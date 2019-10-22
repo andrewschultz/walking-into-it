@@ -1,0 +1,11 @@
+#current binary number, where to place, text
+3	4	0	Wow! I get the center!
+1	4	0	Wow! I get the center!
+81	4	0	Whoah! Gonna be tough to win now you took the center!
+408	2	0	You need to block me!
+427,453	6	-1	No fair! You have to try to play sensible! Adults did that before!
+1155	0	0	Okay, I need to try something I guess.
+7718	3	0	Yawn!
+1184,3344	8	-1	No fair! You have to try to play sensible! Adults did that before!
+9959	-1	-2	Yawn, a draw!
+;
