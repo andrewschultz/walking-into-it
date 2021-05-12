@@ -1,11 +1,108 @@
 #current binary number, where to place, text
 3	4	0	Wow! I get the center!
 1	4	0	Wow! I get the center!
-81	4	0	Whoah! Gonna be tough to win now you took the center!
-408	2	0	You need to block me!
+81	0	0	Whoah! Gonna be tough to win now you took the center!
+166	2	0	OK, I'll block. Now you block.
+211	6	-1	No fair! You missed an obvious block.
 427,453	6	-1	No fair! You have to try to play sensible! Adults did that before!
+913	3	0	OK, I'll block again.
+1210	7	0	Doesn't make a difference, does it?
+12145	-1	-2	Yawn, a draw!
+3154	5	-1	No fair! You missed an obvious block.
+7528	7	0	OK, I'll block again.
+2371	6	-1	No fair! You missed an obvious block.
+6745	6	-1	No fair! You missed an obvious block.
+172	1	0	OK, I'll block.
+205	7	-1	No fair! You missed an obvious block.
+907	7	-1	No fair! You missed an obvious block.
+2365	3	0	Didn't threaten anything but okay...
+2662	8	0	OK, I'll block again.
+3148	5	-1	No fair! You missed an obvious block.
+8980	5	-1	No fair! You missed an obvious block.
+451	6	-1	No fair! You missed an obvious block.
+406	1	0	Ho hum. Block me, I guess.
+439,1141	7	-1	No fair! You missed an obvious block.
+2599	2	-1	Long as I don't play that side square...
+6973	7	-1	No fair! You missed an obvious block.
+6724	1	0	I know that one! I'm not playing the corner.
+6757,7459	7	-1	No fair! You missed an obvious block.
+8917	6	0	Okay, I block.
+10384	5	0	I block.
+10402,10618	2	-1	No fair! You missed an obvious block.
+192	0	0	No, I'm not playing the opposite corner!
+6755	6	0	You better block again!
+8222	5	0	Block you back.
+10895	-1	-2	Yawn! A draw.
+8456	2	-1	No fair! You missed an obvious block.
+10400	2	-1	No fair! You missed an obvious block.
+1381	3	-1	No fair! You missed an obvious block.
+1407	0	0	Okay, block.
+3596	8	0	Okay, block.
+16727	-1	-2	Yawn! A draw.
+7970	2	0	Doesn't matter, does it?
+10175	-1	-2	Yawn! A draw.
+3567	3	-1	No fair! You missed an obvious block.
+2352	3	0	You're on the defensive already!
+2649	0	0	(Silence)
+2660	6	-1	That's just silly! You have to TRY. Even though it won't HELP...
+3380	8	-3	Wow! I did it!
+9212	6	-3	Wow! I did it!
+10679	-1	-2	Yawn! A draw.
+1145	8	-1	No fair! You missed an obvious block.
+2603	8	-1	No fair! You missed an obvious block.
+14538	0	-1	No fair! You missed an obvious block.
+16722	0	-1	No fair! You missed an obvious block.
+2397	6	-1	No fair! You missed an obvious block.
+6977	3	-1	No fair! I shouldn't lose like that. There's a bug.
+14536	1	-1	No fair! I shouldn't lose like that. There's a bug.
+9686	1	-1	No fair! I shouldn't lose like that. There's a bug.
+3123	0	0	Oh no! How'd I get suckered like that?
+3128	8	-1	No fair! You missed an obvious block.
+3368	8	-1	No fair! You missed an obvious block.
+86	7	0	Okay, block.
+4469	6	0	Okay, block. Hmm.
+5954	8	-3	I had you either way! Go, me!
+6170	8	-3	I had you either way! Go, me!
+12488	3	-3	I had you either way! Go, me!
+4487	5	0	Okay, block.
+4982	6	0	Okay, block.
+13001	-1	-2	Yawn! A draw.
+11534	2	0	Does it matter? I don't think it does.
+4703	3	0	Okay, block.
+4766	6	-1	No fair! You missed an obvious block.
+5486	2	0	Okay, block.
+11318	6	-1	No fair! You missed an obvious block.
+5189	2	0	Okay, block.
+5234	5	0	Okay, block.
+5450	3	0	Does it matter? I don't think it does.
+11768	3	0	Does it matter? I don't think it does.
+11021	6	0	No immediate threats here for you.
+12506	5	0	Okay, block.
+12722	3	-1	No fair! You missed an obvious block.
+92	6	0	Okay, block.
+1553	3	-1	No fair! You missed an obvious block.
+1577	5	0	Okay, block.
+1793	3	-1	No fair! You missed an obvious block.
+3737	1	0	Okay, block.
+8111	3	-1	No fair! You missed an obvious block.
+326	3	0	Okay, block.
+383	6	-1	No fair! You missed an obvious block.
+389	6	-1	No fair! You missed an obvious block.
+1109	2	0	Okay, block.
+12767	-1	-2	Yawn! A draw.
+2567	6	-1	No fair! You missed an obvious block.
+6941	6	-1	No fair! You missed an obvious block.
+6644	2	0	I think I'm in trouble if I do this wrong.
+#Above I can create
+#--O
+#XO-
+#XX-
+# which should be losing
+;
+408	2	0	You need to block me!
 1155	0	0	Okay, I need to try something I guess.
 7718	3	0	Yawn!
 1184,3344	8	-1	No fair! You have to try to play sensible! Adults did that before!
 9959	-1	-2	Yawn, a draw!
-;
+1210	7	0	Not much to do.
+937	8	-1	Shouldn't have happened, bug!
