@@ -280,6 +280,15 @@ def check_board(board, whose_turn):
             return whose_turn
     return no_result
 
+def all_rotations(initial_board_num):
+    initial_board = board_of(initial_board_num)
+    for x in orientations:
+        y = [0] * 9
+        for z in range(0, 9):
+            y[z] = initial_board[x[z]]
+        show_board(y)
+        print(y, board_sum(y))
+
 def test_rotations(bail = True):
     rotations = [ 166, 174, 190, 918, 414, 6966, 3078, 8910 ]
     for r in rotations:
@@ -316,7 +325,8 @@ for x in range(0, 8):
     for z in range(0,9):
       if ary1[ary2[z]] == z: matches += 1
     if matches == 9:
-        print("Inverse of", x, ary1, "is", y, ary2)
+        if debug:
+            print("Inverse of", x, ary1, "is", y, ary2)
         inverse[x] = y
 
 # initialization stuff
@@ -329,6 +339,9 @@ while cmd_count < len(sys.argv):
         debug = True
     elif arg == 't':
         test_rotations()
+    elif arg[0] == 'a':
+        all_rotations(int(arg[1:]))
+        exit()
     else:
         usage()
     cmd_count += 1
