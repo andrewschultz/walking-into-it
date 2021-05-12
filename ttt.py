@@ -27,6 +27,14 @@ you_won = 1
 ghost_won = 2
 no_result = 0
 
+def usage():
+    print("USAGE: d/v = debug/verbose, t = test rotations")
+    sys.exit()
+
+def d_print(x):
+    if debug:
+        print(x)
+
 def base_3_of(x):
     ary = []
     for y in range(0, 10):
@@ -255,17 +263,17 @@ def clear_game():
     
 def check_board(board, whose_turn):
     if board[2] and board[2] == board[4] == board[6]:
-        print("Diagonal match UL/DR.")
+        d_print("Diagonal match UL/DR.")
         return whose_turn
     if board[0] and board[0] == board[4] == board[8]:
-        print("Diagonal match UR/DL.")
+        d_print("Diagonal match UR/DL.")
         return whose_turn
     for x in range(0, 2):
         if board[3*x] and board[3*x] == board[3*x+1] == board[3*x+2]:
-            print("Horizontal match row", x)
+            d_print("Horizontal match: row {}".format(x))
             return whose_turn
         if board[x] and board[x] == board[x+3] == board[x+6]:
-            print("Vertical match row", x)
+            d_print("Vertical match: row {}".format(x))
             return whose_turn
     return no_result
 
@@ -310,8 +318,19 @@ for x in range(0, 8):
 
 # initialization stuff
 
+cmd_count = 1
+
+while cmd_count < len(sys.argv):
+    arg = mt.nohy(sys.argv[cmd_count])
+    if arg == 'd' or arg == 'v':
+        debug = True
+    elif arg == 't':
+        test_rotations()
+    else:
+        usage()
+    cmd_count += 1
+
 read_dict_tree()
-#test_rotations()
 see_needed_branches(board, [])
 
 clear_game()
