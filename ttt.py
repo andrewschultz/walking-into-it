@@ -366,13 +366,13 @@ while 1:
         if my_move == '':
             show_board(board)
             continue
-        if x == 'pa' and debug == True:
+        if my_move == 'pa' and debug == True:
             print_all_sums()
-        if x == 'm':
+        if my_move == 'm':
             show_moves = not show_moves
             show_board(board)
             continue
-        if x == 'q':
+        if my_move == 'q':
             exit()
         x = int(my_move)
         if board[x]:
@@ -405,7 +405,7 @@ while 1:
             print("The ghost won!")
             clear_game()
             continue
-        if moves == 9:
+        if len(moves) == 9:
             print("It's a stalemate.")
             clear_game()
             continue
