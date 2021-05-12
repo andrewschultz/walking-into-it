@@ -19,7 +19,7 @@ play_ary = ['-', 'X', 'O']
 my_color = 1
 ghost_color = 2
 
-debug = True
+debug = False
 
 show_moves = False
 
@@ -118,7 +118,7 @@ def inverse_matrix_of(x):
     temp = orientations.index(x)
     return orientations[inverse[temp]]
 
-def the_rotation(a_sum, a_board):
+def rotation_index(a_sum, a_board):
     b2 = board_of(a_sum)
     #print(b2, a_board)
     for x in orientations:
@@ -147,8 +147,11 @@ def check_dupe_trees(board):
         return (-1, -1)
     for y in all_sums(board):
         if y in tree_move_dict:
-            my_ary = the_rotation(y, board)
-            return(my_ary[tree_move_dict[my_sum]], my_sum)
+            my_ary = rotation_index(y, board)
+            if tree_move_dict[my_sum] >= 0:
+                return(my_ary[tree_move_dict[my_sum]], my_sum)
+            else:
+                return(tree_move_dict[my_sum], my_sum)
     return (tree_move_dict[my_sum], my_sum)
 
 def verify_dict_tree(bail = False, move_to_find = 1):
@@ -380,7 +383,7 @@ while 1:
         if my_tree_num not in tree_move_dict: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
         board[where_to_move] = ghost_color
         moves.append(ghost_color)
-        cell_idx[ghost_color] = len(moves)
+        cell_idx[where_to_move] = len(moves)
         print()
         print(tree_text[my_tree_num])
         print()
