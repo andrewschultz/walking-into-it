@@ -16,14 +16,16 @@ inverse = defaultdict(int)
 cell_idx = defaultdict(int)
 
 win_logs = defaultdict(lambda: defaultdict(bool))
+win_msg = defaultdict(lambda: defaultdict(str))
 
 play_ary = ['-', 'X', 'O']
 my_color = 1
 ghost_color = 2
 
-CORNER = 1
-SIDE = 2
-CENTER = 3
+# constants are listed in order of descending difficulty for the ghost
+CENTER = 1
+CORNER = 2
+SIDE = 3
 PLAYER_FIRST = 1
 GHOST_FIRST = 2
 
@@ -178,10 +180,7 @@ def verify_dict_tree(bail = False, move_to_find = 1):
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
             if line.startswith(";"): break
-            if line.startswith("move="):
-                (prefix, data) = my.cfg_to_data(line)
-                move_to_find = int(data)
-                continue
+            if line.startswith("move=") or line.startswith("msg"): continue
             ary = line.split("\t")
             for q in ary[0].split(','):
                 if nonzeros_3(q) % 2 != move_to_find:
@@ -198,7 +197,14 @@ def read_dict_tree(bail = False):
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
             if line.startswith(";"): break
-            if line.startswith("move="): continue
+            if line.startswith("msg"):
+                ary = line.split("\t")
+                win_msg[int(ary[1])][int(ary[2])] = ary[3]
+                continue
+            if line.startswith("move="):
+                (prefix, data) = mt.cfg_data_split(line)
+                move_to_find = int(data)
+                continue
             if "~" in line:
                 ltil = line.strip().split("~")
                 text_macro[ltil[0]] = ltil[1]
@@ -290,7 +296,7 @@ def check_board(board, whose_turn):
     if board[0] and board[0] == board[4] == board[8]:
         d_print("Diagonal match UR/DL.")
         return whose_turn
-    for x in range(0, 2):
+    for x in range(0, 3):
         if board[3*x] and board[3*x] == board[3*x+1] == board[3*x+2]:
             d_print("Horizontal match: row {}".format(x))
             return whose_turn
@@ -368,9 +374,9 @@ while cmd_count < len(sys.argv):
 read_dict_tree()
 see_needed_branches(board, [])
 
-clear_game()
 init_wins()
 
+clear_game()
 # put tests below here
 
 while 1:
@@ -429,6 +435,12 @@ while 1:
         show_board(board)
         if check_board(board, my_color) == my_color:
             print("The ghost won!")
+            if win_logs[first_square_type][first_mover] == True:
+                print("But sadly, they don't look that happy. They already beat you that way!")
+            else:
+                for x in win_msg: print(win_msg[x])
+                print(win_msg[first_square_type][first_mover])
+                win_logs[first_square_type][first_mover] = True
             clear_game()
             continue
         if len(moves) == 9:
