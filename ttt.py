@@ -15,9 +15,23 @@ tree_text = defaultdict(int)
 inverse = defaultdict(int)
 cell_idx = defaultdict(int)
 
+win_logs = defaultdict(lambda: defaultdict(bool))
+
 play_ary = ['-', 'X', 'O']
 my_color = 1
 ghost_color = 2
+
+CORNER = 1
+SIDE = 2
+CENTER = 3
+PLAYER_FIRST = 1
+GHOST_FIRST = 2
+
+locations = [ CORNER, SIDE, CORNER, SIDE, CENTER, SIDE, CORNER, SIDE, CORNER ]
+location_types = [ CORNER, SIDE, CENTER ]
+colors = [ PLAYER_FIRST, GHOST_FIRST ]
+
+first_move = -1
 
 debug = False
 
@@ -30,6 +44,11 @@ no_result = 0
 def usage():
     print("USAGE: d/v = debug/verbose, t = test rotations")
     sys.exit()
+
+def init_wins():
+    for x in location_types:
+        for y in colors:
+            win_logs[y][x] = False
 
 def d_print(x):
     if debug:
@@ -350,6 +369,7 @@ read_dict_tree()
 see_needed_branches(board, [])
 
 clear_game()
+init_wins()
 
 # put tests below here
 
