@@ -39,6 +39,90 @@ def nonzeros_3(x):
     y = base_3_of(int(x))
     return y.count('0')
 
+def board_sum(board, my_rot = range(0, 9)):
+    mult = 1
+    sum = 0
+    for y in range(0, 9):
+        sum += board[my_rot[y]] * mult
+        mult *= 3
+    return sum
+
+def board_of(a_num):
+    temp = []
+    for y in range(0, 9):
+        temp.append(a_num % 3)
+        a_num //= 3
+    return temp
+
+def see_poss_parents(a_num):
+    b = board_of(a_num)
+    got_one = False
+    for x in tree_move_dict:
+        if x == a_num: continue
+        can_retro = True
+        c = board_of(x)
+        for y in range(0, 9):
+            if b[y] == c[y]: continue
+            if c[y] == 0: continue
+            can_retro = False
+        if can_retro:
+            print(x, "may be below", a_num)
+            print(c, b)
+            show_board(board_of(x))
+            show_board(board_of(a_num))
+            got_one = True
+    if not got_one: print("No parents for", a_num)
+
+def see_needed_branches(my_board, moves_so_far, depth = 1):
+    #print("Top of function", my_board, "depth", depth, board_sum(my_board))
+    for move_try in range(0, 9):
+        if my_board[move_try] == 0:
+            temp_board = list(my_board)
+            temp_board[move_try] = 1
+            temp_moves = list(moves_so_far)
+            temp_moves.append(move_try)
+            #print(move_try, "move", temp_board, board_sum(temp_board))
+            skip = False
+            if board_sum(board) not in tree_move_dict:
+                for z in all_sums(board):
+                    if board_sum(board) != z: skip = True
+            if skip: continue
+            (a, b) = check_dupe_trees(temp_board)
+            #print("Tree status of", temp_board, board_sum(temp_board), "is", b, "from", my_board, board_sum(my_board))
+            if tree_move_status[b] < 0:
+                continue
+            if a > -1:
+                if temp_board[a]:
+                    print("Uh oh overwrote position", a, "with status", b, "value", temp_board[a], "on", temp_board, "from", board, "moves so far", moves_so_far)
+                    show_board(board)
+                    sys.exit(tree_move_status)
+                temp_board[a] = 2
+                temp_moves_2 = list(temp_moves)
+                temp_moves_2.append(a)
+                see_needed_branches(temp_board, temp_moves_2, depth + 1)
+            else:
+                print("Need entry for", board_sum(temp_board))
+                show_board(board)
+                print("Moves so far", moves_so_far)
+            #print("End of", move_try, "depth=", depth)
+
+def inverse_matrix_of(x):
+    temp = orientations.index(x)
+    return orientations[inverse[temp]]
+
+def the_rotation(a_sum, a_board):
+    b2 = board_of(a_sum)
+    #print(b2, a_board)
+    for x in orientations:
+        blank_board = []
+        can_match = True
+        new_ary = [b2[x[q]] for q in range(0, 9)]
+        #print(b2, "goes to", new_ary, "via", x, a_board)
+        for y in range(0, 9):
+            if a_board[y] != new_ary[y]: can_match = False
+        if can_match: return inverse_matrix_of(x)
+    sys.exit("Could not rotate {} onto {}.".format(a_sum, a_board))
+
 def check_dupe_trees(board):
     my_sum = 0
     orig_sum = board_sum(board)
@@ -103,15 +187,14 @@ def read_dict_tree(bail = False):
                     if debug: print("Adding", ia2, "to tree.")
             if 0:
                 sys.exit("Oh no! Had trouble parsing line {}: {}".format(line_count, line))
-    if bail: sys.exit("Fix ttt before playing.")
+    if bail:
+        sys.exit("Fix ttt before playing.")
 
-def board_sum(board, my_rot = range(0, 9)):
-    mult = 1
-    sum = 0
-    for y in range(0, 9):
-        sum += board[my_rot[y]] * mult
-        mult *= 3
-    return sum
+def in_pos_file(x):
+    for y in identicals(x):
+        if y in tree_move_dict:
+            return y
+    return -1
 
 def all_sums(board, avoid_number = -1):
     for x in range(0, 8):
@@ -124,6 +207,9 @@ def identicals(x):
         bary.append(temp % 3)
         temp //= 3
     return all_sums(bary)
+
+def is_rotated(x, y):
+    return y in identicals(x)
 
 def check_move_trees(board):
     for q in all_sums(board):
