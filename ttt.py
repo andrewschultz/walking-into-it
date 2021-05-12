@@ -68,6 +68,17 @@ def nonzeros_3(x):
     y = base_3_of(int(x))
     return y.count('0')
 
+def wins_so_far():
+    place = [ 'in the center', 'in the corner', 'on the side' ]
+    finds = 0
+    for x in win_logs:
+        for y in win_logs[x]:
+            if win_logs[x][y]:
+                finds += 1
+                print("You managed to win with {} going first {}.".format('you' if y == PLAYER_FIRST else 'them', place[x-1]))
+    if not finds:
+        print("You haven't managed to win any ways yet.")
+
 def board_sum(board, my_rot = range(0, 9)):
     mult = 1
     sum = 0
@@ -400,7 +411,14 @@ while 1:
             continue
         if my_move == 'q':
             exit()
-        x = int(my_move)
+        if my_move == '?':
+            wins_so_far()
+            continue
+        try:
+            x = int(my_move)
+        except:
+            print("Unknown command.")
+            continue
         if x < 0 or x > len(board):
             print("You need something from 0 to {}.".format(len(board)-1))
             continue
