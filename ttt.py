@@ -395,6 +395,12 @@ while 1:
         if my_move == 'q':
             exit()
         x = int(my_move)
+        if x < 0 or x > len(board):
+            print("You need something from 0 to {}.".format(len(board)-1))
+            continue
+        if len(moves) == 0:
+            first_square_type = locations[x]
+            first_mover = PLAYER_FIRST
         if board[x]:
             print("Something's already there!")
             continue
@@ -407,11 +413,11 @@ while 1:
             clear_game()
             continue
         (where_to_move, my_tree_num) = check_dupe_trees(board)
-        print(where_to_move, my_tree_num)
         if where_to_move == -1:
             print("It's a draw, so you try again.")
             clear_game()
             continue
+        d_print("AI decides move: {} from tree branch {}, officially {}".format(where_to_move, my_tree_num, board_sum(board)))
         if board[where_to_move]: sys.exit("Oops tried to move on occupied square {} for {}.".format(where_to_move, my_tree_num))
         if my_tree_num not in tree_move_dict: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
         board[where_to_move] = ghost_color
