@@ -163,10 +163,19 @@ def verify_dict_tree(bail = False, move_to_find = 1):
         sys.exit()
 
 def read_dict_tree(bail = False):
+    text_macro = defaultdict(str)
     with open("ttt.txt") as file:
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
             if line.startswith(";"): break
+            if line.startswith("move="): continue
+            if "~" in line:
+                ltil = line.strip().split("~")
+                text_macro[ltil[0]] = ltil[1]
+                continue
+            for x in text_macro:
+                if x in line:
+                    line = line.replace(x, text_macro[x])
             if "\t" not in line:
                 print("Need tabs at line {}.".format(line_count))
                 bail = True
