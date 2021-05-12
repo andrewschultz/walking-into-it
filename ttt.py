@@ -1,5 +1,12 @@
-import sys
+#
+#
+# tic tac toe python game
+#
+# where you meet a kid who wants to beat you, but not after you make obvious dumb mistakes
+#
 
+import sys
+import mytools as mt
 from collections import defaultdict
 
 tree_move_dict = defaultdict(int)
@@ -167,15 +174,29 @@ def check_board(board, whose_turn):
             return whose_turn
     return no_result
 
+def test_rotations(bail = True):
+    rotations = [ 166, 174, 190, 918, 414, 6966, 3078, 8910 ]
+    for r in rotations:
+        b = board_of(r)
+        (where_to_move, my_tree_num) = check_dupe_trees(b)
+        print()
+        print(r, b, where_to_move, my_tree_num)
+        show_board(b)
+        print("to")
+        b[where_to_move] = 2
+        show_board(b)
+    if bail:
+        sys.exit()
+
 orientations = [
  [0,1,2,3,4,5,6,7,8],
- [0,3,6,1,4,7,2,5,8],
- [2,5,8,1,4,7,0,3,6],
- [2,1,0,5,4,3,8,7,6],
+ [6,3,0,7,4,1,8,5,2],
  [8,7,6,5,4,3,2,1,0],
+ [2,5,8,1,4,7,0,3,6],
+ [0,3,6,1,4,7,2,5,8],
+ [2,1,0,5,4,3,8,7,6],
  [8,5,2,7,4,1,6,3,0],
- [6,7,8,3,4,5,0,1,2],
- [6,3,0,7,4,1,8,5,2]
+ [6,7,8,3,4,5,0,1,2]
 ]
 
 board = [0,0,0,0,0,0,0,0,0]
@@ -189,11 +210,18 @@ for x in range(0, 8):
     for z in range(0,9):
       if ary1[ary2[z]] == z: matches += 1
     if matches == 9:
-    #print("Inverse of", x, ary1, "is", y, ary2)
+        print("Inverse of", x, ary1, "is", y, ary2)
         inverse[x] = y
 
+# initialization stuff
+
 read_dict_tree()
+#test_rotations()
+see_needed_branches(board, [])
+
 clear_game()
+
+# put tests below here
 
 while 1:
     if 1:
