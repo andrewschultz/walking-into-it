@@ -20,23 +20,58 @@ you_won = 1
 ghost_won = 2
 no_result = 0
 
-def check_dupe_trees():
+def base_3_of(x):
+    ary = []
+    for y in range(0, 10):
+        ary.append(x % 3)
+        x = x // 3
+    ary.reverse()
+    return(''.join([str(x) for x in ary]))
+
+def nonzeros_3(x):
+    y = base_3_of(int(x))
+    return y.count('0')
+
+def check_dupe_trees(board):
     my_sum = 0
+    orig_sum = board_sum(board)
     for y in all_sums(board):
         if y in tree_move_dict:
             if my_sum and y != my_sum:
                 print("Warning", y, "duplicates", my_sum)
-                return (tree_move_dict[my_sum], my_sum)
             my_sum = y
     if not my_sum:
-        print("Warning no directions for", board_sum(board))
+        print("Warning no directions for", board_sum(board), base_3_of(board_sum(board)))
         print("Define one of", list(all_sums(board)))
+        show_board(board)
         sys.exit()
         return (-1, -1)
+    for y in all_sums(board):
+        if y in tree_move_dict:
+            my_ary = the_rotation(y, board)
+            return(my_ary[tree_move_dict[my_sum]], my_sum)
     return (tree_move_dict[my_sum], my_sum)
 
-def read_dict_tree():
-    bail = False
+def verify_dict_tree(bail = False, move_to_find = 1):
+    with open("ttt.txt") as file:
+        for (line_count, line) in enumerate(file, 1):
+            if line.startswith("#"): continue
+            if line.startswith(";"): break
+            if line.startswith("move="):
+                (prefix, data) = my.cfg_to_data(line)
+                move_to_find = int(data)
+                continue
+            ary = line.split("\t")
+            for q in ary[0].split(','):
+                if nonzeros_3(q) % 2 != move_to_find:
+                    print(x, "bad", line_count)
+                    bail = True
+                else:
+                    print(q, "ok", nonzeros_3(q))
+    if bail:
+        sys.exit()
+
+def read_dict_tree(bail = False):
     with open("ttt.txt") as file:
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
@@ -96,7 +131,7 @@ def check_move_trees(board):
 def print_all_sums():
     for z in all_sums(board): print(z)
 
-def show_board():
+def show_board(board):
     row_string = ''
     for y in range(0, 9):
         row_string += ' ' if y in cell_idx else str(y)
@@ -114,7 +149,7 @@ def clear_game():
     board = [0] * 9
     moves = []
     cell_idx.clear()
-    show_board()
+    show_board(board)
     
 def check_board(board, whose_turn):
     if board[2] and board[2] == board[4] == board[6]:
@@ -171,13 +206,13 @@ while 1:
                         print("Define move tree for", board_sum(board2), "square", x)
         my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
         if my_move == '':
-            show_board()
+            show_board(board)
             continue
         if x == 'pa' and debug == True:
             print_all_sums()
         if x == 'm':
             show_moves = not show_moves
-            show_board()
+            show_board(board)
             continue
         if x == 'q':
             exit()
@@ -188,12 +223,13 @@ while 1:
         board[x] = my_color
         moves.append(x)
         cell_idx[x] = len(moves)
-        show_board()
+        show_board(board)
         if check_board(board, my_color) == my_color:
             print("You won!")
             clear_game()
             continue
-        (where_to_move, my_tree_num) = check_dupe_trees()
+        (where_to_move, my_tree_num) = check_dupe_trees(board)
+        print(where_to_move, my_tree_num)
         if where_to_move == -1:
             print("It's a draw, so you try again.")
             clear_game()
@@ -206,7 +242,7 @@ while 1:
         print()
         print(tree_text[my_tree_num])
         print()
-        show_board()
+        show_board(board)
         if check_board(board, my_color) == my_color:
             print("The ghost won!")
             clear_game()
