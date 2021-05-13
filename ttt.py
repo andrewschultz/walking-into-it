@@ -38,13 +38,14 @@ first_move = -1
 debug = False
 
 show_moves = False
+check_needed = False
 
 you_won = 1
 ghost_won = 2
 no_result = 0
 
 def usage():
-    print("USAGE: d/v = debug/verbose, t = test rotations")
+    print("USAGE: d/v = debug/verbose, t = test rotations, c = check needed branches, a = all rotations of a certain #")
     sys.exit()
 
 def init_wins():
@@ -145,6 +146,12 @@ def see_needed_branches(my_board, moves_so_far, depth = 1):
                 show_board(board)
                 print("Moves so far", moves_so_far)
             #print("End of", move_try, "depth=", depth)
+
+def check_all_needed_branches():
+    see_needed_branches(board, [])
+    see_needed_branches([0, 0, 0, 0, 2, 0, 0, 0, 0], [])
+    see_needed_branches([2, 0, 0, 0, 0, 0, 0, 0, 0], [])
+    see_needed_branches([0, 2, 0, 0, 0, 0, 0, 0, 0], [])
 
 def inverse_matrix_of(x):
     temp = orientations.index(x)
@@ -373,6 +380,8 @@ while cmd_count < len(sys.argv):
     arg = mt.nohy(sys.argv[cmd_count])
     if arg == 'd' or arg == 'v':
         debug = True
+    elif arg == 'c':
+        check_needed = True
     elif arg == 't':
         test_rotations()
     elif arg[0] == 'a':
@@ -383,7 +392,9 @@ while cmd_count < len(sys.argv):
     cmd_count += 1
 
 read_dict_tree()
-see_needed_branches(board, [])
+
+if check_needed:
+    check_all_needed_branches()
 
 init_wins()
 
