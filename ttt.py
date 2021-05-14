@@ -40,9 +40,10 @@ debug = False
 show_moves = False
 check_needed = False
 
-you_won = 1
+CONTINUE_PLAYING = 0
+BOARD_FULL_DRAW = -1
+you_won = 1 # should never happen but just in case
 ghost_won = 2
-no_result = 0
 
 def usage():
     print("USAGE: d/v = debug/verbose, t = test rotations, c = check needed branches, a = all rotations of a certain #")
@@ -321,7 +322,10 @@ def check_board(board, whose_turn):
         if board[x] and board[x] == board[x+3] == board[x+6]:
             d_print("Vertical match: row {}".format(x))
             return whose_turn
-    return no_result
+    for x in range(0, 9):
+        if not board[x]:
+            return CONTINUE_PLAYING
+    return BOARD_FULL_DRAW
 
 def all_rotations(initial_board_num):
     initial_board = board_of(initial_board_num)
