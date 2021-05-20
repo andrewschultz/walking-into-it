@@ -33,6 +33,8 @@ locations = [ CORNER, SIDE, CORNER, SIDE, CENTER, SIDE, CORNER, SIDE, CORNER ]
 location_types = [ CORNER, SIDE, CENTER ]
 colors = [ PLAYER_FIRST, GHOST_FIRST ]
 
+wins = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ]
+
 first_move = -1
 
 debug = False
@@ -44,6 +46,11 @@ CONTINUE_PLAYING = 0
 BOARD_FULL_DRAW = -1
 you_won = 1 # should never happen but just in case
 ghost_won = 2
+
+total_blocks = 0
+
+def other_color(move_color):
+    return my_color + ghost_color - move_color
 
 def usage():
     print("USAGE: d/v = debug/verbose, t = test rotations, c = check needed branches, a = all rotations of a certain #")
@@ -69,6 +76,37 @@ def base_3_of(x):
 def nonzeros_3(x):
     y = base_3_of(int(x))
     return y.count('0')
+
+def find_clear_moves(board, to_move_color, look_for_win):
+    this_triple = defaultdict(int)
+    blanks = defaultdict(int)
+    two_of_color = to_move_color if look_for_win else other_color(to_move_color)
+    for w in wins:
+        this_triple = [0, 0, 0]
+        blank_square = -1
+        for square in w:
+            if board[square]:
+                this_triple[board[square]] += 1
+            else:
+                blank_square = square
+        if this_triple[two_of_color] == 2 and blank_square != -1:
+            blanks[blank_square] += 1
+    return blanks
+
+def find_winning_move(board, to_move_color):
+    return find_clear_moves(board, to_move_color, look_for_win = True)
+
+def find_blocking_move(board, to_move_color):
+    return find_clear_moves(board, to_move_color, look_for_win = True)
+
+def find_automatic_move(board, to_move_color):
+    temp = find_winning_move(board, to_move_color)
+    if len(temp):
+        return (temp, "win")
+    temp = find_blocking_move(board, to_move_color)
+    if len(temp):
+        return (temp, "block")
+    return ([], "do anything")
 
 def wins_so_far():
     place = [ 'in the center', 'in the corner', 'on the side' ]
@@ -303,10 +341,12 @@ def show_board(board):
 def clear_game():
     global board
     global moves
+    global total_blocks
     board = [0] * 9
     moves = []
     cell_idx.clear()
     show_board(board)
+    total_blocks = 0
     
 def check_board(board, whose_turn):
     if board[2] and board[2] == board[4] == board[6]:
@@ -414,6 +454,14 @@ while 1:
                     board2[x] = 1
                     if not check_move_trees(board2):
                         print("Define move tree for", board_sum(board2), "square", x)
+        (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
+        if debug:
+            if len(auto_moves_you) == 1:
+                print("You should probably", auto_moves, auto_kibitz)
+            elif len(auto_moves_you) == 0:
+                print(auto_kibitz)
+            else:
+                print("You have multiple ways to win/lose:". list(auto_moves_you))
         my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
         if my_move == '':
             show_board(board)
@@ -451,14 +499,23 @@ while 1:
             print("You won!")
             clear_game()
             continue
-        (where_to_move, my_tree_num) = check_dupe_trees(board)
+        (auto_moves_kid, auto_kibitz) = find_automatic_move(board, ghost_color)
+        if len(auto_moves_kid) == 1:
+            print("The kid moves quickly.")
+            where_to_move = list(auto_moves_kid)[0]
+            tree_num = -1
+            if auto_kibitz == 'block':
+                total_blocks += 1
+        else:
+            (where_to_move, my_tree_num) = check_dupe_trees(board)
+            if my_tree_num not in tree_move_dict and my_tree_num != -1: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
         if where_to_move == -1:
             print("It's a draw, so you try again.")
             clear_game()
             continue
+        did_you_fail = len(auto_moves_kid) > len(auto_moves_you)
         d_print("AI decides move: {} from tree branch {}, officially {}".format(where_to_move, my_tree_num, board_sum(board)))
         if board[where_to_move]: sys.exit("Oops tried to move on occupied square {} for {}.".format(where_to_move, my_tree_num))
-        if my_tree_num not in tree_move_dict: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
         board[where_to_move] = ghost_color
         moves.append(ghost_color)
         cell_idx[where_to_move] = len(moves)
