@@ -108,6 +108,19 @@ def find_automatic_move(board, to_move_color):
         return (temp, "block")
     return ([], "do anything")
 
+def find_forking_move(board, to_move_color):
+    ret_array = []
+    for x in range(0, 9):
+        board_temp = list(board)
+        if board_temp[x]:
+            continue
+        board_temp[x] = to_move_color
+        wins = find_winning_move(board_temp, to_move_color)
+        if len(wins) >= 2:
+            ret_array.append(x)
+        print("fork check", x, ret_array, board_temp, wins)
+    return ret_array
+
 def wins_so_far():
     place = [ 'in the center', 'in the corner', 'on the side' ]
     finds = 0
@@ -501,7 +514,15 @@ while 1:
             print("You won!")
             clear_game()
             continue
-        (auto_moves_kid, auto_kibitz) = find_automatic_move(board, ghost_color)
+        my_square = find_forking_move(board, kid_color)
+        if my_square:
+            board[my_square[0]] = kid_color
+            moves.append(my_square[0])
+            cell_idx[my_square[0]] = len(moves)
+            print("...winning fork at", my_square[0], my_square)
+            show_board(board)
+            continue
+        (auto_moves_kid, auto_kibitz) = find_automatic_move(board, kid_color)
         if len(auto_moves_kid) == 1:
             print("The kid moves quickly.")
             where_to_move = list(auto_moves_kid)[0]
