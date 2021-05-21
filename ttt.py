@@ -126,10 +126,14 @@ def wins_so_far():
     place = [ 'in the center', 'in the corner', 'on the side' ]
     finds = 0
     for x in win_logs:
+        you_them = 'you' if x == PLAYER_FIRST else 'them'
+        if not any_left(win_logs, x):
+            print("You let the kid beat you all three ways with {} going first.".format(you_them))
+            continue
         for y in win_logs[x]:
             if win_logs[x][y]:
                 finds += 1
-                print("You managed to lose with {} going first {}.".format('you' if y == PLAYER_FIRST else 'them', place[x-1]))
+                print("You managed to lose with {} going first {}.".format(you_them, place[y-1]))
     if not finds:
         print("You haven't managed to lose any ways yet.")
 
@@ -374,26 +378,32 @@ def start_game():
     need_kid_first = any_left(win_logs, KID_FIRST)
     if not need_kid_first and not need_you_first:
         sys.exit("Hooray! The kid is happy to have beaten you in all possible ways.")
+    global initial_mover
     if not need_kid_first:
         print("Since the kid has won starting in the corner, center and sides, you go first.")
+        initial_mover = PLAYER_FIRST
         return -1
-    rand_first_move = random.choice(list(win_logs))
+    kid_picks = random.choice(list(win_logs[KID_FIRST]))
     if not need_you_first:
-        print("Since you've won all three ways with you first, the kid chooses.")
-        return rand_first_move
+        print("Since you've won all three ways with you first, the kid starts.")
+        initial_mover = KID_FIRST
+        return kid_picks
     while 1:
-        print(first_mover)
         who_moves = input("Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if first_mover == -1 else 'second') if first_mover != -2 else '')).lower().strip()
         if who_moves == '1':
+            initial_mover = PLAYER_FIRST
             return -1
         if who_moves == '2':
-            return rand_first_move
+            break
         if not who_moves:
             if first_mover == -2:
                 continue
             if first_mover == -1:
+                initial_mover = PLAYER_FIRST
                 return -1
-            return rand_first_move
+            initial_mover = KID_FIRST
+            return kid_picks
+    return rand_first_move
 
 def check_board(board, whose_turn):
     if board[2] and board[2] == board[4] == board[6]:
@@ -493,8 +503,10 @@ init_wins()
 
 while 1:
     first_mover = start_game()
-    print("!", first_mover)
-    if first_mover != -1:
+    if first_mover == -1:
+        initial_mover = PLAYER_FIRST
+    else:
+        initial_mover = KID_FIRST
         board[first_mover] = kid_color
         moves.append(first_mover)
         cell_idx[first_mover] = len(moves)
@@ -579,12 +591,12 @@ while 1:
         show_board(board)
         if check_board(board, my_color) == my_color:
             print("The kid won!")
-            if win_logs[first_square_type][first_mover] == True:
+            if win_logs[initial_mover][first_square_type] == True:
                 print("But sadly, they don't look that happy. They already beat you that way!")
             else:
                 for x in win_msg: print(win_msg[x])
                 print(win_msg[first_square_type][first_mover])
-                win_logs[first_square_type][first_mover] = True
+                win_logs[initial_mover][first_square_type] = True
             break
         if len(moves) == 9:
             print("It's a stalemate.")
