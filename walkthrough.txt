@@ -1,0 +1,84 @@
+In order to please the kid, you need to be able to let them win at tic-tac-toe. But you can't let them win by being dumb and missing an immediate three-in-a-row!
+
+The key is to set things up so the kid can win two ways with their next move, and you can't block both.
+
+There are six possible scenarios you need to fulfill. You can start on the edge, in a corner, or in the center. So can the kid. Note that starting on any corner square is equivalent, as is starting on any side square.
+
+We'll go from easiest to hardest. Note the kid moves randomly to start, but also, if they beat you a certain way, they won't try that again.
+
+Unsurprisingly, the easiest way for the kid to win is by starting in the center. You have all kinds of ways to mess up.
+
+Just to explain the notation, the numbers are the orders of moves. X goes first, third and fifth, and so forth.
+
+..|4o|..
+--+--+--
+..|1x|2o
+--+--+--
+5x|3x|..
+
+Putting the second x in the lower left corner would also allow X to fork two wins:
+
+..|..|4o
+--+--+--
+..|1x|2o
+--+--+--
+3x|..|5x
+
+
+It's a bit trickier for a corner start. In the example below, the lowerleft corner might also lead to an unavoidable win.
+
+..|2o|1x
+--+--+--
+..|5x|4o
+--+--+--
+..|..|3x
+
+Finally, if you start on the side,
+
+It's worth noting that O taking the center would make it very hard for X to win. Though O can play badly to ensure it:
+
+4o|..|1x
+--+--+--
+..|2o|..
+--+--+--
+3x|..|5x
+
+Finally, if X starts on the edge, it's a bit tricky, but with thoughtful enough bad play, O can allow a win.
+
+..|5x|..
+--+--+--
+1x|3x|2o
+--+--+--
+4o|..|..
+
+..|2o|..
+--+--+--
+1x|3x|4o
+--+--+--
+5x|..|..
+
+So this brings us to tougher stuff. What if the player goes first? You can imagine it's easiest for the kid to win if the player starts on the side. You'd be right.
+
+..|5x|..
+--+--+--
+1x|2o|3x
+--+--+--
+6o|4o|..
+
+Then, if you start in the corner, you can again stumble to a loss. You have to rig things a bit, but it's doable, if you grind it out.
+
+1x|..|..
+--+--+--
+5x|2o|3x
+--+--+--
+6o|..|4o
+
+And now, finally, you might not think you could plausibly lose after taking the center without obvious oversights. But in fact you can! Yes, it's clearly not best play, but it's sensible.
+
+2o|..|6o
+--+--+--
+3x|1x|4o
+--+--+--
+5x|..|..
+
+Once you've fallen into all six of these (or other) traps, the kid is happy.
