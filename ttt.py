@@ -155,7 +155,7 @@ def find_forking_move(board, to_move_color):
         wins = find_winning_move(board_temp, to_move_color)
         if len(wins) >= 2:
             ret_array.append(x)
-        print("fork check", x, ret_array, board_temp, wins)
+        d_print("fork check {} {} {} {}".format(x, ret_array, board_temp, wins))
     return ret_array
 
 def wins_so_far():
@@ -399,7 +399,6 @@ def clear_game():
     board = [0] * 9
     moves = []
     cell_idx.clear()
-    show_board(board)
     total_blocks = 0
 
 def any_left(my_dict, my_dict_idx):
@@ -425,7 +424,7 @@ def start_game():
         initial_mover = KID_FIRST
         return kid_picks
     while 1:
-        who_moves = input("Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if first_mover == -1 else 'second') if first_mover != -2 else '')).lower().strip()
+        who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if first_mover == -1 else 'second') if first_mover != -2 else '')).lower().strip()
         if who_moves == '1':
             initial_mover = PLAYER_FIRST
             return -1
@@ -546,7 +545,7 @@ while 1:
         board[first_mover] = kid_color
         moves.append(first_mover)
         cell_idx[first_mover] = len(moves)
-        show_board(board)
+    show_board(board)
     while 1:
         (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
         if debug:
@@ -630,8 +629,7 @@ while 1:
             if win_logs[initial_mover][first_square_type] == True:
                 print("But sadly, they don't look that happy. They already beat you that way!")
             else:
-                for x in win_msg: print(win_msg[x])
-                print(win_msg[first_square_type][first_mover])
+                for x in win_msg: print(x, win_msg[x])
                 win_logs[initial_mover][first_square_type] = True
             break
         if len(moves) == 9:
