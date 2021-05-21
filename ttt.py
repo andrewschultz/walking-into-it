@@ -50,6 +50,42 @@ kid_won = 2
 
 total_blocks = 0
 
+class game:
+    my_move = PLAYER_FIRST
+    board = []
+
+    def __init__(self):
+        self.init_wins()
+        self.init_new_game()
+
+    def init_wins(self):
+        for x in location_types:
+            for y in colors:
+                win_logs[y][x] = False
+
+    def init_new_game(self):
+        self.clear()
+        self.show_board()
+
+    def clear(self):
+        self.board = [0] * 9
+
+    def move(self, move_color, move_square):
+        if self.board[move_square]:
+            print("Already occupied!")
+
+    def show_board(self):
+        row_string = ''
+        for y in range(0, 9):
+            row_string += ' ' if y in cell_idx else str(y)
+            row_string += play_ary[self.board[y]]
+            if y % 3 == 2:
+                print(row_string)
+                row_string = ""
+                if y != 8: print("--+--+--")
+            else:
+                row_string += "|"
+
 def other_color(move_color):
     return my_color + kid_color - move_color
 
