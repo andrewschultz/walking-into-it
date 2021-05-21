@@ -1,9 +1,20 @@
+# should x or o go first?
+# track number of possible wins after move
+# you always x at moment, change that
 ##################################macros first
+MACRO_MATTER~0	Does it matter? I don't think it does.
 MACRO_FAIR_WIN~-3	I had you either way! Go, me!
 MACRO_YAWN~-2	Yawn, a draw!
 MACRO_NO_FAIR~-1	No fair! You missed an obvious block. I want to win fair and square!
 MACRO_BLOCK_AGAIN~0	OK, I'll block again.
 MACRO_OKAY_BLOCK~0	Okay, block.
+##################################win messages
+msg	1	1	Wow! That's probably the toughest way to win!
+msg	2	1	I should feel pretty good about myself!
+msg	3	1	Well, you sort of wasted your first move.
+msg	1	2	I guess taking the center can help a lot.
+msg	2	2	Taking the corner was a good idea.
+msg	3	2	Wow, I won first even sort of wasting a move.
 #you move first
 move=0
 #current binary number, where to place, text
@@ -28,9 +39,15 @@ move=0
 3148	5	MACRO_NO_FAIR
 8980	5	MACRO_NO_FAIR
 451	6	MACRO_NO_FAIR
-406	1	0	Ho hum. Block me, I guess.
+406	8	0	Ho hum. Block me, I guess.
+13531	2	MACRO_OKAY_BLOCK
+13555	6	MACRO_OKAY_BLOCK
+15022	7	MACRO_FAIR_WIN
+14257	3	MACRO_OKAY_BLOCK
+#1153	3	MACRO_OKAY_BLOCK
+#2611	6	MACRO_NO_FAIR
 439,1141	7	MACRO_NO_FAIR
-2599	2	-1	Long as I don't play that side square...
+2599	6	-1	Long as I don't play that side square...
 6973	7	MACRO_NO_FAIR
 6724	1	0	I know that one! I'm not playing the corner.
 6757,7459	7	MACRO_NO_FAIR
@@ -75,15 +92,15 @@ move=0
 4487	5	MACRO_OKAY_BLOCK
 4982	6	MACRO_OKAY_BLOCK
 13001	-1	MACRO_YAWN
-11534	2	0	Does it matter? I don't think it does.
+11534	2	MACRO_MATTER
 4703	3	MACRO_OKAY_BLOCK
 4766	6	MACRO_NO_FAIR
 5486	2	MACRO_OKAY_BLOCK
 11318	6	MACRO_NO_FAIR
 5189	2	MACRO_OKAY_BLOCK
 5234	5	MACRO_OKAY_BLOCK
-5450	3	0	Does it matter? I don't think it does.
-11768	3	0	Does it matter? I don't think it does.
+5450	3	MACRO_MATTER
+11768	3	MACRO_MATTER
 11021	6	0	No immediate threats here for you.
 12506	5	MACRO_OKAY_BLOCK
 12722	3	MACRO_NO_FAIR
@@ -101,17 +118,126 @@ move=0
 2567	6	MACRO_NO_FAIR
 6941	6	MACRO_NO_FAIR
 6644	2	0	I think I'm in trouble if I do this wrong.
+15514	6	MACRO_OKAY_BLOCK
 move=1
-#Above I can create
-#--O
-#XO-
-#XX-
-# which should be losing
+163	8	0	Okay, let's try this!
+165	0	0	I feel good about my chances.
+13288	2	MACRO_NO_FAIR
+13294	2	MACRO_NO_FAIR
+13528	6	MACRO_MATTER
+# note: a block here would still lose
+14989	2	MACRO_NO_FAIR
+15013	7	MACRO_NO_FAIR
+14995	7	MACRO_FAIR_WIN
+17173	2	MACRO_FAIR_WIN
+176	8	MACRO_NO_FAIR
+194	8	MACRO_NO_FAIR
+410	8	MACRO_NO_FAIR
+896	8	MACRO_NO_FAIR
+2354	8	MACRO_NO_FAIR
+5	6	0	A threat already!
+1472	3	MACRO_NO_FAIR
+1490	4	0	Yay, the center!
+1661	8	MACRO_FAIR_WIN
+# a block here would still lose
+1895	8	MACRO_NO_FAIR
+3839	8	MACRO_NO_FAIR
+# the below are very silly plays
+1544	3	MACRO_NO_FAIR
+1706	3	MACRO_NO_FAIR
+3650	3	MACRO_NO_FAIR
+8024	3	MACRO_NO_FAIR
+11	8	0	Let's try this.
+13136	4	MACRO_NO_FAIR
+13160	4	MACRO_NO_FAIR
+13214	4	MACRO_NO_FAIR
+13862	4	MACRO_NO_FAIR
+83	8	0	Ok, try this.
+13208	7	0	Block...
+17591	6	MACRO_NO_FAIR
+17609	6	MACRO_NO_FAIR
+17825	6	MACRO_NO_FAIR
+18311	2	0	Block...
+18356	2	MACRO_NO_FAIR
+18572	3	MACRO_YAWN
+# 6 also works below
+245	2	0	Let's rumble!
+6563	6	0	Let's rumble!
+8030	3	MACRO_NO_FAIR
+8048	2	0	Nobody's taken the center yet!
+8069	4	MACRO_FAIR_WIN
+8147	1	MACRO_FAIR_WIN
+8309	4	MACRO_NO_FAIR
+10253	4	MACRO_NO_FAIR
+8102	3	MACRO_NO_FAIR
+8264	3	MACRO_NO_FAIR
+7	6	0	Oh, I dunno, here?
+1474	7	0	Oh, I really dunno, here?
+5875	8	MACRO_NO_FAIR
+6091	8	MACRO_NO_FAIR
+5929	8	MACRO_FAIR_WIN
+12409	4	MACRO_FAIR_WIN
+1492	4	0	Oh, I really dunno, here?
+1663	7	MACRO_FAIR_WIN
+3841	2	MACRO_FAIR_WIN
+1897	7	MACRO_NO_FAIR
+8215	7	MACRO_NO_FAIR
+1546	8	0	Block...
+14677	7	MACRO_NO_FAIR
+14695	7	MACRO_NO_FAIR
+14911	7	MACRO_NO_FAIR
+16855	5	0	Nothing to block...
+17350	3	0	Nothing to block...
+17368	2	MACRO_NO_FAIR
+1708	4	0	Oh, I really dunno, here?
+1879	7	MACRO_FAIR_WIN
+4057	7	MACRO_FAIR_WIN
+8431	7	MACRO_NO_FAIR
+3652	4	0	Guess this is okay.
+3823	5	0	Guess this is okay.
+4336	8	MACRO_YAWN
+10870	3	MACRO_NO_FAIR
+10375	2	MACRO_FAIR_WIN
+8026	4	MACRO_FAIR_WIN
+33	4	0	This looks promising.
+196	7	MACRO_NO_FAIR
+204	7	MACRO_NO_FAIR
+438	7	MACRO_NO_FAIR
+924	7	MACRO_NO_FAIR
+2382	0	0	This looks promising.
+2393	8	MACRO_FAIR_WIN
+2627	8	MACRO_NO_FAIR
+3113	8	MACRO_NO_FAIR
+8945	2	MACRO_FAIR_WIN
+6756	7	MACRO_NO_FAIR
+87	0	0	Ok, see what's next.
+98	6	0	Ok, block.
+1583	5	0	Ok, block.
+4256	8	MACRO_YAWN
+1799	3	MACRO_NO_FAIR
+3743	3	MACRO_NO_FAIR
+8117	3	MACRO_NO_FAIR
+116	2	MACRO_NO_FAIR
+332	2	MACRO_NO_FAIR
+818	2	MACRO_NO_FAIR
+2276	2	MACRO_NO_FAIR
+6650	2	MACRO_NO_FAIR
+735	4	0	Take the center, ok.
+898	7	MACRO_NO_FAIR
+906	7	MACRO_NO_FAIR
+3084	8	0	OK, block.
+16207	3	0	OK, block.
+16233	0	MACRO_NO_FAIR
+16449	0	MACRO_NO_FAIR
+7458	7	MACRO_NO_FAIR
+2193	4	0	Center.
+2356	3	0	Why not here?
+2419	5	MACRO_NO_FAIR
+2653	6	0	Why not here?
+4120	8	MACRO_YAWN
+10672	2	MACRO_YAWN
+3139	5	MACRO_NO_FAIR
+8971	6	0	Block.
+10438	5	MACRO_NO_FAIR
+#15 vs 27 could go either way
 ;
-408	2	0	You need to block me!
-1155	0	0	Okay, I need to try something I guess.
-7718	3	0	Yawn!
-1184,3344	8	-1	No fair! You have to try to play sensible! Adults did that before!
-9959	-1	-2	Yawn, a draw!
-1210	7	0	Not much to do.
-937	8	-1	Shouldn't have happened, bug!
