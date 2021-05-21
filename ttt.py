@@ -20,18 +20,18 @@ win_msg = defaultdict(lambda: defaultdict(str))
 
 play_ary = ['-', 'X', 'O']
 my_color = 1
-ghost_color = 2
+kid_color = 2
 
 # constants are listed in order of descending difficulty for the ghost
 CENTER = 1
 CORNER = 2
 SIDE = 3
 PLAYER_FIRST = 1
-GHOST_FIRST = 2
+KID_FIRST = 2
 
 locations = [ CORNER, SIDE, CORNER, SIDE, CENTER, SIDE, CORNER, SIDE, CORNER ]
 location_types = [ CORNER, SIDE, CENTER ]
-colors = [ PLAYER_FIRST, GHOST_FIRST ]
+colors = [ PLAYER_FIRST, KID_FIRST ]
 
 wins = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ]
 
@@ -45,12 +45,12 @@ check_needed = False
 CONTINUE_PLAYING = 0
 BOARD_FULL_DRAW = -1
 you_won = 1 # should never happen but just in case
-ghost_won = 2
+kid_won = 2
 
 total_blocks = 0
 
 def other_color(move_color):
-    return my_color + ghost_color - move_color
+    return my_color + kid_color - move_color
 
 def usage():
     print("USAGE: d/v = debug/verbose, t = test rotations, c = check needed branches, a = all rotations of a certain #")
@@ -97,7 +97,7 @@ def find_winning_move(board, to_move_color):
     return find_clear_moves(board, to_move_color, look_for_win = True)
 
 def find_blocking_move(board, to_move_color):
-    return find_clear_moves(board, to_move_color, look_for_win = True)
+    return find_clear_moves(board, to_move_color, look_for_win = False)
 
 def find_automatic_move(board, to_move_color):
     temp = find_winning_move(board, to_move_color)
@@ -115,9 +115,9 @@ def wins_so_far():
         for y in win_logs[x]:
             if win_logs[x][y]:
                 finds += 1
-                print("You managed to win with {} going first {}.".format('you' if y == PLAYER_FIRST else 'them', place[x-1]))
+                print("You managed to lose with {} going first {}.".format('you' if y == PLAYER_FIRST else 'them', place[x-1]))
     if not finds:
-        print("You haven't managed to win any ways yet.")
+        print("You haven't managed to lose any ways yet.")
 
 def board_sum(board, my_rot = range(0, 9)):
     mult = 1
@@ -457,12 +457,14 @@ while 1:
         (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
         if debug:
             if len(auto_moves_you) == 1:
-                print("You should probably", auto_moves, auto_kibitz)
+                print("You should probably", auto_kibitz, auto_moves_you)
             elif len(auto_moves_you) == 0:
                 print(auto_kibitz)
             else:
-                print("You have multiple ways to win/lose:". list(auto_moves_you))
+                print("You have multiple ways to win/lose:", list(auto_moves_you))
         my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
+        if debug and my_move == 'x':
+            sys.exit("Bye!")
         if my_move == '':
             show_board(board)
             continue
@@ -516,15 +518,15 @@ while 1:
         did_you_fail = len(auto_moves_kid) > len(auto_moves_you)
         d_print("AI decides move: {} from tree branch {}, officially {}".format(where_to_move, my_tree_num, board_sum(board)))
         if board[where_to_move]: sys.exit("Oops tried to move on occupied square {} for {}.".format(where_to_move, my_tree_num))
-        board[where_to_move] = ghost_color
-        moves.append(ghost_color)
+        board[where_to_move] = kid_color
+        moves.append(where_to_move)
         cell_idx[where_to_move] = len(moves)
         print()
         print(tree_text[my_tree_num])
         print()
         show_board(board)
         if check_board(board, my_color) == my_color:
-            print("The ghost won!")
+            print("The kid won!")
             if win_logs[first_square_type][first_mover] == True:
                 print("But sadly, they don't look that happy. They already beat you that way!")
             else:
