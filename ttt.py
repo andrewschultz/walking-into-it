@@ -5,6 +5,7 @@
 # where you meet a kid who wants to beat you, but not after you make obvious dumb mistakes
 #
 
+import random
 import sys
 import mytools as mt
 from collections import defaultdict
@@ -35,7 +36,7 @@ colors = [ PLAYER_FIRST, KID_FIRST ]
 
 wins = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ]
 
-first_move = -1
+first_mover = -2
 
 debug = False
 
@@ -360,7 +361,40 @@ def clear_game():
     cell_idx.clear()
     show_board(board)
     total_blocks = 0
-    
+
+def any_left(my_dict, my_dict_idx):
+    for x in my_dict[my_dict_idx]:
+        if not my_dict[my_dict_idx][x]:
+            return True
+    return False
+
+def start_game():
+    clear_game()
+    need_you_first = any_left(win_logs, PLAYER_FIRST)
+    need_kid_first = any_left(win_logs, KID_FIRST)
+    if not need_kid_first and not need_you_first:
+        sys.exit("Hooray! The kid is happy to have beaten you in all possible ways.")
+    if not need_kid_first:
+        print("Since the kid has won starting in the corner, center and sides, you go first.")
+        return -1
+    rand_first_move = random.choice(list(win_logs))
+    if not need_you_first:
+        print("Since you've won all three ways with you first, the kid chooses.")
+        return rand_first_move
+    while 1:
+        print(first_mover)
+        who_moves = input("Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if first_mover == -1 else 'second') if first_mover != -2 else '')).lower().strip()
+        if who_moves == '1':
+            return -1
+        if who_moves == '2':
+            return rand_first_move
+        if not who_moves:
+            if first_mover == -2:
+                continue
+            if first_mover == -1:
+                return -1
+            return rand_first_move
+
 def check_board(board, whose_turn):
     if board[2] and board[2] == board[4] == board[6]:
         d_print("Diagonal match UL/DR.")
@@ -455,18 +489,17 @@ if check_needed:
 
 init_wins()
 
-clear_game()
 # put tests below here
 
 while 1:
-    if 1:
-        if debug:
-            for x in range(0, 9):
-                if board[x] == 0:
-                    board2 = list(board)
-                    board2[x] = 1
-                    if not check_move_trees(board2):
-                        print("Define move tree for", board_sum(board2), "square", x)
+    first_mover = start_game()
+    print("!", first_mover)
+    if first_mover != -1:
+        board[first_mover] = kid_color
+        moves.append(first_mover)
+        cell_idx[first_mover] = len(moves)
+        show_board(board)
+    while 1:
         (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
         if debug:
             if len(auto_moves_you) == 1:
@@ -502,7 +535,6 @@ while 1:
             continue
         if len(moves) == 0:
             first_square_type = locations[x]
-            first_mover = PLAYER_FIRST
         if board[x]:
             print("Something's already there!")
             continue
@@ -534,8 +566,7 @@ while 1:
             if my_tree_num not in tree_move_dict and my_tree_num != -1: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
         if where_to_move == -1:
             print("It's a draw, so you try again.")
-            clear_game()
-            continue
+            break
         did_you_fail = len(auto_moves_kid) > len(auto_moves_you)
         d_print("AI decides move: {} from tree branch {}, officially {}".format(where_to_move, my_tree_num, board_sum(board)))
         if board[where_to_move]: sys.exit("Oops tried to move on occupied square {} for {}.".format(where_to_move, my_tree_num))
@@ -554,12 +585,10 @@ while 1:
                 for x in win_msg: print(win_msg[x])
                 print(win_msg[first_square_type][first_mover])
                 win_logs[first_square_type][first_mover] = True
-            clear_game()
-            continue
+            break
         if len(moves) == 9:
             print("It's a stalemate.")
-            clear_game()
-            continue
+            break
 #    except KeyboardInterrupt:
 #        exit()
 #    except:
