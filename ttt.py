@@ -420,7 +420,14 @@ def start_game():
         print("Since the kid has won starting in the corner, center and sides, you go first.")
         initial_mover = PLAYER_FIRST
         return -1
-    kid_picks = random.choice(list(win_logs[KID_FIRST]))
+    print(win_logs[KID_FIRST])
+    kid_picks_index = random.choice(list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]]))
+    if kid_picks_index == CENTER:
+        kid_picks = 1
+    elif kid_picks_index == SIDE:
+        kid_picks = random.choice([1,3,5,7])
+    else:
+        kid_picks = random.choice([0,2,6,8])
     if not need_you_first:
         print("Since you've won all three ways with you first, the kid starts.")
         initial_mover = KID_FIRST
@@ -440,7 +447,7 @@ def start_game():
                 return -1
             initial_mover = KID_FIRST
             return kid_picks
-    return rand_first_move
+    return kid_picks
 
 def check_board(board, whose_turn):
     if board[2] and board[2] == board[4] == board[6]:
@@ -547,6 +554,7 @@ while 1:
         board[first_mover] = kid_color
         moves.append(first_mover)
         cell_idx[first_mover] = len(moves)
+        first_square_type = locations[first_mover]
     show_board(board)
     while 1:
         (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
@@ -631,7 +639,7 @@ while 1:
             if win_logs[initial_mover][first_square_type] == True:
                 print("But sadly, they don't look that happy. They already beat you that way!")
             else:
-                for x in win_msg: print(x, win_msg[x])
+                print(win_msg[initial_mover][first_square_type])
                 win_logs[initial_mover][first_square_type] = True
             break
         if len(moves) == 9:
