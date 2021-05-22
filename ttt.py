@@ -145,9 +145,10 @@ def find_automatic_move(board, to_move_color):
         return (temp, "block")
     return ([], "do anything")
 
-def find_forking_move(board, to_move_color):
+def find_forking_move(board, to_move_color, remove_blocks = True):
     ret_array = []
-    blocks = find_blocking_move(board, to_move_color)
+    if remove_blocks:
+        blocks = find_blocking_move(board, to_move_color)
     for x in range(0, 9):
         board_temp = list(board)
         if board_temp[x]:
@@ -155,10 +156,31 @@ def find_forking_move(board, to_move_color):
         board_temp[x] = to_move_color
         wins = find_winning_move(board_temp, to_move_color)
         if len(wins) >= 2:
-            if blocks and x not in blocks: continue
+            if remove_blocks and blocks and x not in blocks: continue
             ret_array.append(x)
         d_print("fork check {} {} {} {}".format(x, ret_array, board_temp, wins))
     return ret_array
+
+def find_calculated_move(board, kid_color):
+    blocking_moves = find_blocking_move(board, kid_color)
+    winning_moves = find_winning_move(board, kid_color)
+    auto_moves = find_automatic_move(board, kid_color)
+    forking_move = find_forking_move(board, kid_color, remove_blocks = False)
+    forking_move_block = find_forking_move(board, kid_color)
+    if len(winning_moves):
+        print("a", winning_moves)
+        return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
+    if len(forking_move_block):
+        print("b")
+        if not len(blocking_moves):
+            return(random.choice(forking_move), "The kid shifts and giggles slightly.", "<KID SEES A FORK>")
+        return(random.choice(forking_move), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
+    if len(auto_moves[0]):
+        print("c")
+        if len(auto_moves[0]) > 1:
+            print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
+        return(random.choice(auto_moves[0]), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
+    return(NO_MOVE, '', '')
 
 def wins_so_far():
     place = [ 'in the center', 'in the corner', 'on the side' ]
@@ -491,6 +513,20 @@ def test_rotations(bail = True):
     if bail:
         sys.exit()
 
+def check_game_end():
+    if check_board(board, my_color) == my_color:
+        print("The kid won!")
+        if win_logs[initial_mover][first_square_type] == True:
+            print("But sadly, they don't look that happy. They already beat you that way!")
+        else:
+            print(win_msg[initial_mover][first_square_type])
+            win_logs[initial_mover][first_square_type] = True
+        return True
+    if len(moves) == 9:
+        print("It's a stalemate.")
+        return True
+    return False
+
 orientations = [
  [0,1,2,3,4,5,6,7,8],
  [6,3,0,7,4,1,8,5,2],
@@ -600,17 +636,19 @@ while 1:
         cell_idx[x] = len(moves)
         show_board(board)
         if check_board(board, my_color) == my_color:
-            print("You won!")
+            print("You won! This should not have happened, but it did.")
             clear_game()
             continue
-        my_square = find_forking_move(board, kid_color)
-        if my_square:
-            board[my_square[0]] = kid_color
-            moves.append(my_square[0])
-            cell_idx[my_square[0]] = len(moves)
-            print("...winning fork at", my_square[0], my_square)
+        (kid_square, the_msg, debug_msg) = find_calculated_move(board, kid_color)
+        if kid_square != NO_MOVE:
+            print("Moving to", kid_square)
+            d_print(debug_msg)
+            board[kid_square] = kid_color
+            moves.append(kid_square)
+            cell_idx[kid_square] = len(moves)
             show_board(board)
-            continue
+            if check_game_end():
+                continue
         (auto_moves_kid, auto_kibitz) = find_automatic_move(board, kid_color)
         if len(auto_moves_kid) == 1:
             print("The kid moves quickly.")
@@ -634,17 +672,8 @@ while 1:
         print(tree_text[my_tree_num])
         print()
         show_board(board)
-        if check_board(board, my_color) == my_color:
-            print("The kid won!")
-            if win_logs[initial_mover][first_square_type] == True:
-                print("But sadly, they don't look that happy. They already beat you that way!")
-            else:
-                print(win_msg[initial_mover][first_square_type])
-                win_logs[initial_mover][first_square_type] = True
-            break
-        if len(moves) == 9:
-            print("It's a stalemate.")
-            break
+        check_game_end()
+
 #    except KeyboardInterrupt:
 #        exit()
 #    except:
