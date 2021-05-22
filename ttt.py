@@ -29,8 +29,13 @@ NO_MOVE = -1
 CENTER = 1
 CORNER = 2
 SIDE = 3
+
+NONE_FIRST = 0
 PLAYER_FIRST = 1
 KID_FIRST = 2
+
+initial_mover = NONE_FIRST
+first_square_type = -1
 
 # x-or-o differences
 X_FIRST = 0
@@ -454,7 +459,7 @@ def any_left(my_dict, my_dict_idx):
             return True
     return False
 
-def start_game():
+def game_setup():
     clear_game()
     need_you_first = any_left(win_logs, PLAYER_FIRST)
     need_kid_first = any_left(win_logs, KID_FIRST)
@@ -465,10 +470,10 @@ def start_game():
         print("Since the kid has won starting in the corner, center and sides, you go first.")
         initial_mover = PLAYER_FIRST
         return NO_MOVE
-    print(win_logs[KID_FIRST])
-    kid_picks_index = random.choice(list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]]))
+    picks_list = list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]])
+    kid_picks_index = random.choice(picks_list)
     if kid_picks_index == CENTER:
-        kid_picks = 1
+        kid_picks = 4
     elif kid_picks_index == SIDE:
         kid_picks = random.choice([1,3,5,7])
     else:
@@ -478,21 +483,29 @@ def start_game():
         initial_mover = KID_FIRST
         return kid_picks
     while 1:
-        who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if first_mover == -1 else 'second') if first_mover != -2 else '')).lower().strip()
+        who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if initial_mover == 1 else 'second') if initial_mover != 0 else '')).lower().strip()
         if who_moves == '1':
             initial_mover = PLAYER_FIRST
             return NO_MOVE
         if who_moves == '2':
-            break
-        if not who_moves:
-            if first_mover == -2:
-                continue
-            if first_mover == NO_MOVE:
-                initial_mover = PLAYER_FIRST
-                return NO_MOVE
             initial_mover = KID_FIRST
+            break
+        if not who_moves and initial_mover:
+            if initial_mover == PLAYER_FIRST:
+                return NO_MOVE
             return kid_picks
     return kid_picks
+
+def start_game():
+    temp = game_setup()
+    global board
+    global first_square_type
+    if temp != NO_MOVE:
+        board[temp] = kid_color
+        moves.append(temp)
+        cell_idx[temp] = len(moves)
+        first_square_type = locations[temp]
+    show_board(board)
 
 def check_board(board, whose_turn):
     if board[2] and board[2] == board[4] == board[6]:
@@ -539,6 +552,7 @@ def test_rotations(bail = True):
 def check_game_end():
     if check_board(board, my_color) == my_color:
         print("The kid won!")
+        print(initial_mover, first_square_type)
         if win_logs[initial_mover][first_square_type] == True:
             print("But sadly, they don't look that happy. They already beat you that way!")
         else:
@@ -604,17 +618,9 @@ init_wins()
 
 # put tests below here
 
+start_game()
+
 while 1:
-    first_mover = start_game()
-    if first_mover == NO_MOVE:
-        initial_mover = PLAYER_FIRST
-    else:
-        initial_mover = KID_FIRST
-        board[first_mover] = kid_color
-        moves.append(first_mover)
-        cell_idx[first_mover] = len(moves)
-        first_square_type = locations[first_mover]
-    show_board(board)
     while 1:
         (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
         if debug:
@@ -698,6 +704,7 @@ while 1:
             if my_tree_num not in tree_move_dict and my_tree_num != -1: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
         if where_to_move == NO_MOVE:
             print("It's a draw, so you try again.")
+            start_game()
             break
         did_you_fail = len(auto_moves_kid) > len(auto_moves_you)
         d_print("AI decides move: {} from tree branch {}, officially {}".format(where_to_move, my_tree_num, board_sum(board)))
