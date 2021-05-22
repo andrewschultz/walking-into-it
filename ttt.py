@@ -93,7 +93,7 @@ def _find_getch():
 
     return _getch()
 
-def introduction():
+def show_introductory_text():
     print("If you've read the introduction before, you can (S)how what's remaining or (no pauses after each text chunk--there are {} total) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)))
     count = 0
     wait_for_pause = True
@@ -136,7 +136,7 @@ class game:
                 self.win_logs[y][x] = False
 
     def init_new_game(self):
-        introduction()
+        show_introductory_text()
         self.clear_game()
         self.show_board()
 
@@ -459,6 +459,20 @@ def inverse_matrix_of(x):
     temp = orientations.index(x)
     return orientations[inverse[temp]]
 
+def assign_inverse_orientations():
+    global inverse
+    for x in range(0, 8):
+      ary1 = orientations[x]
+      for y in range(0, 8):
+        ary2 = orientations[y]
+        matches = 0
+        for z in range(0,9):
+          if ary1[ary2[z]] == z: matches += 1
+        if matches == 9:
+            if debug:
+                print("Inverse of", x, ary1, "is", y, ary2)
+            inverse[x] = y
+
 def rotation_index(a_sum, a_board):
     b2 = board_of(a_sum)
     #print(b2, a_board)
@@ -761,17 +775,7 @@ orientations = [
 board = [0,0,0,0,0,0,0,0,0]
 moves = []
 
-for x in range(0, 8):
-  ary1 = orientations[x]
-  for y in range(0, 8):
-    ary2 = orientations[y]
-    matches = 0
-    for z in range(0,9):
-      if ary1[ary2[z]] == z: matches += 1
-    if matches == 9:
-        if debug:
-            print("Inverse of", x, ary1, "is", y, ary2)
-        inverse[x] = y
+assign_inverse_orientations()
 
 # initialization stuff
 
@@ -813,7 +817,7 @@ init_wins()
 # put tests below here
 # put tests above here
 
-introduction()
+show_introductory_text()
 start_game()
 
 while 1:
