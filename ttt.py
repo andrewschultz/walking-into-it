@@ -38,6 +38,8 @@ O_FIRST = 1
 X_PLAYER = 2
 O_PLAYER = 3
 
+display_descriptions = [ 'X goes first', 'O goes first', 'Player is X', 'Player is O' ]
+
 display_type = X_FIRST
 
 locations = [ CORNER, SIDE, CORNER, SIDE, CENTER, SIDE, CORNER, SIDE, CORNER ]
@@ -184,12 +186,11 @@ def find_calculated_move(board, kid_color):
         print("b")
         if not len(blocking_moves):
             return(random.choice(forking_move), "The kid shifts and giggles slightly.", "<KID SEES A FORK>")
-        return(random.choice(forking_move), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
+        return(random.choice(forking_move_block), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
     if len(auto_moves[0]):
-        print("c")
         if len(auto_moves[0]) > 1:
             print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
-        return(random.choice(auto_moves[0]), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
+        return(random.choice(list(auto_moves[0])), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
     return(NO_MOVE, '', '')
 
 def wins_so_far():
@@ -625,8 +626,16 @@ while 1:
                 print("You have multiple ways to win/lose:", list(auto_moves_you))
         my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
         try:
-            if my_move[0] == 'x' and my_move[1].isdigit():
-                display_type = int(my_move[1])
+            if my_move[0] == 'x' and my_move[1:].isdigit():
+                temp = int(my_move[1:])
+                if temp >= len(display_descriptions):
+                    print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
+                elif temp != display_type:
+                    print("Changed display type:", display_descriptions[display_type])
+                    show_board(board)
+                else:
+                    print("Display type was already", display_descriptions[display_type])
+                continue
         except:
             pass
         if debug and my_move == 'x':
@@ -664,7 +673,7 @@ while 1:
         show_board(board)
         if check_board(board, my_color) == my_color:
             print("You won! This should not have happened, but it did.")
-            clear_game()
+            start_game()
             continue
         (kid_square, the_msg, debug_msg) = find_calculated_move(board, kid_color)
         if kid_square != NO_MOVE:
@@ -675,7 +684,8 @@ while 1:
             cell_idx[kid_square] = len(moves)
             show_board(board)
             if check_game_end():
-                continue
+                start_game()
+            continue
         (auto_moves_kid, auto_kibitz) = find_automatic_move(board, kid_color)
         if len(auto_moves_kid) == 1:
             print("The kid moves quickly.")
@@ -699,7 +709,8 @@ while 1:
         print(tree_text[my_tree_num])
         print()
         show_board(board)
-        check_game_end()
+        if check_game_end():
+            start_game()
 
 #    except KeyboardInterrupt:
 #        exit()
