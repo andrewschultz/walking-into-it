@@ -147,6 +147,7 @@ def find_automatic_move(board, to_move_color):
 
 def find_forking_move(board, to_move_color):
     ret_array = []
+    blocks = find_blocking_move(board, to_move_color)
     for x in range(0, 9):
         board_temp = list(board)
         if board_temp[x]:
@@ -154,6 +155,7 @@ def find_forking_move(board, to_move_color):
         board_temp[x] = to_move_color
         wins = find_winning_move(board_temp, to_move_color)
         if len(wins) >= 2:
+            if blocks and x not in blocks: continue
             ret_array.append(x)
         d_print("fork check {} {} {} {}".format(x, ret_array, board_temp, wins))
     return ret_array
