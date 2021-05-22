@@ -59,6 +59,7 @@ debug = False
 
 show_moves = False
 check_needed = False
+played_correctly = True
 
 CONTINUE_PLAYING = 0
 BOARD_FULL_DRAW = -1
@@ -327,6 +328,8 @@ def check_dupe_trees(board):
     return (tree_move_dict[my_sum], my_sum)
 
 def verify_dict_tree(bail = False, move_to_find = 1):
+    if not os.path.exists("ttt.txt"):
+        sys.exit("ttt.py requires ttt.txt to read in configurations. Please check that ttt.txt is in the same folder as ttt.py before continuing.")
     with open("ttt.txt") as file:
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
@@ -552,7 +555,9 @@ def test_rotations(bail = True):
 def check_game_end():
     if check_board(board, my_color) == my_color:
         print("The kid won!")
-        print(initial_mover, first_square_type)
+        if not played_correctly:
+            print("But they don't look happy. \"No fair! I'm not a baby! You made it too easy.\"")
+            return True
         if win_logs[initial_mover][first_square_type] == True:
             print("But sadly, they don't look that happy. They already beat you that way!")
         else:
@@ -622,6 +627,7 @@ start_game()
 
 while 1:
     (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
+    before_moves = find_blocking_move(board, my_color)
     if debug:
         if len(auto_moves_you) == 1:
             print("You should probably", auto_kibitz, auto_moves_you)
@@ -676,6 +682,11 @@ while 1:
     moves.append(x)
     cell_idx[x] = len(moves)
     show_board(board)
+    played_correctly = True
+    if len(before_moves):
+        after_moves = find_blocking_move(board, my_color)
+        if len(before_moves) == len(after_moves):
+            played_correctly = False
     if check_board(board, my_color) == my_color:
         print("You won! This should not have happened, but it did.")
         start_game()
