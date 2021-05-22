@@ -68,6 +68,24 @@ kid_won = 2
 
 total_blocks = 0
 
+def introduction():
+    print("The book on the four-color theorem isn't online, and it's in the research collection at the main library branch, so you'll have to make a tripThat's okay--the weather's been nice. Walking past a park on the way, you see kids playing ball and yelling. But one kid is to the side, staring at a tic-tac-toe game in chalk on the pavement. It's the usual drawn game.")
+    print()
+    print("You think back to all the draws you played as a kid. Against other kids. Just glad you never lost. It beat the heck out of more physical activities, which you weren't good at. But then the draws got boring. Over the years, you've ... at least kept in shape. Seeing that kid reminds you of something, though.")
+    print()
+    print("It reminds you of the day you finally won a game. Against another kid who missed something. It didn't feel as good as you hoped, and you didn't know why. You wanted to win and feel clever about it, which felt greedy. You never quite did.")
+    print()
+    print('The kid looks up at you. "Would you like to play?"')
+    print()
+    print("Why not? You sit down to play with the kid. You have a faint memory, of one kid taunting another that their position was hopeless. The game itself wasn't important... but you wish you could remember...")
+    print()
+    print("You have nothing better to do. In fact, now might be the perfect time to finish your scratch-writing notebook that has a few pages in it. It's weird, but the last few pages are always tough to get through. It's tough to say goodbye to an inanimate object like a writing notebook.")
+    print()
+    print("You think back to what you would've wanted as a kid. You remember how adults let you win at certain games, but it was too obvious, and you were almost mad at them. You felt bad, asking for more.")
+    print()
+    print("Maybe you can put your finger on what you wanted and what the kid wants now.")
+    print()
+
 class game:
     my_move = PLAYER_FIRST
     board = []
@@ -82,6 +100,7 @@ class game:
                 win_logs[y][x] = False
 
     def init_new_game(self):
+        introduction()
         self.clear()
         self.show_board()
 
@@ -622,7 +641,9 @@ if check_needed:
 init_wins()
 
 # put tests below here
+# put tests above here
 
+introduction()
 start_game()
 
 while 1:
