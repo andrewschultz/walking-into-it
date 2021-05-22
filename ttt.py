@@ -23,12 +23,22 @@ play_ary = ['-', 'X', 'O']
 my_color = 1
 kid_color = 2
 
+NO_MOVE = -1
+
 # constants are listed in order of descending difficulty for the ghost
 CENTER = 1
 CORNER = 2
 SIDE = 3
 PLAYER_FIRST = 1
 KID_FIRST = 2
+
+# x-or-o differences
+X_FIRST = 0
+O_FIRST = 1
+X_PLAYER = 2
+O_PLAYER = 3
+
+display_type = X_FIRST
 
 locations = [ CORNER, SIDE, CORNER, SIDE, CENTER, SIDE, CORNER, SIDE, CORNER ]
 location_types = [ CORNER, SIDE, CENTER ]
@@ -120,13 +130,13 @@ def find_clear_moves(board, to_move_color, look_for_win):
     two_of_color = to_move_color if look_for_win else other_color(to_move_color)
     for w in wins:
         this_triple = [0, 0, 0]
-        blank_square = -1
+        blank_square = NO_MOVE
         for square in w:
             if board[square]:
                 this_triple[board[square]] += 1
             else:
                 blank_square = square
-        if this_triple[two_of_color] == 2 and blank_square != -1:
+        if this_triple[two_of_color] == 2 and blank_square != NO_MOVE:
             blanks[blank_square] += 1
     return blanks
 
@@ -193,7 +203,7 @@ def wins_so_far():
         for y in win_logs[x]:
             if win_logs[x][y]:
                 finds += 1
-                print("You managed to lose with {} going first {}.".format(you_them, place[y-1]))
+                print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
     if not finds:
         print("You haven't managed to lose any ways yet.")
 
@@ -408,6 +418,18 @@ def show_board(board):
     row_string = ''
     for y in range(0, 9):
         row_string += ' ' if y in cell_idx else str(y)
+        raw_idx = board[y]
+        if display_type == O_PLAYER:
+            if raw_idx:
+                raw_idx = other_color(raw_idx)
+        elif display_type == X_PLAYER:
+            pass
+        elif display_type == X_FIRST:
+            if initial_mover == KID_FIRST:
+                raw_idx = other_color(raw_idx)
+        elif display_type == O_FIRST:
+            if initial_mover == PLAYER_FIRST:
+                raw_idx = other_color(raw_idx)
         row_string += play_ary[board[y]]
         if y % 3 == 2:
             print(row_string)
@@ -441,7 +463,7 @@ def start_game():
     if not need_kid_first:
         print("Since the kid has won starting in the corner, center and sides, you go first.")
         initial_mover = PLAYER_FIRST
-        return -1
+        return NO_MOVE
     print(win_logs[KID_FIRST])
     kid_picks_index = random.choice(list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]]))
     if kid_picks_index == CENTER:
@@ -458,15 +480,15 @@ def start_game():
         who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if first_mover == -1 else 'second') if first_mover != -2 else '')).lower().strip()
         if who_moves == '1':
             initial_mover = PLAYER_FIRST
-            return -1
+            return NO_MOVE
         if who_moves == '2':
             break
         if not who_moves:
             if first_mover == -2:
                 continue
-            if first_mover == -1:
+            if first_mover == NO_MOVE:
                 initial_mover = PLAYER_FIRST
-                return -1
+                return NO_MOVE
             initial_mover = KID_FIRST
             return kid_picks
     return kid_picks
@@ -583,7 +605,7 @@ init_wins()
 
 while 1:
     first_mover = start_game()
-    if first_mover == -1:
+    if first_mover == NO_MOVE:
         initial_mover = PLAYER_FIRST
     else:
         initial_mover = KID_FIRST
@@ -602,6 +624,11 @@ while 1:
             else:
                 print("You have multiple ways to win/lose:", list(auto_moves_you))
         my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
+        try:
+            if my_move[0] == 'x' and my_move[1].isdigit():
+                display_type = int(my_move[1])
+        except:
+            pass
         if debug and my_move == 'x':
             sys.exit("Bye!")
         if my_move == '':
@@ -624,7 +651,7 @@ while 1:
             print("Unknown command.")
             continue
         if x < 0 or x > len(board):
-            print("You need something from 0 to {}.".format(len(board)-1))
+            print("You need something from 0 to {}.".format(len(board) - 1))
             continue
         if len(moves) == 0:
             first_square_type = locations[x]
@@ -659,7 +686,7 @@ while 1:
         else:
             (where_to_move, my_tree_num) = check_dupe_trees(board)
             if my_tree_num not in tree_move_dict and my_tree_num != -1: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
-        if where_to_move == -1:
+        if where_to_move == NO_MOVE:
             print("It's a draw, so you try again.")
             break
         did_you_fail = len(auto_moves_kid) > len(auto_moves_you)
