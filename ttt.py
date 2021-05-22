@@ -77,11 +77,6 @@ def _find_getch():
     except ImportError:
         # Non-POSIX. Return msvcrt's (Windows') getch.
         import msvcrt
-        temp = msvcrt.getch()
-        if temp == b'\x03':
-            print("Bailing.")
-            import sys
-            sys.exit()
         return msvcrt.getch()
 
     # POSIX system. Create and return a getch that manipulates the tty.
@@ -124,8 +119,11 @@ def introduction():
 class game:
     my_move = PLAYER_FIRST
     board = []
+    moves = []
+    cell_idx = defaultdict(int)
     win_logs = defaultdict(lambda: defaultdict(bool))
     win_msg = defaultdict(lambda: defaultdict(str))
+    total_blocks = 0
 
     def __init__(self):
         self.init_wins()
@@ -139,11 +137,54 @@ class game:
 
     def init_new_game(self):
         introduction()
-        self.clear()
+        self.clear_game()
         self.show_board()
 
-    def clear(self):
+    def clear_game(self):
+        global board
+        global moves
+        global total_blocks
         self.board = [0] * 9
+        self.moves = []
+        self.cell_idx.clear()
+        self.total_blocks = 0
+
+    def game_setup():
+        clear_game()
+        need_you_first = left_specific_player_first(win_logs, PLAYER_FIRST)
+        need_kid_first = left_specific_player_first(win_logs, KID_FIRST)
+        if not need_kid_first and not need_you_first:
+            sys.exit("Hooray! The kid is happy to have beaten you in all possible ways.")
+        global initial_mover
+        if not need_kid_first:
+            print("Since the kid has won starting in the corner, center and sides, you go first.")
+            initial_mover = PLAYER_FIRST
+            return NO_MOVE
+        picks_list = list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]])
+        kid_picks_index = random.choice(picks_list)
+        if kid_picks_index == CENTER:
+            kid_picks = 4
+        elif kid_picks_index == SIDE:
+            kid_picks = random.choice([1,3,5,7])
+        else:
+            kid_picks = random.choice([0,2,6,8])
+        if not need_you_first:
+            print("Since you've won all three ways with you first, the kid starts.")
+            initial_mover = KID_FIRST
+            return kid_picks
+        while 1:
+            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if initial_mover == 1 else 'second') if initial_mover != 0 else '')).lower().strip()
+            if who_moves == '1':
+                initial_mover = PLAYER_FIRST
+                return NO_MOVE
+            if who_moves == '2':
+                initial_mover = KID_FIRST
+                break
+            if not who_moves and initial_mover:
+                if initial_mover == PLAYER_FIRST:
+                    return NO_MOVE
+                return kid_picks
+        return kid_picks
 
     def move(self, move_color, move_square):
         if self.board[move_square]:
@@ -156,12 +197,18 @@ class game:
     def print_all_sums():
         for z in all_sums(self.board): print(z)
 
+    def left_specific_player_first(my_dict_idx):
+        for x in self.win_logs([my_dict_idx]):
+            if not self.win_logs[my_dict_idx][x]:
+                return True
+        return False
+
     def print_wins_so_far():
         place = [ 'in the center', 'in the corner', 'on the side' ]
         finds = 0
         for x in win_logs:
             you_them = 'you' if x == PLAYER_FIRST else 'them'
-            if not any_left(win_logs, x):
+            if not self.left_specific_player_first(x):
                 print("You let the kid beat you all three ways with {} going first.".format(you_them))
                 continue
             for y in win_logs[x]:
@@ -325,7 +372,7 @@ def print_wins_so_far():
     finds = 0
     for x in win_logs:
         you_them = 'you' if x == PLAYER_FIRST else 'them'
-        if not any_left(win_logs, x):
+        if not left_specific_player_first(win_logs, x):
             print("You let the kid beat you all three ways with {} going first.".format(you_them))
             continue
         for y in win_logs[x]:
@@ -587,7 +634,7 @@ def clear_game():
     cell_idx.clear()
     total_blocks = 0
 
-def any_left(my_dict, my_dict_idx):
+def left_specific_player_first(my_dict, my_dict_idx):
     for x in my_dict[my_dict_idx]:
         if not my_dict[my_dict_idx][x]:
             return True
@@ -595,8 +642,8 @@ def any_left(my_dict, my_dict_idx):
 
 def game_setup():
     clear_game()
-    need_you_first = any_left(win_logs, PLAYER_FIRST)
-    need_kid_first = any_left(win_logs, KID_FIRST)
+    need_you_first = left_specific_player_first(win_logs, PLAYER_FIRST)
+    need_kid_first = left_specific_player_first(win_logs, KID_FIRST)
     if not need_kid_first and not need_you_first:
         sys.exit("Hooray! The kid is happy to have beaten you in all possible ways.")
     global initial_mover
