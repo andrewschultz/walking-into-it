@@ -70,16 +70,48 @@ total_blocks = 0
 
 intro_array = []
 
+# thanks to https://stackoverflow.com/a/21659588/6395052
+def _find_getch():
+    try:
+        import termios
+    except ImportError:
+        # Non-POSIX. Return msvcrt's (Windows') getch.
+        import msvcrt
+        temp = msvcrt.getch()
+        if temp == b'\x03':
+            print("Bailing.")
+            import sys
+            sys.exit()
+        return msvcrt.getch()
+
+    # POSIX system. Create and return a getch that manipulates the tty.
+    import sys, tty
+    def _getch():
+        fd = sys.stdin.fileno()
+        old_settings = termios.tcgetattr(fd)
+        try:
+            tty.setraw(fd)
+            ch = sys.stdin.read(1)
+        finally:
+            termios.tcsetattr(fd, termios.TCSADRAIN, old_settings)
+        return ch
+
+    return _getch()
+
 def introduction():
     print("If you've read the introduction before, you can (S)how what's remaining or (no pauses after each text chunk--there are {} total) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)))
     count = 0
     wait_for_pause = True
     while count < len(intro_array):
         if wait_for_pause:
-            raw = input(">").lower().strip()
+            raw = _find_getch()
+            if raw == b'\x03':
+                print("Bailing.")
+                sys.exit()
+            raw = raw.decode().lower()
             if raw == 's':
                 wait_for_pause = False
-            if raw == 'f':
+            elif raw == 'f':
                 return
         print()
         print(intro_array[count])
