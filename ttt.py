@@ -617,6 +617,7 @@ for x in range(0, 8):
 # initialization stuff
 
 cmd_count = 1
+use_class = True
 
 while cmd_count < len(sys.argv):
     arg = mt.nohy(sys.argv[cmd_count])
@@ -624,6 +625,10 @@ while cmd_count < len(sys.argv):
         debug = True
     elif arg == 'c':
         check_needed = True
+    elif arg == 'cy' or arg == 'yc':
+        use_class = True
+    elif arg == 'cn' or arg == 'nc':
+        use_class = False
     elif arg == 't':
         test_rotations()
     elif arg[0] == 'a':
@@ -637,6 +642,12 @@ read_dict_tree()
 
 if check_needed:
     check_all_needed_branches()
+
+if use_class:
+    my_games = game()
+    while 1:
+        my_games.get_move()
+    sys.exit()
 
 init_wins()
 
