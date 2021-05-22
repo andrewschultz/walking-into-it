@@ -89,15 +89,18 @@ def introduction():
 class game:
     my_move = PLAYER_FIRST
     board = []
+    win_logs = defaultdict(lambda: defaultdict(bool))
+    win_msg = defaultdict(lambda: defaultdict(str))
 
     def __init__(self):
         self.init_wins()
         self.init_new_game()
+        self.win_msg = win_msg
 
     def init_wins(self):
         for x in location_types:
             for y in colors:
-                win_logs[y][x] = False
+                self.win_logs[y][x] = False
 
     def init_new_game(self):
         introduction()
@@ -111,6 +114,28 @@ class game:
         if self.board[move_square]:
             print("Already occupied!")
 
+    def all_sums(board, avoid_number = -1):
+        for x in range(0, 8):
+            yield board_sum(board, orientations[x])
+
+    def print_all_sums():
+        for z in all_sums(self.board): print(z)
+
+    def print_wins_so_far():
+        place = [ 'in the center', 'in the corner', 'on the side' ]
+        finds = 0
+        for x in win_logs:
+            you_them = 'you' if x == PLAYER_FIRST else 'them'
+            if not any_left(win_logs, x):
+                print("You let the kid beat you all three ways with {} going first.".format(you_them))
+                continue
+            for y in win_logs[x]:
+                if win_logs[x][y]:
+                    finds += 1
+                    print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
+        if not finds:
+            print("You haven't managed to lose any ways yet.")
+
     def show_board(self):
         row_string = ''
         for y in range(0, 9):
@@ -122,6 +147,48 @@ class game:
                 if y != 8: print("--+--+--")
             else:
                 row_string += "|"
+
+    def get_move(self):
+        while 1:
+            my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
+            try:
+                if my_move[0] == 'x' and my_move[1:].isdigit():
+                    temp = int(my_move[1:])
+                    if temp >= len(display_descriptions):
+                        print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
+                    elif temp != display_type:
+                        print("Changed display type:", display_descriptions[display_type])
+                        show_board(board)
+                    else:
+                        print("Display type was already", display_descriptions[display_type])
+                    continue
+            except:
+                pass
+            if debug and my_move == 'x':
+                sys.exit("Bye!")
+            if my_move == '':
+                self.show_board()
+                continue
+            if my_move == 'pa' and debug == True:
+                self.print_all_sums()
+            if my_move == 'm':
+                show_moves = not show_moves
+                show_board(board)
+                continue
+            if my_move == 'q':
+                sys.exit()
+            if my_move == '?':
+                print_wins_so_far()
+                continue
+            try:
+                x = int(my_move)
+            except:
+                print("Unknown command.")
+                continue
+            if x < 0 or x > len(board):
+                print("You need something from 0 to {}.".format(len(board) - 1))
+                continue
+            return x
 
 def other_color(move_color):
     return my_color + kid_color - move_color
@@ -218,7 +285,7 @@ def find_calculated_move(board, kid_color):
         return(random.choice(list(auto_moves[0])), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
     return(NO_MOVE, '', '')
 
-def wins_so_far():
+def print_wins_so_far():
     place = [ 'in the center', 'in the corner', 'on the side' ]
     finds = 0
     for x in win_logs:
@@ -695,7 +762,7 @@ while 1:
     if my_move == 'q':
         exit()
     if my_move == '?':
-        wins_so_far()
+        print_wins_so_far()
         continue
     try:
         x = int(my_move)
