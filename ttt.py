@@ -621,103 +621,102 @@ init_wins()
 start_game()
 
 while 1:
-    while 1:
-        (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
-        if debug:
-            if len(auto_moves_you) == 1:
-                print("You should probably", auto_kibitz, auto_moves_you)
-            elif len(auto_moves_you) == 0:
-                print(auto_kibitz)
-            else:
-                print("You have multiple ways to win/lose:", list(auto_moves_you))
-        my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
-        try:
-            if my_move[0] == 'x' and my_move[1:].isdigit():
-                temp = int(my_move[1:])
-                if temp >= len(display_descriptions):
-                    print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
-                elif temp != display_type:
-                    print("Changed display type:", display_descriptions[display_type])
-                    show_board(board)
-                else:
-                    print("Display type was already", display_descriptions[display_type])
-                continue
-        except:
-            pass
-        if debug and my_move == 'x':
-            sys.exit("Bye!")
-        if my_move == '':
-            show_board(board)
-            continue
-        if my_move == 'pa' and debug == True:
-            print_all_sums()
-        if my_move == 'm':
-            show_moves = not show_moves
-            show_board(board)
-            continue
-        if my_move == 'q':
-            exit()
-        if my_move == '?':
-            wins_so_far()
-            continue
-        try:
-            x = int(my_move)
-        except:
-            print("Unknown command.")
-            continue
-        if x < 0 or x > len(board):
-            print("You need something from 0 to {}.".format(len(board) - 1))
-            continue
-        if len(moves) == 0:
-            first_square_type = locations[x]
-        if board[x]:
-            print("Something's already there!")
-            continue
-        board[x] = my_color
-        moves.append(x)
-        cell_idx[x] = len(moves)
-        show_board(board)
-        if check_board(board, my_color) == my_color:
-            print("You won! This should not have happened, but it did.")
-            start_game()
-            continue
-        (kid_square, the_msg, debug_msg) = find_calculated_move(board, kid_color)
-        if kid_square != NO_MOVE:
-            print("Moving to", kid_square)
-            d_print(debug_msg)
-            board[kid_square] = kid_color
-            moves.append(kid_square)
-            cell_idx[kid_square] = len(moves)
-            show_board(board)
-            if check_game_end():
-                start_game()
-            continue
-        (auto_moves_kid, auto_kibitz) = find_automatic_move(board, kid_color)
-        if len(auto_moves_kid) == 1:
-            print("The kid moves quickly.")
-            where_to_move = list(auto_moves_kid)[0]
-            tree_num = -1
-            if auto_kibitz == 'block':
-                total_blocks += 1
+    (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
+    if debug:
+        if len(auto_moves_you) == 1:
+            print("You should probably", auto_kibitz, auto_moves_you)
+        elif len(auto_moves_you) == 0:
+            print(auto_kibitz)
         else:
-            (where_to_move, my_tree_num) = check_dupe_trees(board)
-            if my_tree_num not in tree_move_dict and my_tree_num != -1: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
-        if where_to_move == NO_MOVE:
-            print("It's a draw, so you try again.")
-            start_game()
-            break
-        did_you_fail = len(auto_moves_kid) > len(auto_moves_you)
-        d_print("AI decides move: {} from tree branch {}, officially {}".format(where_to_move, my_tree_num, board_sum(board)))
-        if board[where_to_move]: sys.exit("Oops tried to move on occupied square {} for {}.".format(where_to_move, my_tree_num))
-        board[where_to_move] = kid_color
-        moves.append(where_to_move)
-        cell_idx[where_to_move] = len(moves)
-        print()
-        print(tree_text[my_tree_num])
-        print()
+            print("You have multiple ways to win/lose:", list(auto_moves_you))
+    my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
+    try:
+        if my_move[0] == 'x' and my_move[1:].isdigit():
+            temp = int(my_move[1:])
+            if temp >= len(display_descriptions):
+                print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
+            elif temp != display_type:
+                print("Changed display type:", display_descriptions[display_type])
+                show_board(board)
+            else:
+                print("Display type was already", display_descriptions[display_type])
+            continue
+    except:
+        pass
+    if debug and my_move == 'x':
+        sys.exit("Bye!")
+    if my_move == '':
+        show_board(board)
+        continue
+    if my_move == 'pa' and debug == True:
+        print_all_sums()
+    if my_move == 'm':
+        show_moves = not show_moves
+        show_board(board)
+        continue
+    if my_move == 'q':
+        exit()
+    if my_move == '?':
+        wins_so_far()
+        continue
+    try:
+        x = int(my_move)
+    except:
+        print("Unknown command.")
+        continue
+    if x < 0 or x > len(board):
+        print("You need something from 0 to {}.".format(len(board) - 1))
+        continue
+    if len(moves) == 0:
+        first_square_type = locations[x]
+    if board[x]:
+        print("Something's already there!")
+        continue
+    board[x] = my_color
+    moves.append(x)
+    cell_idx[x] = len(moves)
+    show_board(board)
+    if check_board(board, my_color) == my_color:
+        print("You won! This should not have happened, but it did.")
+        start_game()
+        continue
+    (kid_square, the_msg, debug_msg) = find_calculated_move(board, kid_color)
+    if kid_square != NO_MOVE:
+        print("Moving to", kid_square)
+        d_print(debug_msg)
+        board[kid_square] = kid_color
+        moves.append(kid_square)
+        cell_idx[kid_square] = len(moves)
         show_board(board)
         if check_game_end():
             start_game()
+        continue
+    (auto_moves_kid, auto_kibitz) = find_automatic_move(board, kid_color)
+    if len(auto_moves_kid) == 1:
+        print("The kid moves quickly.")
+        where_to_move = list(auto_moves_kid)[0]
+        tree_num = -1
+        if auto_kibitz == 'block':
+            total_blocks += 1
+    else:
+        (where_to_move, my_tree_num) = check_dupe_trees(board)
+        if my_tree_num not in tree_move_dict and my_tree_num != -1: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
+    if where_to_move == NO_MOVE:
+        print("It's a draw, so you try again.")
+        start_game()
+        continue
+    did_you_fail = len(auto_moves_kid) > len(auto_moves_you)
+    d_print("AI decides move: {} from tree branch {}, officially {}".format(where_to_move, my_tree_num, board_sum(board)))
+    if board[where_to_move]: sys.exit("Oops tried to move on occupied square {} for {}.".format(where_to_move, my_tree_num))
+    board[where_to_move] = kid_color
+    moves.append(where_to_move)
+    cell_idx[where_to_move] = len(moves)
+    print()
+    print(tree_text[my_tree_num])
+    print()
+    show_board(board)
+    if check_game_end():
+        start_game()
 
 #    except KeyboardInterrupt:
 #        exit()
