@@ -24,8 +24,7 @@ win_logs = defaultdict(lambda: defaultdict(bool))
 win_msg = defaultdict(lambda: defaultdict(str))
 
 # these could/should be sent to a text_arrays dictionary later
-wins_in_order = []
-about_text = []
+text_arrays = defaultdict(list)
 
 victories = 0
 
@@ -146,14 +145,10 @@ def show_introductory_text():
         print()
 
 def about():
-    my_text_wrap_array(about_text)
+    my_text_wrap_array(text_arrays["about"])
 
 def credits():
-    my_text_wrap("Thanks to my testers: <nobody yet>.")
-    my_text_wrap("Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues")
-    my_text_wrap("Thanks to stackoverflow for helping me with so much cool coding stuff, enough so I would be confident writing a Python text adventure.")
-    my_text_wrap("Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.")
-    my_text_wrap("And thanks to everyone who's been even moderately successful with a homebrew IFComp entry. It all gave me the confidence to try a project in something other than Inform or Twine.")
+    my_text_wrap_array(text_arrays["credits"])
 
 def show_possible_commands():
     my_text_wrap("You will usually just want to type a number from 0 to 8 inclusive, to make a move.")
@@ -286,10 +281,10 @@ class game:
                 return True
         print(self.win_msg[self.current_first][self.first_square_type])
         self.win_logs[self.current_first][self.first_square_type] = True
-        print(wins_in_order[self.victories])
+        print(text_arrays["win_progress"][self.victories])
         print()
         self.victories += 1
-        if self.victories == len(wins_in_order):
+        if self.victories == len(text_arrays["win_progress"]):
             sys.exit()
         return True
 
@@ -750,9 +745,9 @@ def read_game_stuff(bail = False):
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
             if line.startswith(";"): break
-            if line.startswith("msg-about"):
+            if line.startswith("txtary\t"):
                 ary = line.split("\t")
-                about_text.append(ary[1])
+                text_arrays[ary[1]].append(ary[2].strip().replace("\\n", "\n"))
                 continue
             if line.startswith("msg-type"):
                 ary = line.split("\t")
@@ -760,7 +755,7 @@ def read_game_stuff(bail = False):
                 continue
             if line.startswith("msg-time"):
                 ary = line.split("\t")
-                wins_in_order.append(ary[1].strip().replace("\\n", "\n"))
+                text_arrays["win_progress"].append(ary[1].strip().replace("\\n", "\n"))
                 continue
             if line.strip() == 'INTRO-START':
                 in_intro = True
@@ -988,7 +983,7 @@ def check_game_end():
             print(win_msg[initial_mover][first_square_type])
             win_logs[initial_mover][first_square_type] = True
             global victories
-            print(wins_in_order[victories])
+            print(text_arrays["win_progress"][victories])
             print()
             victories += 1
         return True
