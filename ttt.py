@@ -8,7 +8,7 @@
 import textwrap
 import random
 import sys
-import mytools as mt
+import mt
 from collections import defaultdict
 import os
 
@@ -22,7 +22,10 @@ cell_idx = defaultdict(int)
 
 win_logs = defaultdict(lambda: defaultdict(bool))
 win_msg = defaultdict(lambda: defaultdict(str))
+
+# these could/should be sent to a text_arrays dictionary later
 wins_in_order = []
+about_text = []
 
 victories = 0
 
@@ -116,6 +119,12 @@ def my_text_wrap(text, carriage_returns = CR_AFTER, refresh_terminal_size = Fals
         print(x)
     if carriage_returns & CR_AFTER: print()
 
+def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_return = False):
+    if carriage_returns == CR_AFTER and extra_carriage_return: print()
+    for line in text_array:
+        my_text_wrap(line, carriage_returns)
+    if carriage_returns == CR_BEFORE and extra_carriage_return: print()
+
 def show_introductory_text():
     count = 0
     my_text_wrap("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)), carriage_returns = CR_NONE)
@@ -137,14 +146,7 @@ def show_introductory_text():
         print()
 
 def about():
-    my_text_wrap("This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?")
-    my_text_wrap("But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. I thought it might be nice to try.")
-    my_text_wrap("And some of my favorite memories of being taught are people who helped me feel smarter than them, though looking back, I realize how clever they were to frame things as they did.")
-    my_text_wrap("Also, as a chess player, I remember my fear of how bore draws might take the game over. Sometimes it felt like 'best play' might ruin chess. It ruined tic-tac-toe...or did it? I enjoyed the what-if meta-games.")
-    my_text_wrap("I initially went ahead with to make sure I kept my IFComp streak alive at 11. My other game had had roadblocks, and I was happy with this once I made it about more than some silly abstract kids' game.")
-    my_text_wrap("Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot.")
-    my_text_wrap("So I think the game stands well on its own, if it's not especially big. Maybe you will even welcome the game as an efficient way to have fun, and if you're playing this during IFComp, hopefully it will boost you to try others.")
-    my_text_wrap("My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, etc.")
+    my_text_wrap_array(about_text)
 
 def credits():
     my_text_wrap("Thanks to my testers: <nobody yet>.")
@@ -748,6 +750,10 @@ def read_game_stuff(bail = False):
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
             if line.startswith(";"): break
+            if line.startswith("msg-about"):
+                ary = line.split("\t")
+                about_text.append(ary[1])
+                continue
             if line.startswith("msg-type"):
                 ary = line.split("\t")
                 win_msg[int(ary[1])][int(ary[2])] = ary[3]

@@ -16,6 +16,15 @@ MACRO_YAWN~-2	Yawn, a draw!
 MACRO_NO_FAIR~-1	No fair! You missed an obvious block. I want to win fair and square!
 MACRO_BLOCK_AGAIN~0	OK, I'll block again.
 MACRO_OKAY_BLOCK~0	Okay, block.
+##################################about-text text array
+msg-about	This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?
+msg-about	But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. I thought it might be nice to try.
+msg-about	And some of my favorite memories of being taught are people who helped me feel smarter than them, though looking back, I realize how clever they were to frame things as they did.
+msg-about	Also, as a chess player, I remember my fear of how bore draws might take the game over. Sometimes it felt like 'best play' might ruin chess. It ruined tic-tac-toe...or did it? I enjoyed the what-if meta-games.
+msg-about	I initially went ahead with to make sure I kept my IFComp streak alive at 11. My other game had had roadblocks, and I was happy with this once I made it about more than some silly abstract kids' game.
+msg-about	Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot.
+msg-about	So I think the game stands well on its own, if it's not especially big. Maybe you will even welcome the game as an efficient way to have fun, and if you're playing this during IFComp, hopefully it will boost you to try others.
+msg-about	My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, etc.
 ##################################win messages by start type
 msg-type	1	1	You congratulate the kid on what is probably the toughest way to win. You took the center, and somehow they pulled it out!
 msg-type	1	2	"Wow! I feel good about that. But I guess I had to take the center there to win." You ponder what the kid says, then motion for them to try again. This time, you play in the corner. They play in a corner, you play next to your first move, they block, and their third play--covering three of the four corners--makes victory unavoidable. You tell them good job.
