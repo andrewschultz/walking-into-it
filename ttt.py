@@ -134,6 +134,8 @@ class game:
     played_correctly = 0
     current_mover = NONE_FIRST
     current_first = NONE_FIRST
+    won_forks = []
+    first_square_type = 0
 
     def __init__(self):
         self.init_wins()
@@ -178,14 +180,14 @@ class game:
             if who_moves[0] == '2':
                 return KID_FIRST
 
-    def kid_starts(self):
-        picks_list = list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]])
-        kid_picks_index = random.choice(picks_list)
-        if kid_picks_index == CENTER:
+    def kid_start_square(self):
+        picks_list = list([x for x in self.win_logs[KID_FIRST] if not self.win_logs[KID_FIRST][x]])
+        self.first_square_type = random.choice(picks_list)
+        if self.first_square_type == CENTER:
             return 4
-        if kid_picks_index == SIDE:
+        if self.first_square_type == SIDE:
             return random.choice([1,3,5,7])
-        if kid_picks_index == CORNER:
+        if self.first_square_type == CORNER:
             return random.choice([0,2,6,8])
         print("Uh-oh, I couldn't find a way for the kid to get started.")
         return -1
@@ -225,7 +227,7 @@ class game:
         if not self.played_correctly:
             print("But they don't look happy. \"No fair! I'm not a baby! You made it too easy.\"")
             return True
-        if self.win_logs[initial_mover][first_square_type] == True:
+        if self.win_logs[self.current_first][self.first_square_type] == True:
             print("But sadly, they don't look that happy. They already beat you that way!")
             return True
         for x in self.won_forks:
@@ -235,11 +237,13 @@ class game:
             if is_rotated(x, self.fork_position):
                 print("You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.")
                 return True
-        print(self.win_msg[initial_mover][first_square_type])
-        self.win_logs[initial_mover][first_square_type] = True
-        print(wins_in_order[victories])
+        print(self.win_msg[self.current_first][self.first_square_type])
+        self.win_logs[self.current_first][self.first_square_type] = True
+        print(wins_in_order[self.victories])
         print()
-        victories += 1
+        self.victories += 1
+        if self.victories == len(wins_in_order):
+            sys.exit()
         return True
 
 
@@ -252,7 +256,7 @@ class game:
         if len(winning_moves):
             return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
         if len(forking_move):
-            fork_position = board_sum(board)
+            self.fork_position = board_sum(board)
             if not len(blocking_moves):
                 return(random.choice(forking_move), "The kid shifts and giggles slightly.", "<KID SEES A FORK>")
             return(random.choice(forking_move_block), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
@@ -305,10 +309,41 @@ class game:
             else:
                 row_string += "|"
 
-    def kid_move(self):
+    def kid_pick_square(self):
+        if len(self.moves) == 0:
+            return self.kid_start_square()
         ary = [x for x in range(0, 9) if not self.board[x]]
-        x = random.choice(ary)
-        self.place_move(x)
+        blocking_moves = find_blocking_move(board, kid_color)
+        winning_moves = find_winning_move(board, kid_color)
+        auto_moves = find_automatic_move(board, kid_color)
+        forking_move = find_forking_move(board, kid_color, remove_blocks = False)
+        forking_move_block = find_forking_move(board, kid_color)
+        if len(winning_moves):
+            print("I think this wins!")
+            return random.choice(list(winning_moves))
+        if len(forking_move):
+            fork_position = board_sum(board)
+            if not len(blocking_moves):
+                print("The kid shifts and giggles slightly.")
+                return random.choice(forking_move)
+            print("\"I see that.\" The kid shifts and giggles slightly.")
+            return random.choice(forking_move_block)
+        if len(auto_moves[0]):
+            if len(auto_moves[0]) > 1:
+                print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
+            print("No choice, really.")
+            return random.choice(list(auto_moves[0]))
+        if len(blocking_moves):
+            return random.choice(list(blocking_moves))
+        (where_to_move, my_tree_num) = check_dupe_trees(self.board)
+        if my_tree_num not in tree_move_dict and my_tree_num != -1:
+            sys.exit("Need my_tree_num for {}.".format(my_tree_num))
+        print(tree_text[my_tree_num])
+        return where_to_move
+
+    def kid_move(self):
+        temp = self.kid_pick_square()
+        self.place_move(temp)
 
     def player_move(self):
         while 1:
@@ -353,22 +388,27 @@ class game:
             if self.board[x] != 0:
                 print("Something is already on square", x)
                 continue
+            if len(self.moves) == 0:
+                self.first_location = locations[x]
+            before_moves = len(find_blocking_move(self.board, my_color))
             self.place_move(x)
+            if before_moves:
+                after_moves = len(find_blocking_move(self.board, my_color))
+                self.played_correctly = before_moves - after_moves
             return
 
     def place_move(self, square):
         self.board[square] = self.current_mover
+        if len(self.moves) == 0:
+            self.first_square_type = locations[square]
         self.moves.append(square)
         self.cell_idx[square] = len(self.moves)
-        if len(moves) == 1:
-            self.first_square_type = locations(square)
         self.show_board()
 
     def next_move(self):
         if self.check_game_end():
             self.clear_and_restart_game()
             return
-        print(self.current_mover)
         if self.current_mover == my_color:
             self.player_move()
         else:
