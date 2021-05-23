@@ -69,7 +69,7 @@ BOARD_FULL_DRAW = -1
 you_won = 1 # should never happen but just in case
 kid_won = 2
 
-total_blocks = 0
+blocks_this_game = 0
 fork_position = 0
 won_forks = []
 
@@ -128,58 +128,91 @@ class game:
     cell_idx = defaultdict(int)
     win_logs = defaultdict(lambda: defaultdict(bool))
     win_msg = defaultdict(lambda: defaultdict(str))
-    total_blocks = 0
+    blocks_this_game = 0
     victories = 0
     fork_position = 0
     played_correctly = 0
+    current_mover = NONE_FIRST
+    current_first = NONE_FIRST
 
     def __init__(self):
         self.init_wins()
-        self.init_new_game()
         self.win_msg = win_msg
+        show_introductory_text()
+        self.clear_and_restart_game()
 
     def init_wins(self):
         for x in location_types:
             for y in colors:
                 self.win_logs[y][x] = False
 
-    def init_new_game(self):
-        show_introductory_text()
-        self.clear_game()
-        self.show_board()
-
-    def clear_game(self):
+    def clear_and_restart_game(self):
         global board
         global moves
-        global total_blocks
+        global blocks_this_game
         self.board = [0] * 9
         self.moves = []
         self.cell_idx.clear()
-        self.total_blocks = 0
+        self.blocks_this_game = 0
+        self.current_first = self.current_mover = self.choose_sides()
 
-    def check_board(self, board = None, whose_turn = my_color):
+    def choose_sides(self):
+        need_you_first = self.left_specific_player_first(PLAYER_FIRST)
+        need_kid_first = self.left_specific_player_first(KID_FIRST)
+        if not need_kid_first and not need_you_first:
+            sys.exit("Hooray! The kid is happy to have beaten you in all possible ways. This should not be shown, but it is.")
+        if not need_kid_first:
+            print("Since the kid has won starting in the corner, center and sides, you go first.")
+            return PLAYER_FIRST
+        if not need_you_first:
+            print("Since you've won all three ways with you first, the kid starts.")
+            return KID_FIRST
+        while 1:
+            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if self.current_mover == 1 else 'second') if self.current_mover != 0 else '')).lower().strip()
+            if not who_moves:
+                if self.current_mover:
+                    return self.current_mover
+            if who_moves[0] == '1':
+                return PLAYER_FIRST
+                break
+            if who_moves[0] == '2':
+                return KID_FIRST
+
+    def kid_starts(self):
+        picks_list = list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]])
+        kid_picks_index = random.choice(picks_list)
+        if kid_picks_index == CENTER:
+            return 4
+        if kid_picks_index == SIDE:
+            return random.choice([1,3,5,7])
+        if kid_picks_index == CORNER:
+            return random.choice([0,2,6,8])
+        print("Uh-oh, I couldn't find a way for the kid to get started.")
+        return -1
+
+    def check_board(self, board = None):
         if board == None:
             board = self.board
         if board[2] and board[2] == board[4] == board[6]:
             d_print("Diagonal match UL/DR.")
-            return whose_turn
+            return board[2]
         if board[0] and board[0] == board[4] == board[8]:
             d_print("Diagonal match UR/DL.")
-            return whose_turn
+            return board[0]
         for x in range(0, 3):
             if board[3*x] and board[3*x] == board[3*x+1] == board[3*x+2]:
                 d_print("Horizontal match: row {}".format(x))
-                return whose_turn
+                return board[3*x]
             if board[x] and board[x] == board[x+3] == board[x+6]:
                 d_print("Vertical match: row {}".format(x))
-                return whose_turn
+                return board[x]
         for x in range(0, 9):
             if not board[x]:
                 return CONTINUE_PLAYING
         return BOARD_FULL_DRAW
 
-    def check_game_end(self, current_move):
-        game_result = self.check_board(self.board, current_move)
+    def check_game_end(self):
+        game_result = self.check_board(self.board)
         if game_result == CONTINUE_PLAYING:
             return False
         if game_result == my_color:
@@ -209,9 +242,6 @@ class game:
         victories += 1
         return True
 
-    def clear_if_game_end(self, current_move):
-        if self.check_game_end(current_move):
-            self.clear_game()
 
     def find_calculated_move(board, kid_color):
         blocking_moves = find_blocking_move(board, kid_color)
@@ -232,44 +262,6 @@ class game:
             return(random.choice(list(auto_moves[0])), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
         return(NO_MOVE, '', '')
 
-    def game_setup():
-        clear_game()
-        need_you_first = left_specific_player_first(win_logs, PLAYER_FIRST)
-        need_kid_first = left_specific_player_first(win_logs, KID_FIRST)
-        if not need_kid_first and not need_you_first:
-            print("This should have been caught earlier. But since it wasn't, I'll note you did what you needed.")
-            sys.exit()
-        global initial_mover
-        if not need_kid_first:
-            print("Since the kid has won starting in the corner, center and sides, you go first.")
-            initial_mover = PLAYER_FIRST
-            return NO_MOVE
-        picks_list = list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]])
-        kid_picks_index = random.choice(picks_list)
-        if kid_picks_index == CENTER:
-            kid_picks = 4
-        elif kid_picks_index == SIDE:
-            kid_picks = random.choice([1,3,5,7])
-        else:
-            kid_picks = random.choice([0,2,6,8])
-        if not need_you_first:
-            print("Since you've won all three ways with you first, the kid starts.")
-            initial_mover = KID_FIRST
-            return kid_picks
-        while 1:
-            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if initial_mover == 1 else 'second') if initial_mover != 0 else '')).lower().strip()
-            if who_moves == '1':
-                initial_mover = PLAYER_FIRST
-                return NO_MOVE
-            if who_moves == '2':
-                initial_mover = KID_FIRST
-                break
-            if not who_moves and initial_mover:
-                if initial_mover == PLAYER_FIRST:
-                    return NO_MOVE
-                return kid_picks
-        return kid_picks
-
     def move(self, move_color, move_square):
         if self.board[move_square]:
             print("Already occupied!")
@@ -281,9 +273,9 @@ class game:
     def print_all_sums():
         for z in all_sums(self.board): print(z)
 
-    def left_specific_player_first(my_dict_idx):
-        for x in self.win_logs([my_dict_idx]):
-            if not self.win_logs[my_dict_idx][x]:
+    def left_specific_player_first(self, this_player):
+        for x in self.win_logs[this_player]:
+            if not self.win_logs[this_player][x]:
                 return True
         return False
 
@@ -313,7 +305,12 @@ class game:
             else:
                 row_string += "|"
 
-    def get_move(self):
+    def kid_move(self):
+        ary = [x for x in range(0, 9) if not self.board[x]]
+        x = random.choice(ary)
+        self.place_move(x)
+
+    def player_move(self):
         while 1:
             my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
             try:
@@ -356,17 +353,27 @@ class game:
             if self.board[x] != 0:
                 print("Something is already on square", x)
                 continue
-            self.place_move(x, my_color)
-            self.clear_if_game_end(my_color)
+            self.place_move(x)
             return
 
-    def place_move(self, square, who_moves):
-        self.board[square] = kid_color
+    def place_move(self, square):
+        self.board[square] = self.current_mover
         self.moves.append(square)
         self.cell_idx[square] = len(self.moves)
         if len(moves) == 1:
             self.first_square_type = locations(square)
         self.show_board()
+
+    def next_move(self):
+        if self.check_game_end():
+            self.clear_and_restart_game()
+            return
+        print(self.current_mover)
+        if self.current_mover == my_color:
+            self.player_move()
+        else:
+            self.kid_move()
+        self.current_mover = other_color(self.current_mover)
 
 def other_color(move_color):
     return my_color + kid_color - move_color
@@ -741,11 +748,11 @@ def show_board(board):
 def clear_game():
     global board
     global moves
-    global total_blocks
+    global blocks_this_game
     board = [0] * 9
     moves = []
     cell_idx.clear()
-    total_blocks = 0
+    blocks_this_game = 0
 
 def left_specific_player_first(my_dict, my_dict_idx):
     for x in my_dict[my_dict_idx]:
@@ -920,7 +927,7 @@ if check_needed:
 if use_class:
     my_games = game()
     while 1:
-        my_games.get_move()
+        my_games.next_move()
     sys.exit()
 
 init_wins()
@@ -1014,7 +1021,7 @@ while 1:
         where_to_move = list(auto_moves_kid)[0]
         tree_num = -1
         if auto_kibitz == 'block':
-            total_blocks += 1
+            blocks_this_game += 1
     else:
         (where_to_move, my_tree_num) = check_dupe_trees(board)
         if my_tree_num not in tree_move_dict and my_tree_num != -1: sys.exit("Need my_tree_num for {}.".format(my_tree_num))
