@@ -16,13 +16,20 @@ MACRO_YAWN~-2	Yawn, a draw!
 MACRO_NO_FAIR~-1	No fair! You missed an obvious block. I want to win fair and square!
 MACRO_BLOCK_AGAIN~0	OK, I'll block again.
 MACRO_OKAY_BLOCK~0	Okay, block.
-##################################win messages
-msg	1	1	Wow! That's probably the toughest way to win!
-msg	1	2	I should feel pretty good about myself!
-msg	1	3	Well, you sort of wasted your first move.
-msg	2	1	I guess taking the center can help a lot.
-msg	2	2	Taking the corner was a good idea.
-msg	2	3	Wow, I won first even sort of wasting a move.
+##################################win messages by start type
+msg-type	1	1	You congratulate the kid on what is probably the toughest way to win. You took the center, and somehow they pulled it out!
+msg-type	1	2	"Wow! I feel good about that. But I guess I had to take the center there to win." You ponder what the kid says, then motion for them to try again. This time, you play in the corner. They play in a corner, you play next to your first move, they block, and their third play--covering three of the four corners--makes victory unavoidable. You tell them good job.
+msg-type	1	3	"Well, you sort of wasted your first move," the kid says. "I mean ... well ... you know. I think. I hope." You do. But they still did well, and you let them know.
+msg-type	2	1	The kid shrugs a bit, wondering if they really deserved it. Starting in the center was probably the easiest way to win. But you brush off their concerns and commend them for not wanting the easy way through.
+msg-type	2	2	The kid fingers the moves in the order played until they come to a suitable conclusion.
+msg-type	2	3	The kid seems slightly blown away that they could win by taking the side square first.
+##################################win messages by order
+msg-time	The kid can't help making a small show. A few other kids look up from playing ball and stop by. They ask the kid to replay the win. The kid obliges.
+msg-time	A few more kids stop by. You don't need to provide a replay this time. The initial crowd is glad to relate what happened.
+msg-time	There are still enough kids for several games in the background. But more are gathering. And they're impressed at this new hero they didn't take much notice of before. You hear a brief argument over whether they should cheer the kid on or keep quiet to help them focus.
+msg-time	This time, the crowd cheers a bit after your latest loss. Everyone wonders how much is left. Some still can't believe the kid managed to win so convincingly going second! More kids stop by.
+msg-time	Someone in the crowd whines, "How much more is there going to BE, anyway?" The kids around shush. You assure everyone there's just one more big win. A few kids groan. Others call their friends for the finale.
+msg-time	The kid jumps up. You mention, yes, they won pretty much every which way. Others surround the kid, asking how they did it. A few come up to you and ask if you'd be willing to lose like that again. You gently explain that your friend was in the right place at the right time, but if they are lucky, the tic-tac-toe champ may be kind enough to lose in the near future. Though--not right away! The aspiring tic-tac-toe black belts must earn it through thinking and not memorization.\nYour friend is mobbed and invited to the game. You make your way to the library. The book you wanted is a bit dry, and it's also short on detail. But it goes quickly. Near the end, you watch all the kids leave the park for the day. Your friend included. The orange t-shirt is pretty clear from up there. You think back to other games you always wondered about on the way home. That night you learn about Bridge-It or Connect Four. You even brave the intricacies of Nim and, even more dauntingly, Wythoff's Nim.\nYou're sure there's more. You're also sure you'd not have thought of them without running into your friend. What else will you think of looking into that you forgot?
 #you move first
 move=0
 #current binary number, where to place, text

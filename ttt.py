@@ -18,6 +18,9 @@ cell_idx = defaultdict(int)
 
 win_logs = defaultdict(lambda: defaultdict(bool))
 win_msg = defaultdict(lambda: defaultdict(str))
+wins_in_order = []
+
+victories = 0
 
 play_ary = ['-', 'X', 'O']
 my_color = 1
@@ -124,6 +127,7 @@ class game:
     win_logs = defaultdict(lambda: defaultdict(bool))
     win_msg = defaultdict(lambda: defaultdict(str))
     total_blocks = 0
+    victories = 0
 
     def __init__(self):
         self.init_wins()
@@ -204,6 +208,9 @@ class game:
         return False
 
     def print_wins_so_far():
+        if not victories:
+            print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
+            return
         place = [ 'in the center', 'in the corner', 'on the side' ]
         finds = 0
         for x in win_logs:
@@ -215,8 +222,6 @@ class game:
                 if win_logs[x][y]:
                     finds += 1
                     print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
-        if not finds:
-            print("You haven't managed to lose any ways yet.")
 
     def show_board(self):
         row_string = ''
@@ -370,6 +375,10 @@ def find_calculated_move(board, kid_color):
 def print_wins_so_far():
     place = [ 'in the center', 'in the corner', 'on the side' ]
     finds = 0
+    if not victories:
+        print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
+        return
+    print("So far, you have let the kid win {} unique ways, total.".format(victories))
     for x in win_logs:
         you_them = 'you' if x == PLAYER_FIRST else 'them'
         if not left_specific_player_first(win_logs, x):
@@ -379,8 +388,6 @@ def print_wins_so_far():
             if win_logs[x][y]:
                 finds += 1
                 print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
-    if not finds:
-        print("You haven't managed to lose any ways yet.")
 
 def board_sum(board, my_rot = range(0, 9)):
     mult = 1
@@ -527,16 +534,20 @@ def verify_dict_tree(bail = False, move_to_find = 1):
     if bail:
         sys.exit()
 
-def read_dict_tree(bail = False):
+def read_game_stuff(bail = False):
     text_macro = defaultdict(str)
     in_intro = False
     with open("ttt.txt") as file:
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"): continue
             if line.startswith(";"): break
-            if line.startswith("msg"):
+            if line.startswith("msg-type"):
                 ary = line.split("\t")
                 win_msg[int(ary[1])][int(ary[2])] = ary[3]
+                continue
+            if line.startswith("msg-time"):
+                ary = line.split("\t")
+                wins_in_order.append(ary[1].strip().replace("\\n", "\n"))
                 continue
             if line.strip() == 'INTRO-START':
                 in_intro = True
@@ -755,6 +766,10 @@ def check_game_end():
         else:
             print(win_msg[initial_mover][first_square_type])
             win_logs[initial_mover][first_square_type] = True
+            global victories
+            print(wins_in_order[victories])
+            print()
+            victories += 1
         return True
     if len(moves) == 9:
         print("It's a stalemate.")
@@ -801,7 +816,7 @@ while cmd_count < len(sys.argv):
         usage()
     cmd_count += 1
 
-read_dict_tree()
+read_game_stuff()
 
 if check_needed:
     check_all_needed_branches()
