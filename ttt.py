@@ -130,6 +130,8 @@ class game:
     win_msg = defaultdict(lambda: defaultdict(str))
     total_blocks = 0
     victories = 0
+    fork_position = 0
+    played_correctly = 0
 
     def __init__(self):
         self.init_wins()
@@ -154,6 +156,81 @@ class game:
         self.moves = []
         self.cell_idx.clear()
         self.total_blocks = 0
+
+    def check_board(self, board = None, whose_turn = my_color):
+        if board == None:
+            board = self.board
+        if board[2] and board[2] == board[4] == board[6]:
+            d_print("Diagonal match UL/DR.")
+            return whose_turn
+        if board[0] and board[0] == board[4] == board[8]:
+            d_print("Diagonal match UR/DL.")
+            return whose_turn
+        for x in range(0, 3):
+            if board[3*x] and board[3*x] == board[3*x+1] == board[3*x+2]:
+                d_print("Horizontal match: row {}".format(x))
+                return whose_turn
+            if board[x] and board[x] == board[x+3] == board[x+6]:
+                d_print("Vertical match: row {}".format(x))
+                return whose_turn
+        for x in range(0, 9):
+            if not board[x]:
+                return CONTINUE_PLAYING
+        return BOARD_FULL_DRAW
+
+    def check_game_end(self, current_move):
+        game_result = self.check_board(self.board, current_move)
+        if game_result == CONTINUE_PLAYING:
+            return False
+        if game_result == my_color:
+            print("Somehow, you won, but you should not have.")
+            return True
+        if game_result == BOARD_FULL_DRAW:
+            print("It's a stalemate. You need to play again.")
+            return True
+        print("The kid won!")
+        if not self.played_correctly:
+            print("But they don't look happy. \"No fair! I'm not a baby! You made it too easy.\"")
+            return True
+        if self.win_logs[initial_mover][first_square_type] == True:
+            print("But sadly, they don't look that happy. They already beat you that way!")
+            return True
+        for x in self.won_forks:
+            if x == self.fork_position:
+                print("You're a bit surprised when the kid proclaims they already won from this exact position, so it really shouldn't count.")
+                return True
+            if is_rotated(x, self.fork_position):
+                print("You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.")
+                return True
+        print(self.win_msg[initial_mover][first_square_type])
+        self.win_logs[initial_mover][first_square_type] = True
+        print(wins_in_order[victories])
+        print()
+        victories += 1
+        return True
+
+    def clear_if_game_end(self, current_move):
+        if self.check_game_end(current_move):
+            self.clear_game()
+
+    def find_calculated_move(board, kid_color):
+        blocking_moves = find_blocking_move(board, kid_color)
+        winning_moves = find_winning_move(board, kid_color)
+        auto_moves = find_automatic_move(board, kid_color)
+        forking_move = find_forking_move(board, kid_color, remove_blocks = False)
+        forking_move_block = find_forking_move(board, kid_color)
+        if len(winning_moves):
+            return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
+        if len(forking_move):
+            fork_position = board_sum(board)
+            if not len(blocking_moves):
+                return(random.choice(forking_move), "The kid shifts and giggles slightly.", "<KID SEES A FORK>")
+            return(random.choice(forking_move_block), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
+        if len(auto_moves[0]):
+            if len(auto_moves[0]) > 1:
+                print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
+            return(random.choice(list(auto_moves[0])), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
+        return(NO_MOVE, '', '')
 
     def game_setup():
         clear_game()
@@ -276,7 +353,20 @@ class game:
             if x < 0 or x > len(board):
                 print("You need something from 0 to {}.".format(len(board) - 1))
                 continue
-            return x
+            if self.board[x] != 0:
+                print("Something is already on square", x)
+                continue
+            self.place_move(x, my_color)
+            self.clear_if_game_end(my_color)
+            return
+
+    def place_move(self, square, who_moves):
+        self.board[square] = kid_color
+        self.moves.append(square)
+        self.cell_idx[square] = len(self.moves)
+        if len(moves) == 1:
+            self.first_square_type = locations(square)
+        self.show_board()
 
 def other_color(move_color):
     return my_color + kid_color - move_color
