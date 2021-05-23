@@ -70,6 +70,8 @@ you_won = 1 # should never happen but just in case
 kid_won = 2
 
 total_blocks = 0
+fork_position = 0
+won_forks = []
 
 intro_array = []
 
@@ -358,10 +360,9 @@ def find_calculated_move(board, kid_color):
     forking_move = find_forking_move(board, kid_color, remove_blocks = False)
     forking_move_block = find_forking_move(board, kid_color)
     if len(winning_moves):
-        print("a", winning_moves)
         return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
-    if len(forking_move_block):
-        print("b")
+    if len(forking_move):
+        fork_position = board_sum(board)
         if not len(blocking_moves):
             return(random.choice(forking_move), "The kid shifts and giggles slightly.", "<KID SEES A FORK>")
         return(random.choice(forking_move_block), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
@@ -760,6 +761,14 @@ def check_game_end():
             return True
         if win_logs[initial_mover][first_square_type] == True:
             print("But sadly, they don't look that happy. They already beat you that way!")
+            return True
+        for x in won_forks:
+            if x == fork_position:
+                print("You're a bit surprised when the kid proclaims they already won from this exact position, so it really shouldn't count.")
+                return True
+            if is_rotated(x, fork_position):
+                print("You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.")
+                return True
         else:
             print(win_msg[initial_mover][first_square_type])
             win_logs[initial_mover][first_square_type] = True
