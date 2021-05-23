@@ -5,10 +5,14 @@
 # where you meet a kid who wants to beat you, but not after you make obvious dumb mistakes
 #
 
+import textwrap
 import random
 import sys
 import mytools as mt
 from collections import defaultdict
+import os
+
+term_width = os.get_terminal_size().columns
 
 tree_move_dict = defaultdict(int)
 tree_move_status = defaultdict(int)
@@ -98,9 +102,23 @@ def _find_getch():
 
     return _getch()
 
+CR_NONE = 0
+CR_AFTER = 1
+CR_BEFORE = 2
+CR_BOTH = 3
+
+def my_text_wrap(text, carriage_returns = CR_AFTER, refresh_terminal_size = False):
+    if refresh_terminal_size:
+        global term_width
+        term_width = os.get_terminal_size().columns
+    if carriage_returns & CR_BEFORE: print()
+    for x in textwrap.wrap(text, term_width):
+        print(x)
+    if carriage_returns & CR_AFTER: print()
+
 def show_introductory_text():
     count = 0
-    print("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)))
+    my_text_wrap("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)), carriage_returns = CR_NONE)
     wait_for_pause = True
     while count < len(intro_array):
         if wait_for_pause:
@@ -113,38 +131,35 @@ def show_introductory_text():
                 wait_for_pause = False
             elif raw == 'f':
                 return
-        print()
-        print(intro_array[count])
-        if wait_for_pause:
-            print()
+        my_text_wrap(intro_array[count])
         count += 1
     if not wait_for_pause:
         print()
 
 def about():
-    print("This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?")
-    print("But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. I thought it might be nice to try.")
-    print("And some of my favorite memories of being taught are people who helped me feel smarter than them, though looking back, I realize how clever they were to frame things as they did.")
-    print("Also, as a chess player, I remember my fear of how bore draws might take the game over. Sometimes it felt like 'best play' might ruin chess. It ruined tic-tac-toe...or did it? I enjoyed the what-if meta-games.")
-    print("I initially went ahead with to make sure I kept my IFComp streak alive at 11. My other game had had roadblocks, and I was happy with this once I made it about more than some silly abstract kids' game.")
-    print("Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot.")
-    print("So I think the game stands well on its own, if it's not especially big. Maybe you will even welcome the game as an efficient way to have fun, and if you're playing this during IFComp, hopefully it will boost you to try others.")
-    print("My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, etc.")
+    my_text_wrap("This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?")
+    my_text_wrap("But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. I thought it might be nice to try.")
+    my_text_wrap("And some of my favorite memories of being taught are people who helped me feel smarter than them, though looking back, I realize how clever they were to frame things as they did.")
+    my_text_wrap("Also, as a chess player, I remember my fear of how bore draws might take the game over. Sometimes it felt like 'best play' might ruin chess. It ruined tic-tac-toe...or did it? I enjoyed the what-if meta-games.")
+    my_text_wrap("I initially went ahead with to make sure I kept my IFComp streak alive at 11. My other game had had roadblocks, and I was happy with this once I made it about more than some silly abstract kids' game.")
+    my_text_wrap("Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot.")
+    my_text_wrap("So I think the game stands well on its own, if it's not especially big. Maybe you will even welcome the game as an efficient way to have fun, and if you're playing this during IFComp, hopefully it will boost you to try others.")
+    my_text_wrap("My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, etc.")
 
 def credits():
-    print("Thanks to my testers: <nobody yet>.")
-    print("Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues")
-    print("Thanks to stackoverflow for helping me with so much cool coding stuff, enough so I would be confident writing a Python text adventure.")
-    print("Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.")
-    print("And thanks to everyone who's been even moderately successful with a homebrew IFComp entry. It all gave me the confidence to try a project in something other than Inform or Twine.")
+    my_text_wrap("Thanks to my testers: <nobody yet>.")
+    my_text_wrap("Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues")
+    my_text_wrap("Thanks to stackoverflow for helping me with so much cool coding stuff, enough so I would be confident writing a Python text adventure.")
+    my_text_wrap("Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.")
+    my_text_wrap("And thanks to everyone who's been even moderately successful with a homebrew IFComp entry. It all gave me the confidence to try a project in something other than Inform or Twine.")
 
 def show_possible_commands():
-    print("You will usually just want to type a number from 0 to 8 inclusive, to make a move.")
-    print("However, there are meta-commands. They only need one letter. A is a general ABOUT, and C is CREDITS.")
-    print("You can also type D0, D1, D2, or D3 to change the display 0=you are X, 1=the kid is X, 2=X goes first, 3=X goes second.")
-    print("M toggles whether or not you see the moves above the board.")
-    print("L or W or S (Losses, Wins, Scores) tracks your losses, the kid's losses or the kid's wins.")
-    print("V views possible commands.")
+    my_text_wrap("You will usually just want to type a number from 0 to 8 inclusive, to make a move.")
+    my_text_wrap("However, there are meta-commands. They only need one letter. A is a general ABOUT, and C is CREDITS.")
+    my_text_wrap("You can also type D0, D1, D2, or D3 to change the display 0=you are X, 1=the kid is X, 2=X goes first, 3=X goes second.")
+    my_text_wrap("M toggles whether or not you see the moves above the board.")
+    my_text_wrap("L or W or S (Losses, Wins, Scores) tracks your losses, the kid's losses or the kid's wins.")
+    my_text_wrap("V views possible commands.")
 
 class game:
     my_move = PLAYER_FIRST
