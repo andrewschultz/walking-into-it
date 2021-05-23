@@ -178,6 +178,7 @@ class game:
             if not who_moves:
                 if self.current_mover:
                     return self.current_mover
+                continue
             if who_moves[0] == '1':
                 return PLAYER_FIRST
                 break
@@ -274,11 +275,11 @@ class game:
         if self.board[move_square]:
             print("Already occupied!")
 
-    def all_sums(board, avoid_number = -1):
+    def all_sums(self, board, avoid_number = -1):
         for x in range(0, 8):
-            yield board_sum(board, orientations[x])
+            yield board_sum(self.board, orientations[x])
 
-    def print_all_sums():
+    def print_all_sums(self):
         for z in all_sums(self.board): print(z)
 
     def left_specific_player_first(self, this_player):
@@ -287,19 +288,20 @@ class game:
                 return True
         return False
 
-    def print_wins_so_far():
+    def print_wins_so_far(self):
         if not victories:
-            print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
+            print("So far, the kid hasn't notched any interesting or worthwhile wins. Yet.".format(self.victories))
             return
+        print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
         place = [ 'in the center', 'in the corner', 'on the side' ]
         for x in win_logs:
             you_them = 'you' if x == PLAYER_FIRST else 'them'
             if not self.left_specific_player_first(x):
-                print("You let the kid beat you all three ways with {} going first.".format(you_them))
+                print("  You let the kid beat you all three ways (corner, side, center) with {} going first.".format(you_them))
                 continue
             for y in win_logs[x]:
                 if win_logs[x][y]:
-                    print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
+                    print("  You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
 
     def show_board(self):
         row_string = ''
