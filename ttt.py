@@ -136,6 +136,8 @@ class game:
     current_first = NONE_FIRST
     won_forks = []
     first_square_type = 0
+    show_moves = False
+    display_type = 0
 
     def __init__(self):
         self.init_wins()
@@ -157,6 +159,8 @@ class game:
         self.cell_idx.clear()
         self.blocks_this_game = 0
         self.current_first = self.current_mover = self.choose_sides()
+        if self.current_first == my_color:
+            self.show_board()
 
     def choose_sides(self):
         need_you_first = self.left_specific_player_first(PLAYER_FIRST)
@@ -300,8 +304,20 @@ class game:
     def show_board(self):
         row_string = ''
         for y in range(0, 9):
-            row_string += ' ' if y in cell_idx else str(y)
-            row_string += play_ary[self.board[y]]
+            raw_idx = self.board[y]
+            if self.display_type == O_PLAYER:
+                if raw_idx:
+                    raw_idx = other_color(raw_idx)
+            elif self.display_type == X_PLAYER:
+                pass
+            elif self.display_type == X_FIRST:
+                if self.current_first == KID_FIRST:
+                    raw_idx = other_color(raw_idx)
+            elif self.display_type == O_FIRST:
+                if self.current_first == PLAYER_FIRST:
+                    raw_idx = other_color(raw_idx)
+            row_string += ' ' if y in self.cell_idx else str(y)
+            row_string += play_ary[raw_idx]
             if y % 3 == 2:
                 print(row_string)
                 row_string = ""
@@ -353,11 +369,12 @@ class game:
                     temp = int(my_move[1:])
                     if temp >= len(display_descriptions):
                         print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
-                    elif temp != display_type:
-                        print("Changed display type:", display_descriptions[display_type])
-                        show_board(board)
+                    elif temp != self.display_type:
+                        self.display_type = temp
+                        print("Changed display type:", display_descriptions[self.display_type])
+                        self.show_board()
                     else:
-                        print("Display type was already", display_descriptions[display_type])
+                        print("Display type was already", display_descriptions[self.display_type])
                     continue
             except:
                 pass
@@ -369,13 +386,13 @@ class game:
             if my_move == 'pa' and debug == True:
                 self.print_all_sums()
             if my_move == 'm':
-                show_moves = not show_moves
-                show_board(board)
+                self.show_moves = not self.show_moves
+                self.show_board(board)
                 continue
             if my_move == 'q':
                 sys.exit()
             if my_move == '?':
-                print_wins_so_far()
+                self.print_wins_so_far()
                 continue
             try:
                 x = int(my_move)
@@ -416,6 +433,8 @@ class game:
         self.current_mover = other_color(self.current_mover)
 
 def other_color(move_color):
+    if move_color == 0:
+        return 0
     return my_color + kid_color - move_color
 
 def usage():
