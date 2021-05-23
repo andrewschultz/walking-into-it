@@ -121,6 +121,31 @@ def show_introductory_text():
     if not wait_for_pause:
         print()
 
+def about():
+    print("This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?")
+    print("But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. I thought it might be nice to try.")
+    print("And some of my favorite memories of being taught are people who helped me feel smarter than them, though looking back, I realize how clever they were to frame things as they did.")
+    print("Also, as a chess player, I remember my fear of how bore draws might take the game over. Sometimes it felt like 'best play' might ruin chess. It ruined tic-tac-toe...or did it? I enjoyed the what-if meta-games.")
+    print("I initially went ahead with to make sure I kept my IFComp streak alive at 11. My other game had had roadblocks, and I was happy with this once I made it about more than some silly abstract kids' game.")
+    print("Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot.")
+    print("So I think the game stands well on its own, if it's not especially big. Maybe you will even welcome the game as an efficient way to have fun, and if you're playing this during IFComp, hopefully it will boost you to try others.")
+    print("My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, etc.")
+
+def credits():
+    print("Thanks to my testers: <nobody yet>.")
+    print("Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues")
+    print("Thanks to stackoverflow for helping me with so much cool coding stuff, enough so I would be confident writing a Python text adventure.")
+    print("Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.")
+    print("And thanks to everyone who's been even moderately successful with a homebrew IFComp entry. It all gave me the confidence to try a project in something other than Inform or Twine.")
+
+def show_possible_commands():
+    print("You will usually just want to type a number from 0 to 8 inclusive, to make a move.")
+    print("However, there are meta-commands. They only need one letter. A is a general ABOUT, and C is CREDITS.")
+    print("You can also type D0, D1, D2, or D3 to change the display 0=you are X, 1=the kid is X, 2=X goes first, 3=X goes second.")
+    print("M toggles whether or not you see the moves above the board.")
+    print("L or W or S (Losses, Wins, Scores) tracks your losses, the kid's losses or the kid's wins.")
+    print("V views possible commands.")
+
 class game:
     my_move = PLAYER_FIRST
     board = []
@@ -304,6 +329,8 @@ class game:
                     print("  You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
 
     def show_board(self):
+        if self.show_moves and len(self.moves):
+            print("Moves:", mt.listnum(self.moves))
         row_string = ''
         for y in range(0, 9):
             raw_idx = self.board[y]
@@ -367,7 +394,7 @@ class game:
         while 1:
             my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
             try:
-                if my_move[0] == 'x' and my_move[1:].isdigit():
+                if my_move[0] == 'd' and my_move[1:].isdigit():
                     temp = int(my_move[1:])
                     if temp >= len(display_descriptions):
                         print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
@@ -380,26 +407,35 @@ class game:
                     continue
             except:
                 pass
-            if debug and my_move == 'x':
-                sys.exit("Bye!")
             if my_move == '':
                 self.show_board()
                 continue
-            if my_move == 'pa' and debug == True:
-                self.print_all_sums()
+            m0 = my_move[0]
+            if m0 == 'a':
+                about()
+                continue
+            if m0 == 'c':
+                credits()
+                continue
+            if my_move == 'l' or my_move == 's' or my_move == 'w':
+                self.print_wins_so_far()
+                continue
             if my_move == 'm':
                 self.show_moves = not self.show_moves
                 self.show_board(board)
                 continue
-            if my_move == 'q':
-                sys.exit()
-            if my_move == '?':
-                self.print_wins_so_far()
+            if m0 == 'q':
+                sys.exit("Bye!")
+            if m0 == 'v' or m0 == '?':
+                show_possible_commands()
                 continue
+            # debug-only commands here
+            if my_move == 'pa' and debug == True:
+                self.print_all_sums()
             try:
                 x = int(my_move)
             except:
-                print("Unknown command.")
+                print("Unknown command. V or ? gives a list of commands.")
                 continue
             if x < 0 or x > len(board):
                 print("You need something from 0 to {}.".format(len(board) - 1))
