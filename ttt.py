@@ -97,8 +97,8 @@ def _find_getch():
     return _getch()
 
 def show_introductory_text():
-    print("If you've read the introduction before, you can (S)how what's remaining or (no pauses after each text chunk--there are {} total) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)))
     count = 0
+    print("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)))
     wait_for_pause = True
     while count < len(intro_array):
         if wait_for_pause:
@@ -158,7 +158,8 @@ class game:
         need_you_first = left_specific_player_first(win_logs, PLAYER_FIRST)
         need_kid_first = left_specific_player_first(win_logs, KID_FIRST)
         if not need_kid_first and not need_you_first:
-            sys.exit("Hooray! The kid is happy to have beaten you in all possible ways.")
+            print("This should have been caught earlier. But since it wasn't, I'll note you did what you needed.")
+            sys.exit()
         global initial_mover
         if not need_kid_first:
             print("Since the kid has won starting in the corner, center and sides, you go first.")
@@ -212,7 +213,6 @@ class game:
             print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
             return
         place = [ 'in the center', 'in the corner', 'on the side' ]
-        finds = 0
         for x in win_logs:
             you_them = 'you' if x == PLAYER_FIRST else 'them'
             if not self.left_specific_player_first(x):
@@ -220,7 +220,6 @@ class game:
                 continue
             for y in win_logs[x]:
                 if win_logs[x][y]:
-                    finds += 1
                     print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
 
     def show_board(self):
@@ -374,7 +373,6 @@ def find_calculated_move(board, kid_color):
 
 def print_wins_so_far():
     place = [ 'in the center', 'in the corner', 'on the side' ]
-    finds = 0
     if not victories:
         print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
         return
@@ -386,7 +384,6 @@ def print_wins_so_far():
             continue
         for y in win_logs[x]:
             if win_logs[x][y]:
-                finds += 1
                 print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
 
 def board_sum(board, my_rot = range(0, 9)):

@@ -82,3 +82,26 @@ And now, finally, you might not think you could plausibly lose after taking the 
 5x|..|..
 
 Once you've fallen into all six of these (or other) traps, the kid is happy.
+
+=========================================================
+
+By the way, if you're curious about the win mentioned when you take the corner on the first move, here are the possibilities:
+
+1x|3x|4o
+--+--+--
+..|5x|..
+--+--+--
+2o|..|6o
+
+1x|3x|2o
+--+--+--
+..|7x|5x
+--+--+--
+6o|..|4o
+
+1x|3x|4o
+--+--+--
+..|5x|..
+--+--+--
+2o|..|6o
+
