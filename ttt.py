@@ -127,9 +127,9 @@ def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_r
 
 def show_introductory_text():
     count = 0
-    my_text_wrap("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(intro_array)), carriage_returns = CR_NONE)
+    my_text_wrap("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(text_arrays["intro"])), carriage_returns = CR_NONE)
     wait_for_pause = True
-    while count < len(intro_array):
+    while count < len(text_arrays["intro"]):
         if wait_for_pause:
             raw = _find_getch()
             if raw == b'\x03':
@@ -140,7 +140,7 @@ def show_introductory_text():
                 wait_for_pause = False
             elif raw == 'f':
                 return
-        my_text_wrap(intro_array[count])
+        my_text_wrap(text_arrays["intro"][count])
         count += 1
     if not wait_for_pause:
         print()
@@ -278,6 +278,7 @@ class game:
             if is_rotated(x, self.fork_position):
                 print("You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.")
                 return True
+        self.won_forks.append(self.fork_position)
         print(self.win_msg[self.current_first][self.first_square_type])
         self.win_logs[self.current_first][self.first_square_type] = True
         print(text_arrays["win_progress"][self.victories])
@@ -287,7 +288,6 @@ class game:
             sys.exit()
         return True
 
-
     def find_calculated_move(board, kid_color):
         blocking_moves = find_blocking_move(board, kid_color)
         winning_moves = find_winning_move(board, kid_color)
@@ -296,6 +296,7 @@ class game:
         forking_move_block = find_forking_move(board, kid_color)
         if len(winning_moves):
             return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
+        print("Forking move", forking_move)
         if len(forking_move):
             self.fork_position = board_sum(board)
             if not len(blocking_moves):
@@ -369,16 +370,16 @@ class game:
         if len(self.moves) == 0:
             return self.kid_start_square()
         ary = [x for x in range(0, 9) if not self.board[x]]
-        blocking_moves = find_blocking_move(board, kid_color)
-        winning_moves = find_winning_move(board, kid_color)
-        auto_moves = find_automatic_move(board, kid_color)
-        forking_move = find_forking_move(board, kid_color, remove_blocks = False)
-        forking_move_block = find_forking_move(board, kid_color)
+        blocking_moves = find_blocking_move(self.board, kid_color)
+        winning_moves = find_winning_move(self.board, kid_color)
+        auto_moves = find_automatic_move(self.board, kid_color)
+        forking_move = find_forking_move(self.board, kid_color, remove_blocks = False)
+        forking_move_block = find_forking_move(self.board, kid_color)
         if len(winning_moves):
             print("I think this wins!")
             return random.choice(list(winning_moves))
         if len(forking_move):
-            fork_position = board_sum(board)
+            self.fork_position = board_sum(self.board)
             if not len(blocking_moves):
                 print("The kid shifts and giggles slightly.")
                 return random.choice(forking_move)
@@ -433,7 +434,7 @@ class game:
                 continue
             if my_move == 'm':
                 self.show_moves = not self.show_moves
-                self.show_board(board)
+                self.show_board()
                 continue
             if m0 == 'q':
                 sys.exit("Bye!")
@@ -451,8 +452,8 @@ class game:
             except:
                 print("Unknown command {}. V or ? gives a list of commands.".format(m0.upper()))
                 continue
-            if x < 0 or x > len(board):
-                print("You need something from 0 to {}.".format(len(board) - 1))
+            if x < 0 or x > len(self.board):
+                print("You need something from 0 to {}.".format(len(self.board) - 1))
                 continue
             if self.board[x] != 0:
                 print("Something is already on square", x)
