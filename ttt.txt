@@ -39,9 +39,9 @@ txtary	intro	You have nothing better to do. In fact, now might be the perfect ti
 txtary	intro	You think back to what you would've wanted as a kid. You remember how adults let you win at certain games, but it was too obvious, and you were almost mad at them. You felt bad, asking for more.
 txtary	intro	Maybe you can put your finger on what you wanted and what the kid wants now.
 ##################################old game text array
-txtary	old_game	You look at the game the kid was playing. It's only partially finished.
-txtary	old_game	X| |O\n-+-+-\n |O|\n-+-+-\nX| |X
-txtary	old_game	You think you see what's going to happen there, and you also think you can see more or less how the position came about.
+txtary	examine	You look at the game the kid was playing. It's only partially finished.
+txtary	examine	X| |O\n-+-+-\n |O|\n-+-+-\nX| |X
+txtary	examine	You think you see what's going to happen there, and you also think you can see more or less how the position came about.
 ##################################win messages by order
 txtary	win_progress	The kid can't help making a small show. A few other kids look up from playing ball and stop by. They ask the kid to replay the win. The kid obliges.
 txtary	win_progress	A few more kids stop by. You don't need to provide a replay this time. The initial crowd is glad to relate what happened.

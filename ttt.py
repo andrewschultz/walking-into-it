@@ -145,17 +145,11 @@ def show_introductory_text():
     if not wait_for_pause:
         print()
 
-def about():
-    my_text_wrap_array(text_arrays["about"])
-
-def credits():
-    my_text_wrap_array(text_arrays["credits"])
-
-def show_possible_commands():
-    my_text_wrap_array(text_arrays["cmd_text"])
-
-def examine_old_game():
-    my_text_wrap_array(text_arrays["old_game"])
+def dump_text(my_idx, resize = True):
+    if resize:
+        global term_width
+        term_width = os.get_terminal_size().columns
+    my_text_wrap_array(text_arrays[my_idx])
 
 class game:
     my_move = PLAYER_FIRST
@@ -424,10 +418,10 @@ class game:
                 continue
             m0 = my_move[0]
             if m0 == 'a':
-                about()
+                dump_text("about")
                 continue
             if m0 == 'c':
-                credits()
+                dump_text("credits")
                 continue
             if my_move == 'l' or my_move == 's' or my_move == 'w':
                 self.print_wins_so_far()
@@ -439,10 +433,10 @@ class game:
             if m0 == 'q':
                 sys.exit("Bye!")
             if m0 == 'v' or m0 == '?':
-                show_possible_commands()
+                dump_text("commands")
                 continue
             if m0 == 'x' or m0 == 'e':
-                examine_old_game()
+                dump_text("examine")
                 continue
             # debug-only commands here
             if my_move == 'pa' and debug == True:
