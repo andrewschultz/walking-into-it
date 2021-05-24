@@ -1,3 +1,7 @@
+Walkthrough for <insert game here> by Andrew Schultz blurglecruncheon@gmail.com
+http://andrewschultz.itch.io
+http://github.com/andrewschultz/<tic-tac-toe>
+
 In order to please the kid, you need to be able to let them win at tic-tac-toe. But you can't let them win by being dumb and missing an immediate three-in-a-row!
 
 The key is to set things up so the kid can win two ways with their next move, and you can't block both.
@@ -57,6 +61,8 @@ Finally, if X starts on the edge, it's a bit tricky, but with thoughtful enough 
 --+--+--
 5x|..|..
 
+==============================================================
+
 So this brings us to tougher stuff. What if the player goes first? You can imagine it's easiest for the kid to win if the player starts on the side. You'd be right.
 
 ..|5x|..
@@ -73,6 +79,16 @@ Then, if you start in the corner, you can again stumble to a loss. You have to r
 --+--+--
 6o|..|4o
 
+Note that you can also get this position from starting on the side, just with a different order.
+
+3x|..|..
+--+--+--
+5x|2o|1x
+--+--+--
+6o|..|4o
+
+Here, you have to play a little dumb-tricky, and so does the kid ... but the kid is maybe smarter than you'd expect. The kid can also distinguish rotations or flips, so you can't get credit for the above position from both starts. Fortunately, there are other ways to lose from each start.
+
 And now, finally, you might not think you could plausibly lose after taking the center without obvious oversights. But in fact you can! Yes, it's clearly not best play, but it's sensible.
 
 2o|..|6o
@@ -85,7 +101,7 @@ Once you've fallen into all six of these (or other) traps, the kid is happy.
 
 =========================================================
 
-By the way, if you're curious about the win mentioned when you take the corner on the first move, here are the possibilities:
+By the way, if you're curious about the win mentioned when you take the corner on the first move (in fact, your opponent CAN win without the center or first move,) here are the possibilities:
 
 1x|3x|4o
 --+--+--
@@ -105,3 +121,10 @@ By the way, if you're curious about the win mentioned when you take the corner o
 --+--+--
 2o|..|6o
 
+And finally, the game the kid was writing when you dropped by went as follows:
+
+1x|..|2o
+--+--+--
+..|4o|..
+--+--+--
+5x|..|3x
