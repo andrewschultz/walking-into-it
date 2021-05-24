@@ -25,6 +25,14 @@ txtary	about	I initially went ahead with to make sure I kept my IFComp streak al
 txtary	about	Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot.
 txtary	about	So I think the game stands well on its own, if it's not especially big. Maybe you will even welcome the game as an efficient way to have fun, and if you're playing this during IFComp, hopefully it will boost you to try others.
 txtary	about	My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, etc.
+##################################command-text array
+txtary	commands	You will usually just want to type a number from 0 to 8 inclusive, to make a move. A blank command will refresh the board.
+txtary	commands	However, there are meta-commands. They only need one letter. A is a general ABOUT, and C is CREDITS.
+txtary	commands	You can also type D0, D1, D2, or D3 to change the display 0=you are X, 1=the kid is X, 2=X goes first, 3=X goes second.
+txtary	commands	M toggles whether or not you see the moves above the board.
+txtary	commands	L or W or S (Losses, Wins, Scores) tracks your losses, the kid's losses or the kid's wins.
+txtary	commands	V views possible commands.
+txtary	commands	X examines the tic-tac-toe game the kid was playing alone, which may or may not be a useful or spoilery hint.
 ##################################credits-text array
 txtary	credits	Thanks to my testers: <nobody yet>.
 txtary	credits	Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues

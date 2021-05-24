@@ -151,12 +151,10 @@ def credits():
     my_text_wrap_array(text_arrays["credits"])
 
 def show_possible_commands():
-    my_text_wrap("You will usually just want to type a number from 0 to 8 inclusive, to make a move.")
-    my_text_wrap("However, there are meta-commands. They only need one letter. A is a general ABOUT, and C is CREDITS.")
-    my_text_wrap("You can also type D0, D1, D2, or D3 to change the display 0=you are X, 1=the kid is X, 2=X goes first, 3=X goes second.")
-    my_text_wrap("M toggles whether or not you see the moves above the board.")
-    my_text_wrap("L or W or S (Losses, Wins, Scores) tracks your losses, the kid's losses or the kid's wins.")
-    my_text_wrap("V views possible commands.")
+    my_text_wrap_array(text_arrays["cmd_text"])
+
+def examine_old_game():
+    my_text_wrap_array(text_arrays["old_game"])
 
 class game:
     my_move = PLAYER_FIRST
@@ -447,7 +445,7 @@ class game:
             try:
                 x = int(my_move)
             except:
-                print("Unknown command. V or ? gives a list of commands.")
+                print("Unknown command {}. V or ? gives a list of commands.".format(m0.upper()))
                 continue
             if x < 0 or x > len(board):
                 print("You need something from 0 to {}.".format(len(board) - 1))
