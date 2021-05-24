@@ -35,10 +35,15 @@ txtary	commands	V views possible commands.
 txtary	commands	X examines the tic-tac-toe game the kid was playing alone, which may or may not be a useful or spoilery hint.
 ##################################credits-text array
 txtary	credits	Thanks to my testers: <nobody yet>.
+#txtary	credits	Thanks to people who found bugs: <nobody yet>.
 txtary	credits	Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues
 txtary	credits	Thanks to stackoverflow for helping me with so much cool coding stuff, enough so I would be confident writing a Python text adventure.
 txtary	credits	Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.
 txtary	credits	And thanks to everyone who's been even moderately successful with a homebrew IFComp entry. It all gave me the confidence to try a project in something other than Inform or Twine.
+##################################old game text array
+txtary	old_game	You look at the game the kid was playing. It's only partially finished.
+txtary	old_game	X| |O\n-+-+-\n |O|\n-+-+-\nX| |X
+txtary	old_game	You think you see what's going to happen there, and you also think you can see more or less how the position came about.
 ##################################win messages by start type
 msg-type	1	1	You congratulate the kid on what is probably the toughest way to win. You took the center, and somehow they pulled it out!
 msg-type	1	2	"Wow! I feel good about that. But I guess I had to take the center there to win." You ponder what the kid says, then motion for them to try again. This time, you play in the corner. They play in a corner, you play next to your first move, they block, and their third play--covering three of the four corners--makes victory unavoidable. You tell them good job.

@@ -114,8 +114,9 @@ def my_text_wrap(text, carriage_returns = CR_AFTER, refresh_terminal_size = Fals
         global term_width
         term_width = os.get_terminal_size().columns
     if carriage_returns & CR_BEFORE: print()
-    for x in textwrap.wrap(text, term_width):
-        print(x)
+    for temp in text.split("\n"):
+        for x in textwrap.wrap(temp, term_width):
+            print(x)
     if carriage_returns & CR_AFTER: print()
 
 def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_return = False):
@@ -439,6 +440,9 @@ class game:
             if m0 == 'v' or m0 == '?':
                 show_possible_commands()
                 continue
+            if m0 == 'x' or m0 == 'e':
+                examine_old_game()
+                continue
             # debug-only commands here
             if my_move == 'pa' and debug == True:
                 self.print_all_sums()
@@ -745,15 +749,11 @@ def read_game_stuff(bail = False):
             if line.startswith(";"): break
             if line.startswith("txtary\t"):
                 ary = line.split("\t")
-                text_arrays[ary[1]].append(ary[2].strip().replace("\\n", "\n"))
+                text_arrays[ary[1]].append(ary[2].strip().replace("\\n", "\r\n"))
                 continue
             if line.startswith("msg-type"):
                 ary = line.split("\t")
                 win_msg[int(ary[1])][int(ary[2])] = ary[3]
-                continue
-            if line.startswith("msg-time"):
-                ary = line.split("\t")
-                text_arrays["win_progress"].append(ary[1].strip().replace("\\n", "\n"))
                 continue
             if line.strip() == 'INTRO-START':
                 in_intro = True
