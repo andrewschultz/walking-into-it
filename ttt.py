@@ -755,15 +755,6 @@ def read_game_stuff(bail = False):
                 ary = line.split("\t")
                 win_msg[int(ary[1])][int(ary[2])] = ary[3]
                 continue
-            if line.strip() == 'INTRO-START':
-                in_intro = True
-                continue
-            if line.strip() == 'INTRO-END':
-                in_intro = False
-                continue
-            if in_intro:
-                intro_array.append(line.strip())
-                continue
             if line.startswith("move="):
                 (prefix, data) = mt.cfg_data_split(line)
                 move_to_find = int(data)
