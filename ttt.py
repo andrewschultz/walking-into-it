@@ -308,10 +308,6 @@ class game:
         if self.board[move_square]:
             print("Already occupied!")
 
-    def all_sums(self, board, avoid_number = -1):
-        for x in range(0, 8):
-            yield board_sum(self.board, orientations[x])
-
     def print_all_sums(self):
         for z in all_sums(self.board): print(z)
 
@@ -336,12 +332,12 @@ class game:
                 if win_logs[x][y]:
                     print("  You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
 
-    def show_board(self):
+    def show_board(self, this_board = self.board):
         if self.show_moves and len(self.moves):
             print("Moves:", mt.listnum(self.moves))
         row_string = ''
         for y in range(0, 9):
-            raw_idx = self.board[y]
+            raw_idx = this_board[y]
             if self.display_type == O_PLAYER:
                 if raw_idx:
                     raw_idx = other_color(raw_idx)
@@ -496,11 +492,6 @@ def usage():
     print("USAGE: d/v = debug/verbose, t = test rotations, c = check needed branches, a = all rotations of a certain #")
     sys.exit()
 
-def init_wins():
-    for x in location_types:
-        for y in colors:
-            win_logs[y][x] = False
-
 def d_print(x):
     if debug:
         print(x)
@@ -516,6 +507,8 @@ def base_3_of(x):
 def nonzeros_3(x):
     y = base_3_of(int(x))
     return y.count('0')
+
+#################################begin finding moves: while these could be in a class, there are times we may wish to use a different board than self.board
 
 def find_clear_moves(board, to_move_color, look_for_win):
     this_triple = defaultdict(int)
@@ -563,39 +556,7 @@ def find_forking_move(board, to_move_color, is_also_block = True):
         d_print("fork check {} {} {} {}".format(x, ret_array, board_temp, wins))
     return ret_array
 
-def find_calculated_move(board, kid_color):
-    blocking_moves = find_blocking_move(board, kid_color)
-    winning_moves = find_winning_move(board, kid_color)
-    auto_moves = find_automatic_move(board, kid_color)
-    forking_move = find_forking_move(board, kid_color, is_also_block = False)
-    forking_move_block = find_forking_move(board, kid_color)
-    if len(winning_moves):
-        return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
-    if len(forking_move):
-        fork_position = board_sum(board)
-        if not len(blocking_moves):
-            return(random.choice(forking_move), "The kid shifts and giggles slightly.", "<KID SEES A FORK>")
-        return(random.choice(forking_move_block), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
-    if len(auto_moves[0]):
-        if len(auto_moves[0]) > 1:
-            print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
-        return(random.choice(list(auto_moves[0])), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
-    return(NO_MOVE, '', '')
-
-def print_wins_so_far():
-    place = [ 'in the center', 'in the corner', 'on the side' ]
-    if not victories:
-        print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
-        return
-    print("So far, you have let the kid win {} unique ways, total.".format(victories))
-    for x in win_logs:
-        you_them = 'you' if x == PLAYER_FIRST else 'them'
-        if not left_specific_player_first(win_logs, x):
-            print("You let the kid beat you all three ways with {} going first.".format(you_them))
-            continue
-        for y in win_logs[x]:
-            if win_logs[x][y]:
-                print("You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
+#################################end finding moves
 
 def board_sum(board, my_rot = range(0, 9)):
     mult = 1
@@ -797,7 +758,7 @@ def in_pos_file(x):
             return y
     return -1
 
-def all_sums(board, avoid_number = -1):
+def all_sums(board):
     for x in range(0, 8):
         yield board_sum(board, orientations[x])
 
@@ -822,115 +783,6 @@ def check_move_trees(board):
             print(q, "in tree_move_dict with suggested move", tree_move_dict[q])
     return False
 
-def print_all_sums():
-    for z in all_sums(board): print(z)
-
-def show_board(board):
-    row_string = ''
-    for y in range(0, 9):
-        row_string += ' ' if y in cell_idx else str(y)
-        raw_idx = board[y]
-        if display_type == O_PLAYER:
-            if raw_idx:
-                raw_idx = other_color(raw_idx)
-        elif display_type == X_PLAYER:
-            pass
-        elif display_type == X_FIRST:
-            if initial_mover == KID_FIRST:
-                raw_idx = other_color(raw_idx)
-        elif display_type == O_FIRST:
-            if initial_mover == PLAYER_FIRST:
-                raw_idx = other_color(raw_idx)
-        row_string += play_ary[board[y]]
-        if y % 3 == 2:
-            print(row_string)
-            row_string = ""
-            if y != 8: print("--+--+--")
-        else:
-            row_string += "|"
-
-def clear_game():
-    global board
-    global moves
-    global blocks_this_game
-    board = [0] * 9
-    moves = []
-    cell_idx.clear()
-    blocks_this_game = 0
-
-def left_specific_player_first(my_dict, my_dict_idx):
-    for x in my_dict[my_dict_idx]:
-        if not my_dict[my_dict_idx][x]:
-            return True
-    return False
-
-def game_setup():
-    clear_game()
-    need_you_first = left_specific_player_first(win_logs, PLAYER_FIRST)
-    need_kid_first = left_specific_player_first(win_logs, KID_FIRST)
-    if not need_kid_first and not need_you_first:
-        sys.exit("Hooray! The kid is happy to have beaten you in all possible ways.")
-    global initial_mover
-    if not need_kid_first:
-        print("Since the kid has won starting in the corner, center and sides, you go first.")
-        initial_mover = PLAYER_FIRST
-        return NO_MOVE
-    picks_list = list([x for x in win_logs[KID_FIRST] if not win_logs[KID_FIRST][x]])
-    kid_picks_index = random.choice(picks_list)
-    if kid_picks_index == CENTER:
-        kid_picks = 4
-    elif kid_picks_index == SIDE:
-        kid_picks = random.choice([1,3,5,7])
-    else:
-        kid_picks = random.choice([0,2,6,8])
-    if not need_you_first:
-        print("Since you've won all three ways with you first, the kid starts.")
-        initial_mover = KID_FIRST
-        return kid_picks
-    while 1:
-        who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if initial_mover == 1 else 'second') if initial_mover != 0 else '')).lower().strip()
-        if who_moves == '1':
-            initial_mover = PLAYER_FIRST
-            return NO_MOVE
-        if who_moves == '2':
-            initial_mover = KID_FIRST
-            break
-        if not who_moves and initial_mover:
-            if initial_mover == PLAYER_FIRST:
-                return NO_MOVE
-            return kid_picks
-    return kid_picks
-
-def start_game():
-    temp = game_setup()
-    global board
-    global first_square_type
-    if temp != NO_MOVE:
-        board[temp] = kid_color
-        moves.append(temp)
-        cell_idx[temp] = len(moves)
-        first_square_type = locations[temp]
-    show_board(board)
-
-def check_board(board, whose_turn):
-    if board[2] and board[2] == board[4] == board[6]:
-        d_print("Diagonal match UL/DR.")
-        return whose_turn
-    if board[0] and board[0] == board[4] == board[8]:
-        d_print("Diagonal match UR/DL.")
-        return whose_turn
-    for x in range(0, 3):
-        if board[3*x] and board[3*x] == board[3*x+1] == board[3*x+2]:
-            d_print("Horizontal match: row {}".format(x))
-            return whose_turn
-        if board[x] and board[x] == board[x+3] == board[x+6]:
-            d_print("Vertical match: row {}".format(x))
-            return whose_turn
-    for x in range(0, 9):
-        if not board[x]:
-            return CONTINUE_PLAYING
-    return BOARD_FULL_DRAW
-
 def all_rotations(initial_board_num):
     initial_board = board_of(initial_board_num)
     for x in orientations:
@@ -953,35 +805,6 @@ def test_rotations(bail = True):
         show_board(b)
     if bail:
         sys.exit()
-
-def check_game_end():
-    if check_board(board, my_color) == my_color:
-        print("The kid won!")
-        if not played_correctly:
-            print("But they don't look happy. \"No fair! I'm not a baby! You made it too easy.\"")
-            return True
-        if win_logs[initial_mover][first_square_type] == True:
-            print("But sadly, they don't look that happy. They already beat you that way!")
-            return True
-        for x in won_forks:
-            if x == fork_position:
-                print("You're a bit surprised when the kid proclaims they already won from this exact position, so it really shouldn't count.")
-                return True
-            if is_rotated(x, fork_position):
-                print("You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.")
-                return True
-        else:
-            print(win_msg[initial_mover][first_square_type])
-            win_logs[initial_mover][first_square_type] = True
-            global victories
-            print(text_arrays["win_progress"][victories])
-            print()
-            victories += 1
-        return True
-    if len(moves) == 9:
-        print("It's a stalemate.")
-        return True
-    return False
 
 orientations = [
  [0,1,2,3,4,5,6,7,8],
@@ -1025,22 +848,17 @@ while cmd_count < len(sys.argv):
 
 read_game_stuff()
 
+# put (other) tests below here
+
 if check_needed:
     check_all_needed_branches()
 
-if use_class:
-    my_games = game()
-    while 1:
-        my_games.next_move()
-    sys.exit()
-
-init_wins()
-
-# put tests below here
 # put tests above here
 
-show_introductory_text()
-start_game()
+my_games = game()
+while 1:
+    my_games.next_move()
+sys.exit()
 
 while 1:
     (auto_moves_you, auto_kibitz) = find_automatic_move(board, my_color)
