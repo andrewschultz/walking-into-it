@@ -282,7 +282,7 @@ class game:
             return True
         print("The kid won!")
         if not self.played_correctly:
-            print("But they don't look happy. \"No fair! I'm not a baby! You made it too easy.\"")
+            print("But they look {} unhappy. \"No fair! I'm not a baby! You made it too easy.\"".format('really' if self.fork_position else 'slightly')
             return True
         if self.win_logs[self.current_first][self.first_square_type] == True:
             print("But sadly, they don't look that happy. They already beat you that way!")
@@ -303,26 +303,6 @@ class game:
         if self.victories == len(text_arrays["win_progress"]):
             sys.exit()
         return True
-
-    def find_calculated_move(board, kid_color):
-        blocking_moves = find_blocking_move(board, kid_color)
-        winning_moves = find_winning_move(board, kid_color)
-        auto_moves = find_automatic_move(board, kid_color)
-        forking_move = find_forking_move(board, kid_color, remove_blocks = False)
-        forking_move_block = find_forking_move(board, kid_color)
-        if len(winning_moves):
-            return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
-        print("Forking move", forking_move)
-        if len(forking_move):
-            self.fork_position = board_sum(board)
-            if not len(blocking_moves):
-                return(random.choice(forking_move), "The kid shifts and giggles slightly.", "<KID SEES A FORK>")
-            return(random.choice(forking_move_block), "\"I see that.\" The kid shifts and giggles slightly.", "<KID SEES A FORK>")
-        if len(auto_moves[0]):
-            if len(auto_moves[0]) > 1:
-                print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
-            return(random.choice(list(auto_moves[0])), '"No choice, really."', "<ONLY ONE OBVIOUS MOVE>")
-        return(NO_MOVE, '', '')
 
     def move(self, move_color, move_square):
         if self.board[move_square]:
@@ -383,24 +363,29 @@ class game:
                 row_string += "|"
 
     def kid_pick_square(self):
+        d_print("Finding move for:".format(board_sum(self.board)))
         if len(self.moves) == 0:
             return self.kid_start_square()
         ary = [x for x in range(0, 9) if not self.board[x]]
         blocking_moves = find_blocking_move(self.board, kid_color)
         winning_moves = find_winning_move(self.board, kid_color)
         auto_moves = find_automatic_move(self.board, kid_color)
-        forking_move = find_forking_move(self.board, kid_color, remove_blocks = False)
-        forking_move_block = find_forking_move(self.board, kid_color)
+        forking_move_noblocks = find_forking_move(self.board, kid_color, is_also_block = False)
+        forking_move_blocks = find_forking_move(self.board, kid_color)
         if len(winning_moves):
             print("I think this wins!")
             return random.choice(list(winning_moves))
-        if len(forking_move):
-            self.fork_position = board_sum(self.board)
-            if not len(blocking_moves):
-                print("The kid shifts and giggles slightly.")
-                return random.choice(forking_move)
+        if len(blocking_moves):
+            if len(blocking_moves) > 1:
+                print("Uh oh. The kid should never be in a lost position.")
+            if blocking_moves[0] not in forking_move_blocks:
+                return random.choice(list(blocking_moves))
+        if len(forking_move_blocks):
             print("\"I see that.\" The kid shifts and giggles slightly.")
-            return random.choice(forking_move_block)
+            return random.choice(forking_move_blocks)
+        if len(forking_move_noblocks):
+            print("The kid shifts and giggles slightly.")
+            return random.choice(forking_move_noblocks)
         if len(auto_moves[0]):
             if len(auto_moves[0]) > 1:
                 print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
@@ -411,6 +396,7 @@ class game:
         (where_to_move, my_tree_num) = check_dupe_trees(self.board)
         if my_tree_num not in tree_move_dict and my_tree_num != -1:
             sys.exit("Need my_tree_num for {}.".format(my_tree_num))
+        d_print("Choosing from move branches: {}".format(my_tree_num))
         print(tree_text[my_tree_num])
         return where_to_move
 
@@ -562,10 +548,9 @@ def find_automatic_move(board, to_move_color):
         return (temp, "block")
     return ([], "do anything")
 
-def find_forking_move(board, to_move_color, remove_blocks = True):
+def find_forking_move(board, to_move_color, is_also_block = True):
     ret_array = []
-    if remove_blocks:
-        blocks = find_blocking_move(board, to_move_color)
+    blocks = find_blocking_move(board, to_move_color)
     for x in range(0, 9):
         board_temp = list(board)
         if board_temp[x]:
@@ -573,7 +558,7 @@ def find_forking_move(board, to_move_color, remove_blocks = True):
         board_temp[x] = to_move_color
         wins = find_winning_move(board_temp, to_move_color)
         if len(wins) >= 2:
-            if remove_blocks and blocks and x not in blocks: continue
+            if (x in blocks) != is_also_block: continue
             ret_array.append(x)
         d_print("fork check {} {} {} {}".format(x, ret_array, board_temp, wins))
     return ret_array
@@ -582,7 +567,7 @@ def find_calculated_move(board, kid_color):
     blocking_moves = find_blocking_move(board, kid_color)
     winning_moves = find_winning_move(board, kid_color)
     auto_moves = find_automatic_move(board, kid_color)
-    forking_move = find_forking_move(board, kid_color, remove_blocks = False)
+    forking_move = find_forking_move(board, kid_color, is_also_block = False)
     forking_move_block = find_forking_move(board, kid_color)
     if len(winning_moves):
         return(random.choice(list(winning_moves)), "I think this wins!", "<KID WINS>")
