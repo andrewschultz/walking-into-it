@@ -5,14 +5,13 @@
 # where you meet a kid who wants to beat you, but not after you make obvious dumb mistakes
 #
 
+from __future__ import print_function
 import textwrap
 import random
 import sys
 import mt
 from collections import defaultdict
 import os
-
-term_width = os.get_terminal_size().columns
 
 tree_move_dict = defaultdict(int)
 tree_move_status = defaultdict(int)
@@ -70,6 +69,8 @@ show_moves = False
 check_needed = False
 played_correctly = True
 
+term_width = 5000
+
 CONTINUE_PLAYING = 0
 BOARD_FULL_DRAW = -1
 you_won = 1 # should never happen but just in case
@@ -80,6 +81,21 @@ fork_position = 0
 won_forks = []
 
 intro_array = []
+
+def python_2_checkoffs():
+    # python 3 can detect terminal size. python 2 can't. But we need to give a default term_width to call functions. We make it ridiculously large, because text-wrapping isn't critical.
+    try:
+        input = raw_input
+    except:
+        pass
+
+    try:
+        global term_width
+        term_width = os.get_terminal_size().columns
+    except:
+        temp = input("Since you seem to be using Python 2, I want to ask you for your preferred terminal width. This only affects text-wrapping for paragraphs of text, so you can just ignore this question if you'd like.")
+        if temp.isdigit():
+            term_width = int(temp)
 
 # thanks to https://stackoverflow.com/a/21659588/6395052
 def _find_getch():
@@ -112,7 +128,10 @@ CR_BOTH = 3
 def my_text_wrap(text, carriage_returns = CR_AFTER, refresh_terminal_size = False):
     if refresh_terminal_size:
         global term_width
-        term_width = os.get_terminal_size().columns
+        try:
+            term_width = os.get_terminal_size().columns
+        except:
+            pass
     if carriage_returns & CR_BEFORE: print()
     for temp in text.split("\n"):
         for x in textwrap.wrap(temp, term_width):
@@ -148,7 +167,10 @@ def show_introductory_text():
 def dump_text(my_idx, resize = True):
     if resize:
         global term_width
-        term_width = os.get_terminal_size().columns
+        try:
+            term_width = os.get_terminal_size().columns
+        except:
+            pass
     my_text_wrap_array(text_arrays[my_idx])
 
 class game:
