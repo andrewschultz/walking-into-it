@@ -204,10 +204,10 @@ class game:
             print("Since you've won all three ways with you first, the kid starts.")
             return KID_FIRST
         while 1:
-            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if self.current_mover == 1 else 'second') if self.current_mover != 0 else '')).lower().strip()
+            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if self.current_first == 1 else 'second') if self.current_first != 0 else '')).lower().strip()
             if not who_moves:
-                if self.current_mover:
-                    return self.current_mover
+                if self.current_first:
+                    return self.current_first
                 continue
             if who_moves[0] == '1':
                 return PLAYER_FIRST
