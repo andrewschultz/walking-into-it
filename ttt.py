@@ -54,7 +54,12 @@ O_FIRST = 1
 X_PLAYER = 2
 O_PLAYER = 3
 
-display_descriptions = [ 'X goes first', 'O goes first', 'Player is X', 'Player is O' ]
+turn_option_descriptions = [ 'X goes first', 'O goes first', 'Player is X', 'Player is O' ]
+square_placement_descriptions = [
+'upper left', 'upper side', 'upper right',
+'left side', 'center', 'right side',
+'lower left', 'lower side', 'lower right'
+]
 
 display_type = X_FIRST
 
@@ -71,6 +76,8 @@ debug = False
 show_moves = False
 check_needed = False
 played_correctly = True
+
+descriptions_not_ascii = False
 
 term_width = 5000
 
@@ -149,6 +156,12 @@ def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_r
 
 def show_introductory_text():
     count = 0
+    print("First, this game can give short descriptions instead of small ASCII art.")
+    print("Would you like to see the descriptions instead of ASCII art? Y/N")
+    raw = _find_getch().decode().lower()
+    if raw == 'y':
+        global descriptions_not_ascii
+        descriptions_not_ascii = True
     my_text_wrap("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(text_arrays["intro"])), carriage_returns = CR_NONE)
     wait_for_pause = True
     while count < len(text_arrays["intro"]):
@@ -336,14 +349,21 @@ class game:
                     print("  You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
 
     def show_board(self, this_board = None):
-        for line in traceback.format_stack():
-            print(line.strip())
         if not this_board:
             this_board = self.board
-        if self.show_moves and len(self.moves):
-            print("Moves:", mt.listnum(self.moves))
+        if self.show_moves:
+            if len(self.moves):
+                print("Moves:", mt.listnum(self.moves))
+            else:
+                print("Nobody has moved yet.")
+        elif descriptions_not_ascii and not len(self.moves):
+            print("Nobody has moved yet.")
         row_string = ''
         for y in range(0, 9):
+            if descriptions_not_ascii:
+                if this_board[y]:
+                    print(square_placement_descriptions[y], 'is', 'yours' if this_board[y] == 1 else 'the kid\'s')
+                continue
             raw_idx = this_board[y]
             if self.display_type == O_PLAYER:
                 if raw_idx:
@@ -413,14 +433,14 @@ class game:
             try:
                 if my_move[0] == 'd' and my_move[1:].isdigit():
                     temp = int(my_move[1:])
-                    if temp >= len(display_descriptions):
-                        print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
+                    if temp >= len(turn_option_descriptions):
+                        print("Only 0 through {} is valid to change display descriptions.".format(len(turn_option_descriptions)))
                     elif temp != self.display_type:
                         self.display_type = temp
-                        print("Changed display type:", display_descriptions[self.display_type])
+                        print("Changed display type:", turn_option_descriptions[self.display_type])
                         self.show_board()
                     else:
-                        print("Display type was already", display_descriptions[self.display_type])
+                        print("Display type was already", turn_option_descriptions[self.display_type])
                     continue
             except:
                 pass
@@ -881,13 +901,13 @@ while 1:
     try:
         if my_move[0] == 'x' and my_move[1:].isdigit():
             temp = int(my_move[1:])
-            if temp >= len(display_descriptions):
-                print("Only 0 through {} is valid to change display descriptions.".format(len(display_descriptions)))
+            if temp >= len(turn_option_descriptions):
+                print("Only 0 through {} is valid to change display descriptions.".format(len(turn_option_descriptions)))
             elif temp != display_type:
-                print("Changed display type:", display_descriptions[display_type])
+                print("Changed display type:", turn_option_descriptions[display_type])
                 show_board(board)
             else:
-                print("Display type was already", display_descriptions[display_type])
+                print("Display type was already", turn_option_descriptions[display_type])
             continue
     except:
         pass
