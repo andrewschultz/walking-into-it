@@ -30,7 +30,8 @@ text_arrays = defaultdict(list)
 
 victories = 0
 
-play_ary = ['-', 'X', 'O']
+on_off = [ 'on', 'off' ]
+play_ary = [ '-', 'X', 'O' ]
 my_color = 1
 kid_color = 2
 
@@ -157,11 +158,15 @@ def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_r
 def show_introductory_text():
     count = 0
     print("First, this game can give short descriptions instead of small ASCII art.")
-    print("Would you like to see the descriptions instead of ASCII art? Y/N")
-    raw = _find_getch().decode().lower()
-    if raw == 'y':
-        global descriptions_not_ascii
-        descriptions_not_ascii = True
+    while 1:
+        print("Would you like to see the descriptions instead of ASCII art? Y/N")
+        raw = _find_getch().decode().lower()
+        if raw == 'y':
+            global descriptions_not_ascii
+            descriptions_not_ascii = True
+            break
+        elif raw == 'n':
+            break
     my_text_wrap("If you've read the introduction before, you can (S)how the remaining introductory text without pauses ({} chunks left) (F)ast-forward to ignore the remaining text. You can also push any key to read the next bit, starting now.".format(len(text_arrays["intro"])), carriage_returns = CR_NONE)
     wait_for_pause = True
     while count < len(text_arrays["intro"]):
@@ -206,6 +211,8 @@ class game:
     first_square_type = 0
     show_moves = False
     display_type = 0
+    brief_question = False
+    descriptions_not_ascii = False
 
     def __init__(self):
         self.init_wins()
@@ -427,23 +434,16 @@ class game:
         temp = self.kid_pick_square()
         self.place_move(temp)
 
+    def input_text(self):
+        if self.brief_question == True:
+            return "Which square?"
+        if descriptions_not_ascii:
+            return ("Which square? 0 is upper left, 1 is upper side, to 8 which is lower right.")
+        return "Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR, ENTER for board, ? for help)"
+
     def player_move(self):
         while 1:
-            my_move = input("Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR)").lower().strip()
-            try:
-                if my_move[0] == 'd' and my_move[1:].isdigit():
-                    temp = int(my_move[1:])
-                    if temp >= len(turn_option_descriptions):
-                        print("Only 0 through {} is valid to change display descriptions.".format(len(turn_option_descriptions)))
-                    elif temp != self.display_type:
-                        self.display_type = temp
-                        print("Changed display type:", turn_option_descriptions[self.display_type])
-                        self.show_board()
-                    else:
-                        print("Display type was already", turn_option_descriptions[self.display_type])
-                    continue
-            except:
-                pass
+            my_move = input(self.input_text()).lower().strip()
             if my_move == '':
                 self.show_board()
                 continue
@@ -451,8 +451,16 @@ class game:
             if m0 == 'a':
                 dump_text("about")
                 continue
+            if m0 == 'b':
+                self.brief_question = not self.brief_question
+                print("Brief text prompts are now", on_off[self.brief_question])
+                continue
             if m0 == 'c':
                 dump_text("credits")
+                continue
+            if m0 == 'd':
+                self.display_type = (self.display_type + 1) % 4
+                print("Changed display type:", turn_option_descriptions[self.display_type])
                 continue
             if my_move == 'l' or my_move == 's' or my_move == 'w':
                 self.print_wins_so_far()
@@ -463,6 +471,10 @@ class game:
                 continue
             if m0 == 'q':
                 sys.exit("Bye!")
+            if m0 == 'r':
+                global descriptions_not_ascii
+                descriptions_not_ascii = not descriptions_not_ascii
+                continue
             if m0 == 'v' or m0 == '?':
                 dump_text("commands")
                 continue
@@ -889,6 +901,7 @@ if check_needed:
 
 # put tests above here
 
+python_2_checkoffs()
 my_games = game()
 while 1:
     my_games.next_move()
