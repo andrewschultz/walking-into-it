@@ -396,6 +396,22 @@ class game:
             else:
                 row_string += "|"
 
+    def find_forking_move(self, board, to_move_color, is_also_block = True): # this has to be in the game class, because it establishes a forking move
+        ret_array = []
+        blocks = find_blocking_move(board, to_move_color)
+        for x in range(0, 9):
+            board_temp = list(board)
+            if board_temp[x]:
+                continue
+            board_temp[x] = to_move_color
+            wins = find_winning_move(board_temp, to_move_color)
+            if len(wins) >= 2:
+                if (x in blocks) != is_also_block: continue
+                ret_array.append(x)
+                self.fork_position = board_sum(board)
+            d_print("fork check {} {} {} {}".format(x, ret_array, board_temp, wins))
+        return ret_array
+
     def kid_pick_square(self):
         d_print("Finding move for:".format(board_sum(self.board)))
         if len(self.moves) == 0:
@@ -404,8 +420,8 @@ class game:
         blocking_moves = find_blocking_move(self.board, kid_color)
         winning_moves = find_winning_move(self.board, kid_color)
         auto_moves = find_automatic_move(self.board, kid_color)
-        forking_move_noblocks = find_forking_move(self.board, kid_color, is_also_block = False)
-        forking_move_blocks = find_forking_move(self.board, kid_color)
+        forking_move_noblocks = self.find_forking_move(self.board, kid_color, is_also_block = False)
+        forking_move_blocks = self.find_forking_move(self.board, kid_color, is_also_block = True)
         if len(winning_moves):
             print("I think this wins!")
             return random.choice(list(winning_moves))
@@ -591,21 +607,6 @@ def find_automatic_move(board, to_move_color):
     if len(temp):
         return (temp, "block")
     return ([], "do anything")
-
-def find_forking_move(board, to_move_color, is_also_block = True):
-    ret_array = []
-    blocks = find_blocking_move(board, to_move_color)
-    for x in range(0, 9):
-        board_temp = list(board)
-        if board_temp[x]:
-            continue
-        board_temp[x] = to_move_color
-        wins = find_winning_move(board_temp, to_move_color)
-        if len(wins) >= 2:
-            if (x in blocks) != is_also_block: continue
-            ret_array.append(x)
-        d_print("fork check {} {} {} {}".format(x, ret_array, board_temp, wins))
-    return ret_array
 
 #################################end finding moves
 
