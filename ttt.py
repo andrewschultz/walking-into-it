@@ -13,6 +13,9 @@ import mt
 from collections import defaultdict
 import os
 
+# for debugging only
+# import traceback
+
 tree_move_dict = defaultdict(int)
 tree_move_status = defaultdict(int)
 tree_text = defaultdict(int)
@@ -282,7 +285,7 @@ class game:
             return True
         print("The kid won!")
         if not self.played_correctly:
-            print("But they look {} unhappy. \"No fair! I'm not a baby! You made it too easy.\"".format('really' if self.fork_position else 'slightly')
+            print("But they look {} unhappy. \"No fair! I'm not a baby! You made it too easy.\"".format('really' if self.fork_position else 'slightly'))
             return True
         if self.win_logs[self.current_first][self.first_square_type] == True:
             print("But sadly, they don't look that happy. They already beat you that way!")
@@ -332,7 +335,11 @@ class game:
                 if win_logs[x][y]:
                     print("  You managed to lose with {} going first {}.".format(you_them, place[y - 1]))
 
-    def show_board(self, this_board = self.board):
+    def show_board(self, this_board = None):
+        for line in traceback.format_stack():
+            print(line.strip())
+        if not this_board:
+            this_board = self.board
         if self.show_moves and len(self.moves):
             print("Moves:", mt.listnum(self.moves))
         row_string = ''
