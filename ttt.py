@@ -110,15 +110,19 @@ def python_2_checkoffs():
 
 # thanks to https://stackoverflow.com/a/21659588/6395052
 def _find_getch():
+    import sys
     try:
         import termios
     except ImportError:
         # Non-POSIX. Return msvcrt's (Windows') getch.
         import msvcrt
-        return msvcrt.getch()
+        temp = msvcrt.getch()
+        if temp == b'\x03' or temp == b'\x11':
+            sys.exit("Bye!")
+        return temp
 
     # POSIX system. Create and return a getch that manipulates the tty.
-    import sys, tty
+    import tty
     def _getch():
         fd = sys.stdin.fileno()
         old_settings = termios.tcgetattr(fd)
