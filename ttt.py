@@ -531,6 +531,14 @@ def base_3_of(x):
     ary.reverse()
     return(''.join([str(x) for x in ary]))
 
+def quick_board(board):
+    row_string = ''
+    for y in range(0, 9):
+        row_string += play_ary[raw_idx]
+        if y % 3 == 2:
+            print(row_string)
+            row_string = ""
+
 def nonzeros_3(x):
     y = base_3_of(int(x))
     return y.count('0')
@@ -614,8 +622,8 @@ def see_poss_parents(a_num):
         if can_retro:
             print(x, "may be below", a_num)
             print(c, b)
-            show_board(board_of(x))
-            show_board(board_of(a_num))
+            quick_board(board_of(x))
+            quick_board(board_of(a_num))
             got_one = True
     if not got_one: print("No parents for", a_num)
 
@@ -640,7 +648,7 @@ def see_needed_branches(my_board, moves_so_far, depth = 1):
             if a > -1:
                 if temp_board[a]:
                     print("Uh oh overwrote position", a, "with status", b, "value", temp_board[a], "on", temp_board, "from", board, "moves so far", moves_so_far)
-                    show_board(board)
+                    quick_board(board)
                     sys.exit(tree_move_status)
                 temp_board[a] = 2
                 temp_moves_2 = list(temp_moves)
@@ -648,7 +656,7 @@ def see_needed_branches(my_board, moves_so_far, depth = 1):
                 see_needed_branches(temp_board, temp_moves_2, depth + 1)
             else:
                 print("Need entry for", board_sum(temp_board))
-                show_board(board)
+                quick_board(board)
                 print("Moves so far", moves_so_far)
             #print("End of", move_try, "depth=", depth)
 
@@ -665,16 +673,16 @@ def inverse_matrix_of(x):
 def assign_inverse_orientations():
     global inverse
     for x in range(0, 8):
-      ary1 = orientations[x]
-      for y in range(0, 8):
-        ary2 = orientations[y]
-        matches = 0
-        for z in range(0,9):
-          if ary1[ary2[z]] == z: matches += 1
-        if matches == 9:
-            if debug:
-                print("Inverse of", x, ary1, "is", y, ary2)
-            inverse[x] = y
+        ary1 = orientations[x]
+        for y in range(0, 8):
+            ary2 = orientations[y]
+            matches = 0
+            for z in range(0,9):
+                if ary1[ary2[z]] == z: matches += 1
+            if matches == 9:
+                if debug:
+                    print("Inverse of", x, ary1, "is", y, ary2)
+                inverse[x] = y
 
 def rotation_index(a_sum, a_board):
     b2 = board_of(a_sum)
@@ -700,7 +708,7 @@ def check_dupe_trees(board):
     if not my_sum:
         print("Warning no directions for", board_sum(board), base_3_of(board_sum(board)))
         print("Define one of", list(all_sums(board)))
-        show_board(board)
+        quick_board(board)
         sys.exit()
         return (-1, -1)
     for y in all_sums(board):
@@ -708,8 +716,7 @@ def check_dupe_trees(board):
             my_ary = rotation_index(y, board)
             if tree_move_dict[my_sum] >= 0:
                 return(my_ary[tree_move_dict[my_sum]], my_sum)
-            else:
-                return(tree_move_dict[my_sum], my_sum)
+            return(tree_move_dict[my_sum], my_sum)
     return (tree_move_dict[my_sum], my_sum)
 
 def verify_dict_tree(bail = False, move_to_find = 1):
@@ -816,7 +823,7 @@ def all_rotations(initial_board_num):
         y = [0] * 9
         for z in range(0, 9):
             y[z] = initial_board[x[z]]
-        show_board(y)
+        quick_board(y)
         print(y, board_sum(y))
 
 def test_rotations(bail = True):
@@ -826,10 +833,10 @@ def test_rotations(bail = True):
         (where_to_move, my_tree_num) = check_dupe_trees(b)
         print()
         print(r, b, where_to_move, my_tree_num)
-        show_board(b)
+        quick_board(b)
         print("to")
         b[where_to_move] = 2
-        show_board(b)
+        quick_board(b)
     if bail:
         sys.exit()
 
@@ -868,7 +875,7 @@ while cmd_count < len(sys.argv):
         test_rotations()
     elif arg[0] == 'a':
         all_rotations(int(arg[1:]))
-        exit()
+        sys.exit()
     else:
         usage()
     cmd_count += 1
