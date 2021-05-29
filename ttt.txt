@@ -18,10 +18,13 @@ txtary	about	My email is blurglecruncheon@gmail.com if you want to contact me ab
 txtary	commands	You will usually just want to type a number from 0 to 8 inclusive, to make a move. A blank command will refresh the board.
 txtary	commands	However, there are meta-commands. They only need one letter. A is a general ABOUT, and C is CREDITS.
 txtary	commands	You can also type D0, D1, D2, or D3 to change the display 0=you are X, 1=the kid is X, 2=X goes first, 3=X goes second.
-txtary	commands	M toggles whether or not you see the moves above the board.
+txtary	commands	G toggles the grid.
 txtary	commands	L or W or S (Losses, Wins, Scores) tracks your losses, the kid's losses or the kid's wins.
+txtary	commands	M toggles whether or not you see the moves above the board.
+txtary	commands	N toggles whether square numbers are shown in the grid or not.
 txtary	commands	V views possible commands.
 txtary	commands	X examines the tic-tac-toe game the kid was playing alone, which may or may not be a useful or spoilery hint.
+txtary	commands	Z toggles zero-basedness of the grid.
 ##################################credits-text array
 txtary	credits	Thanks to my testers: <nobody yet>.
 #txtary	credits	Thanks to people who found bugs: <nobody yet>.
@@ -56,11 +59,12 @@ msg-type	1	3	"Well, you sort of wasted your first move," the kid says. "I mean .
 msg-type	2	1	The kid shrugs a bit, wondering if they really deserved it. Starting in the center was probably the easiest way to win. But you brush off their concerns and commend them for not wanting the easy way through.
 msg-type	2	2	The kid fingers the moves in the order played until they come to a suitable conclusion.
 msg-type	2	3	The kid seems slightly blown away that they could win by taking the side square first.
-#need to let the parsing function these are branches where you move first
-move=0
 #current binary number, where to place, text
 3	4	0	Wow! I get the center!
-1	4	0	Wow! I get the center!
+#1	4	0	Wow! I get the center!
+1	8	0	I just don't feel like taking the center.
+1494	8	0	I already have a threat.
+16803	4	0	Someone finally took the center.
 81	0	0	Whoah! Gonna be tough to win now you took the center!
 166	2	0	OK, I'll block. Now you block.
 211	6	MACRO_NO_FAIR
@@ -160,8 +164,8 @@ move=0
 6941	6	MACRO_NO_FAIR
 6644	2	0	I think I'm in trouble if I do this wrong.
 15514	6	MACRO_OKAY_BLOCK
-#need to let the parsing function these are branches where you move second
-move=1
+#########################################note below here is if the kid goes first
+# we don't have anything for 0 because that is determined by what you've won
 163	8	0	Okay, let's try this!
 165	0	0	I feel good about my chances.
 13288	2	MACRO_NO_FAIR
