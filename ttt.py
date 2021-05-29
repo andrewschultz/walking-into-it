@@ -255,7 +255,7 @@ class game:
             print("Since the kid has won starting in the corner, center and sides, you go first.")
             return PLAYER_FIRST
         if not need_you_first:
-            print("Since you've won all three ways with you first, the kid starts.")
+            print("Since the kid has won all three ways with you first, the kid starts.")
             return KID_FIRST
         while 1:
             who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.".format(", (enter) = keep going {}".format('first' if self.current_first == 1 else 'second') if self.current_first != 0 else '')).lower().strip()
@@ -327,7 +327,7 @@ class game:
                 print("You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.")
                 return True
         self.won_forks.append(self.fork_position)
-        print(self.win_msg[self.current_first][self.first_square_type])
+        my_text_wrap(self.win_msg[self.current_first][self.first_square_type])
         self.win_logs[self.current_first][self.first_square_type] = True
         print(text_arrays["win_progress"][self.victories])
         print()
@@ -433,8 +433,11 @@ class game:
         if len(blocking_moves):
             if len(blocking_moves) > 1:
                 print("Uh oh. The kid should never be in a lost position.")
-            if blocking_moves[0] not in forking_move_blocks:
-                return random.choice(list(blocking_moves))
+            if len(forking_move_blocks):
+                print("\"I see that.\" The kid shifts and giggles slightly.")
+            else:
+                print("The kid nods. They see your threat.")
+            return random.choice(list(blocking_moves))
         if len(forking_move_blocks):
             print("\"I see that.\" The kid shifts and giggles slightly.")
             return random.choice(forking_move_blocks)
@@ -446,8 +449,6 @@ class game:
                 print("OOPS! 2 auto moves in position:", mt.listnum(auto_moves[0]))
             print("No choice, really.")
             return random.choice(list(auto_moves[0]))
-        if len(blocking_moves):
-            return random.choice(list(blocking_moves))
         (where_to_move, my_tree_num) = check_dupe_trees(self.board)
         if my_tree_num not in tree_move_dict and my_tree_num != -1:
             sys.exit("Need my_tree_num for {}.".format(my_tree_num))
@@ -767,7 +768,7 @@ def read_game_stuff(bail = False):
             if line.startswith("#"): continue
             if line.startswith(";"): break
             if line.startswith("txtary\t"):
-                ary = line.split("\t")
+                ary = line.strip().split("\t")
                 text_arrays[ary[1]].append(ary[2].strip().replace("\\n", "\r\n"))
                 continue
             if line.startswith("msg-type"):
@@ -788,7 +789,7 @@ def read_game_stuff(bail = False):
             if "\t" not in line:
                 print("Need tabs at line {}.".format(line_count))
                 bail = True
-            ary = line.split("\t")
+            ary = line.strip().split("\t")
             if len(ary) != 4:
                 print("Bad # of tabs (need 3) at line {}.".format(line_count))
                 bail = True
