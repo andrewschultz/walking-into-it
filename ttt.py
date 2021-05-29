@@ -160,6 +160,11 @@ def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_r
     if carriage_returns == CR_BEFORE and extra_carriage_return: print()
 
 def show_introductory_text():
+    if os.path.exists("debug-skip-intro.txt"):
+        if os.stat("debug-skip-intro.txt").st_size:
+            print("debug-skip-intro.txt exists and is not blank, so I am skipping the intro. This is probably just for testing.")
+            return
+        print("debug-skip-intro.txt exists, but it is blank, so I am not skipping the intro.")
     count = 0
     print("First, this game can give short descriptions instead of small ASCII art.")
     while 1:
