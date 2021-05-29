@@ -6,40 +6,56 @@ In order to please the kid, you need to be able to let them win at tic-tac-toe. 
 
 The key is to set things up so the kid can win two ways with their next move, and you can't block both.
 
-There are six possible scenarios you need to fulfill. You can start on the edge, in a corner, or in the center. So can the kid. Note that starting on any corner square is equivalent, as is starting on any side square.
+There are six possible scenarios you need to fulfill. You can start on the edge, in a corner, or in the center. So can the kid. Note that starting on any corner square is equivalent, as is starting on any side square. You can just rotate or mirror the board.
 
-We'll go from easiest to hardest. Note the kid moves randomly to start, but also, if they beat you a certain way, they won't try that again.
+We'll go roughly from easiest to lose to hardest. The exact difficulty is debatable, but it seems most orderly to organize things this way:
 
-Unsurprisingly, the easiest way for the kid to win is by starting in the center. You have all kinds of ways to mess up.
+1. kid goes first, center
+2. kid goes first, corner
+3. kid goes first, side
+4. you go first, side
+5. you go first, corner6
+6. you go first, center
 
-Just to explain the notation, the numbers are the orders of moves. X goes first, third and fifth, and so forth.
+Note the kid moves randomly on the first move, but after that, it's relatively fixed, and they always block or find a fork when they can.
 
-..|4o|..
+To understand the notation, the numbers are the orders of moves. X goes first, third and fifth, and so forth. I hope the rotations won't be too hard to figure out. I also assume that O plays second.
+
+==========================1. kid goes first, center
+
+Unsurprisingly, the easiest way for the kid to win is by starting in the center. You have all kinds of ways to mess up. However, this is the one the kid chooses.
+
+..|5x|3x
 --+--+--
 ..|1x|2o
 --+--+--
-5x|3x|..
+4o|..|..
 
-Putting the second x in the lower left corner would also allow X to fork two wins:
+(Note that if the kid placed an X in the corner as their second move, they could still force a win. But this might overlap woith other cases, for instance, when the kid started in the corner.)
 
-..|..|4o
+There are other ways to win, but I hard-coded this so the kid's win wouldn't overlap others.
+
+==========================2. kid goes first, corner
+
+If you move on the side square next to them, this happens:
+
+..|..|..
 --+--+--
-..|1x|2o
+2o|5x|..
 --+--+--
-3x|..|5x
+1x|4o|3x
 
+If you move on a far side square, the same thing happens, with a slight transposition:
 
-It's a bit trickier for a corner start. In the example below, the lowerleft corner might also lead to an unavoidable win.
-
-..|2o|1x
+3x|2o|..
 --+--+--
-..|5x|4o
+4o|5x|..
 --+--+--
-..|..|3x
+1x|..|..
 
-Finally, if you start on the side,
+Note (3x) in the lower right corner would've worked, too, as the kid would still take the center.
 
-It's worth noting that O taking the center would make it very hard for X to win. Though O can play badly to ensure it:
+It's worth noting that O taking the center would make it very hard for X to win. Then taking the final corner would lose:
 
 4o|..|1x
 --+--+--
@@ -47,21 +63,25 @@ It's worth noting that O taking the center would make it very hard for X to win.
 --+--+--
 3x|..|5x
 
-Finally, if X starts on the edge, it's a bit tricky, but with thoughtful enough bad play, O can allow a win.
+==========================3. kid goes first, side
 
-..|5x|..
+Finally, if the kid starts on the side, it's a bit tricky, but with thoughtful enough bad play, O can allow a win.
+
+5x|1x|..
+--+--+--
+2o|3x|..
+--+--+--
+..|4o|..
+
+..|4o|..
 --+--+--
 1x|3x|2o
 --+--+--
-4o|..|..
-
-..|2o|..
---+--+--
-1x|3x|4o
---+--+--
 5x|..|..
 
-==============================================================
+Note that this second one may overlap with the kid going first, because you can switch your first and second moves. But the first way is an ironclad way through.
+
+==========================4. you go first, side
 
 So this brings us to tougher stuff. What if the player goes first? You can imagine it's easiest for the kid to win if the player starts on the side. You'd be right.
 
@@ -71,7 +91,19 @@ So this brings us to tougher stuff. What if the player goes first? You can imagi
 --+--+--
 6o|4o|..
 
-Then, if you start in the corner, you can again stumble to a loss. You have to rig things a bit, but it's doable, if you grind it out.
+This is sort of like how the kid goes first, as you wasted a move on the side.
+
+==========================5. you go first, corner
+
+The kid plays a bit oddly here. The reason is that I realized starting in the corner can transform into one of the ways to start on the side. So the game would be unwinnable if you started on the side and lost, then started in the corner.
+
+1x|3x|4o
+--+--+--
+..|..|5x
+--+--+--
+6o|..|2o
+
+If the kid took the center, this could happen:
 
 1x|..|..
 --+--+--
@@ -79,7 +111,7 @@ Then, if you start in the corner, you can again stumble to a loss. You have to r
 --+--+--
 6o|..|4o
 
-Note that you can also get this position from starting on the side, just with a different order.
+Here is how you can also get this position from starting on the side, just with a different order.
 
 3x|..|..
 --+--+--
@@ -100,31 +132,3 @@ And now, finally, you might not think you could plausibly lose after taking the 
 Once you've fallen into all six of these (or other) traps, the kid is happy.
 
 =========================================================
-
-By the way, if you're curious about the win mentioned when you take the corner on the first move (in fact, your opponent CAN win without the center or first move,) here are the possibilities:
-
-1x|3x|4o
---+--+--
-..|5x|..
---+--+--
-2o|..|6o
-
-1x|3x|2o
---+--+--
-..|7x|5x
---+--+--
-6o|..|4o
-
-1x|3x|4o
---+--+--
-..|5x|..
---+--+--
-2o|..|6o
-
-And finally, the game the kid was writing when you dropped by went as follows:
-
-1x|..|2o
---+--+--
-..|4o|..
---+--+--
-5x|..|3x
