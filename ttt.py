@@ -231,6 +231,7 @@ class GameTracker:
     descriptions_not_ascii = False
     show_numbers = True
     grid_display = True
+    zero_based = True
 
     def __init__(self):
         self.init_wins()
@@ -425,7 +426,7 @@ class GameTracker:
                 if self.current_first == PLAYER_FIRST:
                     raw_idx = other_color(raw_idx)
             if self.show_numbers:
-                row_string += ' ' if y in self.cell_idx else str(y)
+                row_string += ' ' if y in self.cell_idx else str(y + 1 - self.zero_based)
             row_string += play_ary[raw_idx]
             if y % 3 == 2:
                 print(row_string)
@@ -499,8 +500,11 @@ class GameTracker:
         if self.brief_question:
             return "Which square?"
         if descriptions_not_ascii:
-            return "Which square? 0 is upper left, 1 is upper side, to 8 which is lower right."
-        return "Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR, ENTER for board, ? for help)"
+            return "Which square? {} is upper left, {} is upper side, to {} which is lower right.".\
+                format(1 - self.zero_based, 2 - self.zero_based, 9 - self.zero_based)
+        return "Which square? ({}-{}, {}=UL, {}=UR, {}=DL, {}=DR, ENTER for board, ? for help)".\
+            format(1 - self.zero_based, 9 - self.zero_based, 1 - self.zero_based,
+                   3 - self.zero_based, 7 - self.zero_based, 9 - self.zero_based)
 
     def player_move(self):
         '''this is the main engine that sees how the player is trying to move'''
@@ -551,6 +555,12 @@ class GameTracker:
             if m0 in ('x', 'e'):
                 dump_text("examine")
                 continue
+            if m0 == 'z':
+                self.zero_based = not self.zero_based
+                print("Grid is now {}-based in the upper-left.".format(
+                    'zero' if self.zero_based else 'one'))
+                self.show_board()
+                continue
             # debug-only commands here
             if my_move == 'pa' and debug:
                 self.print_all_sums()
@@ -559,8 +569,11 @@ class GameTracker:
             except:
                 print("Unknown command {}. V or ? gives a list of commands.".format(m0.upper()))
                 continue
+            if not self.zero_based:
+                x -= 1
             if x < 0 or x > len(self.board):
-                print("You need something from 0 to {}.".format(len(self.board) - 1))
+                print("You need something from {} to {}.".format(
+                    1 - self.zero_based, 9 - self.zero_based))
                 continue
             if self.board[x] != 0:
                 print("Something is already on square", x)
