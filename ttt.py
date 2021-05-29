@@ -230,6 +230,7 @@ class GameTracker:
     brief_question = False
     descriptions_not_ascii = False
     show_numbers = True
+    grid_display = True
 
     def __init__(self):
         self.init_wins()
@@ -429,10 +430,10 @@ class GameTracker:
             if y % 3 == 2:
                 print(row_string)
                 row_string = ""
-                if y != 8:
+                if self.grid_display and y != 8:
                     print("--+--+--" if self.show_numbers else "-+-+-")
             else:
-                row_string += "|"
+                row_string += "|" if self.grid_display else " "
 
     def find_forking_move(self, board, to_move_color, is_also_block = True):
         '''this has to be in the game class, because it establishes a forking move'''
@@ -525,6 +526,10 @@ class GameTracker:
                 continue
             if my_move in ('l', 's', 'w'):
                 self.print_wins_so_far()
+                continue
+            if my_move == 'g':
+                self.grid_display = not self.grid_display
+                print("Grid is now", on_off[self.grid_display])
                 continue
             if my_move == 'm':
                 self.show_moves = not self.show_moves
