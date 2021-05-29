@@ -1,6 +1,8 @@
 '''ttt.py: tic tac toe in python
 # where you meet a kid who wants to beat you, but not after you make obvious dumb mistakes'''
 
+# pylint: disable=too-many-branches, too-many-statements
+
 from __future__ import print_function
 import textwrap
 import random
@@ -26,7 +28,7 @@ win_msg = defaultdict(lambda: defaultdict(str))
 # these could/should be sent to a text_arrays dictionary later
 text_arrays = defaultdict(list)
 
-on_off = [ 'on', 'off' ]
+on_off = [ 'off', 'on' ]
 play_ary = [ '-', 'X', 'O' ]
 MY_COLOR = 1
 KID_COLOR = 2
@@ -59,7 +61,9 @@ locations = [ CORNER, SIDE, CORNER, SIDE, CENTER, SIDE, CORNER, SIDE, CORNER ]
 location_types = [ CORNER, SIDE, CENTER ]
 colors = [ PLAYER_FIRST, KID_FIRST ]
 
-wins = [ [0, 1, 2], [3, 4, 5], [6, 7, 8], [0, 3, 6], [1, 4, 7], [2, 5, 8], [0, 4, 8], [2, 4, 6] ]
+win_triads = [ [0, 1, 2], [3, 4, 5], [6, 7, 8],
+    [0, 3, 6], [1, 4, 7], [2, 5, 8],
+    [0, 4, 8], [2, 4, 6] ]
 
 debug = False
 check_needed = False
@@ -130,7 +134,7 @@ CR_BOTH = 3
 def my_text_wrap(text, carriage_returns = CR_AFTER, refresh_terminal_size = False):
     '''wraps a string of text'''
     if refresh_terminal_size:
-        global term_width
+        global term_width # pylint: disable=global-statement
         try:
             term_width = os.get_terminal_size().columns
         except:
@@ -142,6 +146,7 @@ def my_text_wrap(text, carriage_returns = CR_AFTER, refresh_terminal_size = Fals
             print(x)
     if carriage_returns & CR_AFTER:
         print()
+
 
 def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_return = False):
     '''wraps an array of text strings, with carriage returns as specified'''
@@ -166,7 +171,7 @@ def show_introductory_text():
         print("Would you like to see the descriptions instead of ASCII art? Y/N")
         raw = _find_getch().decode().lower()
         if raw == 'y':
-            global descriptions_not_ascii
+            global descriptions_not_ascii # pylint: disable=global-statement
             descriptions_not_ascii = True
             break
         if raw == 'n':
@@ -196,7 +201,7 @@ def show_introductory_text():
 def dump_text(my_idx, resize = True):
     '''given an array of text read from ttt.txt, we print it out with appropriate line spacing'''
     if resize:
-        global term_width
+        global term_width # pylint: disable=global-statement
         try:
             term_width = os.get_terminal_size().columns
         except:
@@ -205,6 +210,7 @@ def dump_text(my_idx, resize = True):
 
 class GameTracker:
     '''this is the main thing that keeps track of how the kid won'''
+    # pylint: disable=too-many-instance-attributes
     my_move = PLAYER_FIRST
     board = []
     moves = []
@@ -223,6 +229,7 @@ class GameTracker:
     display_type = 0
     brief_question = False
     descriptions_not_ascii = False
+    show_numbers = True
 
     def __init__(self):
         self.init_wins()
@@ -279,7 +286,7 @@ class GameTracker:
 
     def kid_start_square(self):
         '''pick a square the kid can start on that might help you win the game'''
-        picks_list = list([x for x in self.win_logs[KID_FIRST] if not self.win_logs[KID_FIRST][x]])
+        picks_list = [x for x in self.win_logs[KID_FIRST] if not self.win_logs[KID_FIRST][x]]
         self.first_square_type = random.choice(picks_list)
         if self.first_square_type == CENTER:
             return 4
@@ -355,24 +362,23 @@ class GameTracker:
             sys.exit()
         return True
 
-    def move(self, move_color, move_square):
-        if self.board[move_square]:
-            print("Already occupied!")
-
     def print_all_sums(self):
-        for z in all_sums_from_board(self.board):
-            print(z)
+        '''print sum and all rotated sums'''
+        for this_sum in all_sums_from_board(self.board):
+            print(this_sum)
 
     def left_specific_player_first(self, this_player):
+        '''this determines whether there are any losses to achieve with this_player first'''
         for x in self.win_logs[this_player]:
             if not self.win_logs[this_player][x]:
                 return True
         return False
 
     def print_wins_so_far(self):
+        '''prints all valid wins so far, with special formatting
+        if you did nothing meaningful yet or, or cleared X-goes-first'''
         if not self.victories:
-            print("So far, the kid hasn't notched any interesting or worthwhile wins. Yet.".format
-                (self.victories))
+            print("So far, the kid hasn't notched any interesting or worthwhile wins. Yet.")
             return
         print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
         place = [ 'in the center', 'in the corner', 'on the side' ]
@@ -388,14 +394,15 @@ class GameTracker:
                         you_them, place[y - 1]))
 
     def show_board(self, this_board = None):
+        '''simply shows the board based on the display options you have set'''
         if not this_board:
             this_board = self.board
         if self.show_moves:
-            if len(self.moves):
-                print("Moves:", mt.listnum(self.moves))
+            if len(self.moves) > 0:
+                print("Moves:", mt.list_nums(self.moves))
             else:
                 print("Nobody has moved yet.")
-        elif descriptions_not_ascii and not len(self.moves):
+        elif descriptions_not_ascii and len(self.moves) == 0:
             print("Nobody has moved yet.")
         row_string = ''
         for y in range(0, 9):
@@ -416,13 +423,14 @@ class GameTracker:
             elif self.display_type == O_FIRST:
                 if self.current_first == PLAYER_FIRST:
                     raw_idx = other_color(raw_idx)
-            row_string += ' ' if y in self.cell_idx else str(y)
+            if self.show_numbers:
+                row_string += ' ' if y in self.cell_idx else str(y)
             row_string += play_ary[raw_idx]
             if y % 3 == 2:
                 print(row_string)
                 row_string = ""
                 if y != 8:
-                    print("--+--+--")
+                    print("--+--+--" if self.show_numbers else "-+-+-")
             else:
                 row_string += "|"
 
@@ -452,7 +460,6 @@ class GameTracker:
             return self.kid_start_square()
         blocking_moves = find_blocking_move(self.board, KID_COLOR)
         winning_moves = find_winning_move(self.board, KID_COLOR)
-        auto_moves = find_automatic_move(self.board, KID_COLOR)
         forking_move_noblocks = self.find_forking_move(self.board, KID_COLOR, is_also_block = False)
         forking_move_blocks = self.find_forking_move(self.board, KID_COLOR, is_also_block = True)
         ranch = []
@@ -473,11 +480,6 @@ class GameTracker:
         elif len(forking_move_noblocks) > 0:
             print("The kid shifts and giggles slightly.")
             ranch = forking_move_noblocks
-        elif len(auto_moves[0]):
-            if len(auto_moves[0]) > 1:
-                print("OOPS! 2 auto moves in position:", mt.list_nums(auto_moves[0]))
-            print("No choice, really.")
-            ranch = list(auto_moves[0])
         if ranch:
             return random.choice(ranch)
         (where_to_move, my_tree_num) = check_dupe_trees(self.board)
@@ -487,11 +489,12 @@ class GameTracker:
         print(tree_text[my_tree_num])
         return where_to_move
 
-    def kid_move(self):
+    def kid_move(self): # pylint: disable=missing-function-docstring
         temp = self.kid_pick_square()
         self.place_move(temp)
 
     def input_text(self):
+        '''tells what the text prompt should be'''
         if self.brief_question:
             return "Which square?"
         if descriptions_not_ascii:
@@ -499,12 +502,13 @@ class GameTracker:
         return "Which square? (0-8, 0=UL, 2=UR, 6=DL, 8=DR, ENTER for board, ? for help)"
 
     def player_move(self):
+        '''this is the main engine that sees how the player is trying to move'''
         while 1:
             my_move = input(self.input_text()).lower().strip()
             if my_move == '':
                 self.show_board()
                 continue
-            m0 = my_move[0]
+            m0 = my_move[0] # pylint:disable=invalid-name
             if m0 == 'a':
                 dump_text("about")
                 continue
@@ -526,10 +530,14 @@ class GameTracker:
                 self.show_moves = not self.show_moves
                 self.show_board()
                 continue
+            if m0 == 'n':
+                self.show_numbers = not self.show_numbers
+                print("Showing numbers is now", on_off[self.show_numbers])
+                continue
             if m0 == 'q':
                 sys.exit("Bye!")
             if m0 == 'r':
-                global descriptions_not_ascii
+                global descriptions_not_ascii # pylint: disable=global-statement
                 descriptions_not_ascii = not descriptions_not_ascii
                 continue
             if m0 in ('v', '?'):
@@ -579,52 +587,53 @@ class GameTracker:
             self.kid_move()
         self.current_mover = other_color(self.current_mover)
 
-def other_color(move_color):
-    if move_color == 0:
-        return 0
-    return MY_COLOR + KID_COLOR - move_color
+def other_color(move_color): # pylint: disable=missing-function-docstring
+    return (MY_COLOR + KID_COLOR - move_color) if move_color else 0
 
-def usage():
+def usage(): # pylint: disable=missing-function-docstring
     print("USAGE: mostly debug")
     print("d/v = debug/verbose")
     print("t = test rotations, c = check needed branches, a = all rotations of a certain #")
     sys.exit()
 
-def d_print(x):
+def d_print(x): # pylint: disable=missing-function-docstring
     if debug:
         print(x)
 
 def base_3_of(my_number):
+    '''renders a number into a base 3 array'''
     ary = []
-    for _ in range(0, 10):
+    for _ in range(0, 9):
         ary.append(my_number % 3)
         my_number = my_number // 3
     ary.reverse()
     return ''.join([str(x) for x in ary])
 
 def quick_board(board):
+    '''very quick board, no boundaries or numbers'''
     row_string = ''
     for x in range(0, 9):
-        row_string += play_ary[x]
+        row_string += board[play_ary[x]]
         if x % 3 == 2:
             print(row_string)
             row_string = ""
 
 def nonzeros_3(x):
-    y = base_3_of(int(x))
-    return y.count('0')
+    ''' counts number of blank squares in a board, or sum'''
+    return base_3_of(int(x)).count('0')
 
 # Begin finding moves: while these could be in a class,
 # there are times we may wish to use a different board than self.board
 
 def find_clear_moves(board, to_move_color, look_for_win):
+    '''returns an array of sensible moves to achieve a win/avoid a loss'''
     this_triple = defaultdict(int)
     blanks = defaultdict(int)
     two_of_color = to_move_color if look_for_win else other_color(to_move_color)
-    for w in wins:
+    for my_win_triad in win_triads:
         this_triple = [0, 0, 0]
         blank_square = NO_MOVE
-        for square in w:
+        for square in my_win_triad:
             if board[square]:
                 this_triple[board[square]] += 1
             else:
@@ -633,24 +642,16 @@ def find_clear_moves(board, to_move_color, look_for_win):
             blanks[blank_square] += 1
     return blanks
 
-def find_winning_move(board, to_move_color):
+def find_winning_move(board, to_move_color): # pylint: disable=missing-function-docstring
     return find_clear_moves(board, to_move_color, look_for_win = True)
 
-def find_blocking_move(board, to_move_color):
+def find_blocking_move(board, to_move_color): # pylint: disable=missing-function-docstring
     return find_clear_moves(board, to_move_color, look_for_win = False)
-
-def find_automatic_move(board, to_move_color):
-    temp = find_winning_move(board, to_move_color)
-    if len(temp):
-        return (temp, "win")
-    temp = find_blocking_move(board, to_move_color)
-    if len(temp):
-        return (temp, "block")
-    return ([], "do anything")
 
 #################################end finding moves
 
 def board_sum(board, my_rot = range(0, 9)):
+    ''' convert board array to number, base 3 '''
     mult = 1
     my_sum = 0
     for y in range(0, 9):
@@ -659,6 +660,7 @@ def board_sum(board, my_rot = range(0, 9)):
     return my_sum
 
 def board_of(a_num):
+    ''' convert number to board, base 3 '''
     temp = []
     for _ in range(0, 9):
         temp.append(a_num % 3)
@@ -666,22 +668,21 @@ def board_of(a_num):
     return temp
 
 def see_poss_parents(a_num):
-    b = board_of(a_num)
+    '''given a board, finds ttt.txt's numbers to see what parents there might be of current board'''
+    base_board = board_of(a_num)
     got_one = False
     for x in tree_move_dict:
         if x == a_num:
             continue
         can_retro = True
-        c = board_of(x)
+        var_board = board_of(x)
         for y in range(0, 9):
-            if b[y] == c[y]:
-                continue
-            if c[y] == 0:
+            if base_board[y] == var_board[y] or var_board[y] == 0:
                 continue
             can_retro = False
         if can_retro:
             print(x, "may be below", a_num)
-            print(c, b)
+            print(var_board, base_board)
             quick_board(board_of(x))
             quick_board(board_of(a_num))
             got_one = True
@@ -689,6 +690,7 @@ def see_poss_parents(a_num):
         print("No parents for", a_num)
 
 def see_needed_branches(my_board, moves_so_far, depth = 1):
+    '''this notes if the current board has a branch/action setting listed in ttt.txt'''
     #print("Top of function", my_board, "depth", depth, board_sum(my_board))
     for move_try in range(0, 9):
         if my_board[move_try] == 0:
@@ -699,25 +701,26 @@ def see_needed_branches(my_board, moves_so_far, depth = 1):
             #print(move_try, "move", temp_board, board_sum(temp_board))
             skip = False
             if board_sum(my_board) not in tree_move_dict:
-                for z in all_sums_from_board(my_board):
-                    if board_sum(my_board) != z:
+                for x in all_sums_from_board(my_board):
+                    if board_sum(my_board) != x:
                         skip = True
             if skip:
                 continue
-            (a, b) = check_dupe_trees(temp_board)
+            (temp_val, temp_board) = check_dupe_trees(temp_board)
             print("Tree status of", temp_board, board_sum(temp_board),
-                "is", b, "from", my_board, board_sum(my_board))
-            if tree_move_status[b] < 0:
+                "is", temp_board, "from", my_board, board_sum(my_board))
+            if tree_move_status[temp_board] < 0:
                 continue
-            if a > -1:
-                if temp_board[a]:
-                    print("Uh oh overwrote position", a, "with status", b, "value", temp_board[a],
-                        "on", temp_board, "from", my_board, "moves so far", moves_so_far)
+            if temp_val > -1:
+                if temp_board[temp_val]:
+                    print("Uh oh overwrote position", temp_val, "with status", temp_board,
+                        "value", temp_board[temp_val], "on", temp_board, "from", my_board,
+                        "moves so far", moves_so_far)
                     quick_board(my_board)
                     sys.exit(tree_move_status)
-                temp_board[a] = 2
+                temp_board[temp_val] = 2
                 temp_moves_2 = list(temp_moves)
-                temp_moves_2.append(a)
+                temp_moves_2.append(temp_val)
                 see_needed_branches(temp_board, temp_moves_2, depth + 1)
             else:
                 print("Need entry for", board_sum(temp_board))
@@ -756,12 +759,12 @@ def assign_inverse_orientations():
 
 def rotation_index(a_sum, a_board):
     '''tells index of orientation that changes a sum to a board'''
-    b2 = board_of(a_sum)
-    #print(b2, a_board)
+    sum_board = board_of(a_sum)
+    #print(sum_board, a_board)
     for x in orientations:
         can_match = True
-        new_ary = [b2[x[q]] for q in range(0, 9)]
-        #print(b2, "goes to", new_ary, "via", x, a_board)
+        new_ary = [sum_board[x[y]] for y in range(0, 9)]
+        #print(sum_board, "goes to", new_ary, "via", x, a_board)
         for y in range(0, 9):
             if a_board[y] != new_ary[y]:
                 can_match = False
@@ -792,29 +795,8 @@ def check_dupe_trees(board):
             return(tree_move_dict[my_sum], my_sum)
     return (tree_move_dict[my_sum], my_sum)
 
-def verify_dict_tree(bail = False, move_to_find = 1):
-    if not os.path.exists("ttt.txt"):
-        sys.exit("ttt.py requires ttt.txt to read in configurations. "
-            "Please check that ttt.txt is in the same folder as ttt.py before continuing.")
-    with open("ttt.txt") as file:
-        for (line_count, line) in enumerate(file, 1):
-            if line.startswith("#"):
-                continue
-            if line.startswith(";"):
-                break
-            if line.startswith("move=") or line.startswith("msg"):
-                continue
-            ary = line.split("\t")
-            for q in ary[0].split(','):
-                if nonzeros_3(q) % 2 != move_to_find:
-                    print(q, "bad", line_count)
-                    bail = True
-                else:
-                    print(q, "ok", nonzeros_3(q))
-    if bail:
-        sys.exit()
-
 def read_game_stuff(bail = False):
+    '''this reads in kid move data and game text from ttt.txt'''
     text_macro = defaultdict(str)
     with open("ttt.txt") as file:
         for (line_count, line) in enumerate(file, 1):
@@ -830,8 +812,6 @@ def read_game_stuff(bail = False):
                 ary = line.split("\t")
                 win_msg[int(ary[1])][int(ary[2])] = ary[3]
                 continue
-            if line.startswith("move="):
-                continue
             if "~" in line:
                 ltil = line.strip().split("~")
                 text_macro[ltil[0]] = ltil[1]
@@ -846,18 +826,17 @@ def read_game_stuff(bail = False):
             if len(ary) != 4:
                 print("Bad # of tabs (need 3) at line {}.".format(line_count))
                 bail = True
-            if 1:
-                ary2 = [int(x) for x in ary[0].split(",")]
-                for ia2 in ary2:
-                    for q in all_rotations_of_sums(ia2):
-                        if q in tree_move_dict:
-                            print(ia2, "duplicates earlier", q)
-                            bail = True
-                    tree_move_dict[ia2] = int(ary[1])
-                    tree_move_status[ia2] = int(ary[2])
-                    tree_text[ia2] = ary[3]
-                    if debug:
-                        print("Adding", ia2, "to tree.")
+            ary2 = [int(x) for x in ary[0].split(",")]
+            for ia2 in ary2:
+                for x in all_rotations_of_sums(ia2):
+                    if x in tree_move_dict:
+                        print(ia2, "duplicates earlier", x)
+                        bail = True
+                tree_move_dict[ia2] = int(ary[1])
+                tree_move_status[ia2] = int(ary[2])
+                tree_text[ia2] = ary[3]
+                if debug:
+                    print("Adding", ia2, "to tree.")
             if debug:
                 sys.exit("Oh no! Had trouble parsing line {}: {}".format(line_count, line))
     if bail:
@@ -877,11 +856,7 @@ def all_sums_from_board(board):
 
 def all_rotations_of_sums(my_board_sum):
     '''all all_rotations_of_sum sums for a sum'''
-    bary = []
-    for _ in range(0, 9):
-        bary.append(my_board_sum % 3)
-        my_board_sum //= 3
-    return all_sums_from_board(bary)
+    return all_sums_from_board(board_of(my_board_sum))
 
 def is_rotated(x, y):
     '''simply checks if two board sum values are rotational equivalents'''
@@ -891,23 +866,24 @@ def show_all_rotations(initial_board_num):
     '''gives a detailed view of all rotated boards, given an initial board sum'''
     initial_board = board_of(initial_board_num)
     for my_orient in orientations:
-        y = [0] * 9
-        for i in range(0, 9):
-            y[i] = initial_board[my_orient[i]]
-        quick_board(y)
-        print(y, board_sum(y))
+        temp_board = [0] * 9
+        for x in range(0, 9):
+            temp_board[x] = initial_board[my_orient[x]]
+        quick_board(temp_board)
+        print(temp_board, board_sum(temp_board))
 
 def test_rotations(bail = True):
+    '''this tests a very specific and simple rotation case so we know the arithmetic is right'''
     rotations = [ 166, 174, 190, 918, 414, 6966, 3078, 8910 ]
-    for r in rotations:
-        b = board_of(r)
-        (where_to_move, my_tree_num) = check_dupe_trees(b)
+    for x in rotations:
+        this_rotation = board_of(x)
+        (where_to_move, my_tree_num) = check_dupe_trees(this_rotation)
         print()
-        print(r, b, where_to_move, my_tree_num)
-        quick_board(b)
+        print(x, this_rotation, where_to_move, my_tree_num)
+        quick_board(this_rotation)
         print("to")
-        b[where_to_move] = 2
-        quick_board(b)
+        this_rotation[where_to_move] = 2
+        quick_board(this_rotation)
     if bail:
         sys.exit()
 
