@@ -231,7 +231,7 @@ class GameTracker:
     descriptions_not_ascii = False
     show_numbers = True
     grid_display = True
-    lowest_number = 1
+    starting_number = 1
 
     def __init__(self):
         self.init_wins()
@@ -426,7 +426,7 @@ class GameTracker:
                 if self.current_first == PLAYER_FIRST:
                     raw_idx = other_color(raw_idx)
             if self.show_numbers:
-                row_string += ' ' if y in self.cell_idx else str(y + self.lowest_number)
+                row_string += ' ' if y in self.cell_idx else str(y + self.starting_number)
             row_string += play_ary[raw_idx]
             if y % 3 == 2:
                 print(row_string)
@@ -501,10 +501,10 @@ class GameTracker:
             return "Which square?"
         if descriptions_not_ascii:
             return "Which square? {} is upper left, {} is upper side, to {} which is lower right.".\
-                format(self.lowest_number, 1 + self.lowest_number, 8 + self.lowest_number)
+                format(self.starting_number, 1 + self.starting_number, 8 + self.starting_number)
         return "Which square? ({}-{}, {}=UL, {}=UR, {}=DL, {}=DR, ENTER for board, ? for help)".\
-            format(self.lowest_number, 8 + self.lowest_number, self.lowest_number,
-                   2 + self.lowest_number, 6 + self.lowest_number, 8 + self.lowest_number)
+            format(self.starting_number, 8 + self.starting_number, self.starting_number,
+                   2 + self.starting_number, 6 + self.starting_number, 8 + self.starting_number)
 
     def player_move(self):
         '''this is the main engine that sees how the player is trying to move'''
@@ -545,9 +545,9 @@ class GameTracker:
                 continue
             if m0 == 'o':
                 print("The board {} starts at one in the upper-left.".format(
-                    'already' if self.lowest_number == 1 else 'now'))
+                    'already' if self.starting_number == 1 else 'now'))
                 print("Z changes the board back to zero in the upper left.")
-                self.lowest_number = 1
+                self.starting_number = 1
                 self.show_board()
                 continue
             if m0 == 'q':
@@ -564,9 +564,9 @@ class GameTracker:
                 continue
             if m0 == 'z':
                 print("The board {} starts at zero in the upper-left.".format(
-                    'already' if self.lowest_number == 0 else 'now'))
+                    'already' if self.starting_number == 0 else 'now'))
                 print("O changes the board back to one in the upper left.")
-                self.lowest_number = 0
+                self.starting_number = 0
                 self.show_board()
                 continue
             # debug-only commands here
@@ -577,14 +577,13 @@ class GameTracker:
             except:
                 print("Unknown command {}. V or ? gives a list of commands.".format(m0.upper()))
                 continue
-            if not self.lowest_number:
-                x -= self.lowest_number
-            if x < 0 or x > len(self.board):
+            x -= self.starting_number
+            if x < 0 or x >= len(self.board):
                 print("You need a number from from {} to {}.".format(
-                    self.lowest_number, 8 + self.lowest_number))
+                    self.starting_number, 8 + self.starting_number))
                 continue
             if self.board[x] != 0:
-                print("Something is already on square", x)
+                print("Something is already on square", x + self.starting_number)
                 continue
             before_moves = len(find_blocking_move(self.board, MY_COLOR))
             self.place_move(x)
