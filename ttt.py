@@ -22,7 +22,7 @@ tree_text = defaultdict(int)
 inverse = defaultdict(int)
 cell_idx = defaultdict(int)
 
-win_logs = defaultdict(lambda: defaultdict(bool))
+win_logs = defaultdict(lambda: defaultdict(int))
 win_msg = defaultdict(lambda: defaultdict(str))
 
 # these could/should be sent to a text_arrays dictionary later
@@ -347,21 +347,31 @@ class GameTracker:
         if self.win_logs[self.current_first][self.first_square_type]:
             print("But sadly, they don't look that happy. They already beat you that way!")
             return True
-        for x in self.won_forks:
-            if x == self.fork_position:
+        for x in self.win_logs[self.current_first]:
+            temp = self.win_logs[self.current_first][x]
+            if not is_rotated(temp, self.fork_position):
+                continue
+            if temp == self.fork_position:
                 print("You're a bit surprised when the kid proclaims "
                 "they already won from this exact position, so it really shouldn't count.")
-                return True
-            if is_rotated(x, self.fork_position):
+            else:
                 print("You're a bit surprised when the kid starts mentioning how "
                 "this win LOOKED sort of like another one, "
                 "so they're not sure if it should count. "
                 "You undo the last couple moves and rotate and flip the board in your head, "
                 "and yeah, you have to agree.")
-                return True
+            print(self.current_first, self.first_square_type, x, self.win_logs[self.current_first])
+            if self.current_first == PLAYER_FIRST and self.first_square_type == CORNER and x == SIDE \
+              and not self.win_logs[self.current_first][CORNER]: # hard coded. We can generalize.
+                print("But you hammer out a bargain. Since you going first in the corner is "
+                "probably tougher to beat than you going first on the side, you shift the "
+                "you-first-side win to the you-first-corner department.")
+                self.win_logs[self.current_first][self.first_square_type] = self.win_logs[self.current_first][SIDE]
+                self.win_logs[self.current_first].pop(SIDE)
+            return True
         self.won_forks.append(self.fork_position)
         my_text_wrap(self.win_msg[self.current_first][self.first_square_type])
-        self.win_logs[self.current_first][self.first_square_type] = True
+        self.win_logs[self.current_first][self.first_square_type] = self.fork_position
         print(text_arrays["win_progress"][self.victories])
         print()
         self.victories += 1
