@@ -4,9 +4,13 @@ import re
 import sys
 
 class Logger(object):
-    def __init__(self):
+    def __init__(self, file_name = "logfile.log"):
         self.terminal = sys.stdout
-        self.log = open("logfile.log", "a")
+        try:
+            self.log = open("logfile.log", "a")
+        except:
+            sys.exit("Could not create logfile {}, bailing. Try l=(file name) for an " + \
+                "alternate name.".format(file_name))
         print("#################start of log")
 
     def write(self, message):
@@ -18,8 +22,6 @@ class Logger(object):
         #this handles the flush command by doing nothing.
         #you might want to specify some extra behavior here.
         pass
-
-sys.stdout = Logger()
 
 def list_nums(my_list, separator=', '):
     return separator.join([str(x) for x in my_list])

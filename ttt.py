@@ -71,6 +71,7 @@ descriptions_not_ascii = False
 log_output = False
 
 term_width = 5000
+log_file = "logfile.log"
 
 CONTINUE_PLAYING = 0
 BOARD_FULL_DRAW = -1
@@ -623,6 +624,7 @@ def usage(): # pylint: disable=missing-function-docstring
     print("USAGE: mostly debug")
     print("d/v = debug/verbose")
     print("t = test rotations, c = check needed branches, a = all rotations of a certain #")
+    print("l = log for testing. l=FILE.TXT appends to FILE.TXT. Default is logfile.log.")
     sys.exit()
 
 def d_print(x): # pylint: disable=missing-function-docstring
@@ -943,6 +945,9 @@ while cmd_count < len(sys.argv):
         test_rotations()
     elif arg == 'l':
         log_output = True
+    elif arg[:2] == 'l=':
+        log_output = True
+        log_file = arg[2:]
     elif arg[0] == 'a':
         show_all_rotations(int(arg[1:]))
         sys.exit()
@@ -951,7 +956,9 @@ while cmd_count < len(sys.argv):
     cmd_count += 1
 
 if log_output:
-    sys.stdout = mt.Logger()
+    print("Note: carriage returns will appear after each user input prompt to flush STDOUT "+ \
+        "so the actual question appears. This shouldn't happen in non-logging mode.")
+    sys.stdout = mt.Logger(log_file)
 
 read_game_stuff()
 
