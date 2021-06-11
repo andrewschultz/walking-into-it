@@ -15,16 +15,17 @@ txtary	about	Along the way, I managed to learn about AI and minimax and that sor
 txtary	about	So I think the game stands well on its own, if it's not especially big. Maybe you will even welcome the game as an efficient way to have fun, and if you're playing this during IFComp, hopefully it will boost you to try others.
 txtary	about	My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, etc.
 ##################################command-text array
-txtary	commands	You will usually just want to type a number from 0 to 8 inclusive, to make a move. A blank command will refresh the board.
+txtary	commands	You will usually just want to type a number from 0 to 8 inclusive, or 1 to 9, depending on if your board starts with 0 or 1.
 txtary	commands	However, there are meta-commands. They only need one letter. A is a general ABOUT, and C is CREDITS.
-txtary	commands	You can also type D0, D1, D2, or D3 to change the display 0=you are X, 1=the kid is X, 2=X goes first, 3=X goes second.
-txtary	commands	G toggles the grid.
+txtary	commands	D cycles the display between X first, O first, you as X, and the kid as X.
+txtary	commands	G toggles the grid display when showing the board.
 txtary	commands	L or W or S (Losses, Wins, Scores) tracks your losses, the kid's losses or the kid's wins.
 txtary	commands	M toggles whether or not you see the moves above the board.
 txtary	commands	N toggles whether square numbers are shown in the grid or not.
-txtary	commands	V views possible commands.
+txtary	commands	O makes the board one-based. You would type 1 to move to the upper left, 2 to the upper side, and 9 to the lower right.
+txtary	commands	V or ? views possible commands.
 txtary	commands	X examines the tic-tac-toe game the kid was playing alone, which may or may not be a useful or spoilery hint.
-txtary	commands	Z toggles zero-basedness of the grid.
+txtary	commands	Z makes the board zero-based. You would type 0 to move to the upper left, 1 to the upper side, and 9 to the lower right.
 ##################################credits-text array
 txtary	credits	Thanks to my testers: <nobody yet>.
 #txtary	credits	Thanks to people who found bugs: <nobody yet>.
@@ -62,7 +63,7 @@ msg-type	2	3	The kid seems slightly blown away that they could win by taking the
 #current binary number, where to place, text
 3	4	0	Wow! I get the center!
 #1	4	0	Wow! I get the center!
-1	8	0	I just don't feel like taking the center.
+1	4	0	Might be big trouble if I don't take the center either.
 1494	8	0	I already have a threat.
 16803	4	0	Someone finally took the center.
 81	0	0	Whoah! Gonna be tough to win now you took the center!
