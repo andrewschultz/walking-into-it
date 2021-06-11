@@ -68,6 +68,7 @@ win_triads = [ [0, 1, 2], [3, 4, 5], [6, 7, 8],
 debug = False
 check_needed = False
 descriptions_not_ascii = False
+log_output = False
 
 term_width = 5000
 
@@ -156,6 +157,9 @@ def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_r
         my_text_wrap(line, carriage_returns)
     if carriage_returns == CR_BEFORE and extra_carriage_return:
         print()
+
+def log_cr():
+    return "\n" if log_output else ""
 
 def show_introductory_text():
     '''this gets basic options from the player, allowing you to skip the full introduction'''
@@ -275,8 +279,8 @@ class GameTracker:
             else:
                 who_now = ", (enter) = keep going " + \
                     'first' if self.current_first == 1 else 'second'
-            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.". \
-                format(who_now)).lower().strip()
+            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.{}". \
+                format(who_now, log_cr())).lower().strip()
             if not who_moves:
                 if self.current_first:
                     return self.current_first
@@ -509,7 +513,7 @@ class GameTracker:
     def player_move(self):
         '''this is the main engine that sees how the player is trying to move'''
         while 1:
-            my_move = input(self.input_text()).lower().strip()
+            my_move = input(self.input_text() + log_cr()).lower().strip()
             if my_move == '':
                 self.show_board()
                 continue
@@ -937,12 +941,17 @@ while cmd_count < len(sys.argv):
         check_needed = True
     elif arg == 't':
         test_rotations()
+    elif arg == 'l':
+        log_output = True
     elif arg[0] == 'a':
         show_all_rotations(int(arg[1:]))
         sys.exit()
     else:
         usage()
     cmd_count += 1
+
+if log_output:
+    sys.stdout = mt.Logger()
 
 read_game_stuff()
 
