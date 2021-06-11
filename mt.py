@@ -1,6 +1,25 @@
 # this is a list of functions from my own mytools, which I didn't want to include in the file proper, because I want as few dependencies as possible
 
 import re
+import sys
+
+class Logger(object):
+    def __init__(self):
+        self.terminal = sys.stdout
+        self.log = open("logfile.log", "a")
+        print("#################start of log")
+
+    def write(self, message):
+        self.terminal.write(message)
+        self.log.write(message)
+
+    def flush(self):
+        #this flush method is needed for python 3 compatibility.
+        #this handles the flush command by doing nothing.
+        #you might want to specify some extra behavior here.
+        pass
+
+sys.stdout = Logger()
 
 def list_nums(my_list, separator=', '):
     return separator.join([str(x) for x in my_list])
