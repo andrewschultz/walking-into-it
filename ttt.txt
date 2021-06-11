@@ -59,6 +59,11 @@ txtary	usage	Here's what can be activated.
 txtary	usage	t = test rotations, c = check needed branches, a = all rotations of a certain #. (programmer testing)
 txtary	usage	l = log for testing. l=FILE.TXT appends to FILE.TXT. Default is logfile.log. (playtester stuff)
 txtary	usage	d/v = debug/verbose output. (both)
+##################################win detail messages
+winver	first-already	But sadly, they don't look that happy. They already beat you that way!
+winver	exact-position-before	You're a bit surprised when the kid proclaims they already won from this exact position, so it really shouldn't count.
+winver	rotation-before	You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.
+winver	shift-wins	But you hammer out a bargain. Since you going first in the corner is probably tougher to beat than you going first on the side, you shift the you-first-side win to the you-first-corner department.
 ##################################win messages by start type
 msg-type	1	1	You congratulate the kid on what is probably the toughest way to win. You took the center, and somehow they pulled it out!
 msg-type	1	2	"Wow! I feel good about that. But I guess I had to take the center there to win." You ponder what the kid says, then motion for them to try again. This time, you play in the corner. They play in a corner, you play next to your first move, they block, and their third play--covering three of the four corners--makes victory unavoidable. You tell them good job.

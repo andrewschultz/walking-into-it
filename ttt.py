@@ -27,6 +27,7 @@ win_msg = defaultdict(lambda: defaultdict(str))
 
 # these could/should be sent to a text_arrays dictionary later
 text_arrays = defaultdict(list)
+win_verify = defaultdict(str)
 
 on_off = [ 'off', 'on' ]
 play_ary = [ '-', 'X', 'O' ]
@@ -345,27 +346,19 @@ class GameTracker:
                 'really' if self.fork_position else 'slightly'))
             return True
         if self.win_logs[self.current_first][self.first_square_type]:
-            print("But sadly, they don't look that happy. They already beat you that way!")
+            my_text_wrap(win_verify["first-already"])
             return True
         for x in self.win_logs[self.current_first]:
             temp = self.win_logs[self.current_first][x]
             if not is_rotated(temp, self.fork_position):
                 continue
             if temp == self.fork_position:
-                print("You're a bit surprised when the kid proclaims "
-                "they already won from this exact position, so it really shouldn't count.")
+                my_text_wrap(win_verify["exact-position-before"])
             else:
-                print("You're a bit surprised when the kid starts mentioning how "
-                "this win LOOKED sort of like another one, "
-                "so they're not sure if it should count. "
-                "You undo the last couple moves and rotate and flip the board in your head, "
-                "and yeah, you have to agree.")
-            print(self.current_first, self.first_square_type, x, self.win_logs[self.current_first])
+                my_text_wrap(win_verify["rotation-before"])
             if self.current_first == PLAYER_FIRST and self.first_square_type == CORNER and x == SIDE \
               and not self.win_logs[self.current_first][CORNER]: # hard coded. We can generalize.
-                print("But you hammer out a bargain. Since you going first in the corner is "
-                "probably tougher to beat than you going first on the side, you shift the "
-                "you-first-side win to the you-first-corner department.")
+                my_text_wrap(win_verify["shift-wins"])
                 self.win_logs[self.current_first][self.first_square_type] = self.win_logs[self.current_first][SIDE]
                 self.win_logs[self.current_first].pop(SIDE)
             return True
@@ -845,6 +838,10 @@ def read_game_stuff(bail = False):
             if line.startswith("txtary\t"):
                 ary = line.strip().split("\t")
                 text_arrays[ary[1]].append(ary[2].strip().replace("\\n", "\r\n"))
+                continue
+            if line.startswith("winver\t"):
+                ary = line.strip().split("\t")
+                win_verify[ary[1]] = ary[2].strip().replace("\\n", "\r\n")
                 continue
             if line.startswith("msg-type"):
                 ary = line.split("\t")
