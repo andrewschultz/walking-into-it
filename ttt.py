@@ -333,10 +333,10 @@ class GameTracker:
         if game_result == CONTINUE_PLAYING:
             return False
         if game_result == MY_COLOR:
-            print("Somehow, you won, but you should not have.")
+            print("Somehow, you won, but you should not have: let me know the moves.", self.moves)
             return True
         if game_result == BOARD_FULL_DRAW:
-            print("It's a stalemate. You need to play again.")
+            print("It's a stalemate. Time to start over and play again.")
             return True
         print("The kid won!")
         if not self.played_correctly:
@@ -621,10 +621,7 @@ def other_color(move_color): # pylint: disable=missing-function-docstring
     return (MY_COLOR + KID_COLOR - move_color) if move_color else 0
 
 def usage(): # pylint: disable=missing-function-docstring
-    print("USAGE: mostly debug")
-    print("d/v = debug/verbose")
-    print("t = test rotations, c = check needed branches, a = all rotations of a certain #")
-    print("l = log for testing. l=FILE.TXT appends to FILE.TXT. Default is logfile.log.")
+    my_text_wrap_array(text_arrays["usage"], carriage_returns = CR_NONE)
     sys.exit()
 
 def d_print(x): # pylint: disable=missing-function-docstring
@@ -857,7 +854,10 @@ def read_game_stuff(bail = False):
             if len(ary) != 4:
                 print("Bad # of tabs (need 3) at line {}.".format(line_count))
                 bail = True
-            ary2 = [int(x) for x in ary[0].split(",")]
+            try:
+                ary2 = [int(x) for x in ary[0].split(",")]
+            except:
+                print("Uh oh. Bad line in ttt.txt {} {}".format(line_count, line.strip()))
             for ia2 in ary2:
                 for x in all_rotations_of_sums(ia2):
                     if x in tree_move_dict:
@@ -933,6 +933,8 @@ inverse = assign_inverse_orientations()
 
 # initialization stuff
 
+read_game_stuff()
+
 cmd_count = 1
 
 while cmd_count < len(sys.argv):
@@ -959,8 +961,6 @@ if log_output:
     print("Note: carriage returns will appear after each user input prompt to flush STDOUT "+ \
         "so the actual question appears. This shouldn't happen in non-logging mode.")
     sys.stdout = mt.Logger(log_file)
-
-read_game_stuff()
 
 # put (other) tests below here
 
