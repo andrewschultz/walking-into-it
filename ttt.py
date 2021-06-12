@@ -22,8 +22,7 @@ tree_text = defaultdict(int)
 inverse = defaultdict(int)
 cell_idx = defaultdict(int)
 
-win_logs = defaultdict(lambda: defaultdict(int))
-win_msg = defaultdict(lambda: defaultdict(str))
+win_msg_from_file = defaultdict(lambda: defaultdict(str))
 
 # these could/should be sent to a text_arrays dictionary later
 text_arrays = defaultdict(list)
@@ -221,7 +220,7 @@ class GameTracker:
     board = []
     moves = []
     cell_idx = defaultdict(int)
-    win_logs = defaultdict(lambda: defaultdict(bool))
+    win_logs = defaultdict(lambda: defaultdict(list))
     win_msg = defaultdict(lambda: defaultdict(str))
     blocks_this_game = 0
     victories = 0
@@ -229,7 +228,6 @@ class GameTracker:
     played_correctly = 0
     current_mover = NONE_FIRST
     current_first = NONE_FIRST
-    won_forks = []
     first_square_type = 0
     show_moves = False
     display_type = X_FIRST
@@ -241,7 +239,7 @@ class GameTracker:
 
     def __init__(self):
         self.init_wins()
-        self.win_msg = win_msg
+        self.win_msg = win_msg_from_file
         show_introductory_text()
         self.clear_and_restart_game()
 
@@ -249,7 +247,7 @@ class GameTracker:
         '''make sure we have tracked all possible win states'''
         for x in location_types:
             for y in colors:
-                self.win_logs[y][x] = False
+                self.win_logs[y][x] = []
 
     def clear_and_restart_game(self):
         '''clear the board and moves data after choosing who starts'''
@@ -347,24 +345,34 @@ class GameTracker:
             return True
         if self.win_logs[self.current_first][self.first_square_type]:
             my_text_wrap(win_verify["first-already"])
+            unfound_rotation = False
+            for x in self.win_logs[self.current_first][self.first_square_type]:
+                if not is_rotated(x, self.fork_position):
+                    unfound_rotation = True
+            if unfound_rotation:
+                if debug:
+                    d_print("DEBUG MESSAGE: You found an alternate solution that will go into the list for this game-start.")
+                self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
             return True
         for x in self.win_logs[self.current_first]:
-            temp = self.win_logs[self.current_first][x]
-            if not is_rotated(temp, self.fork_position):
-                continue
-            if temp == self.fork_position:
-                my_text_wrap(win_verify["exact-position-before"])
-            else:
-                my_text_wrap(win_verify["rotation-before"])
-            if self.current_first == PLAYER_FIRST and self.first_square_type == CORNER and x == SIDE \
-              and not self.win_logs[self.current_first][CORNER]: # hard coded. We can generalize.
-                my_text_wrap(win_verify["shift-wins"])
-                self.win_logs[self.current_first][self.first_square_type] = self.win_logs[self.current_first][SIDE]
-                self.win_logs[self.current_first].pop(SIDE)
-            return True
-        self.won_forks.append(self.fork_position)
+            for y in self.win_logs[self.current_first][x]:
+                if not is_rotated(y, self.fork_position):
+                    continue
+                if y == self.fork_position:
+                    my_text_wrap(win_verify["exact-position-before"])
+                else:
+                    my_text_wrap(win_verify["rotation-before"])
+                if self.current_first == PLAYER_FIRST and self.first_square_type == CORNER and x == SIDE \
+                    and not self.win_logs[self.current_first][CORNER]: # hard coded. We can generalize.
+                    if len(self.win_logs[self.current_first][SIDE]) > 1:
+                        my_text_wrap(win_verify["shift-one-side-win"])
+                    else:
+                        my_text_wrap(win_verify["shift-side-to-corner"])
+                    self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
+                    self.win_logs[self.current_first][x].remove(y)
+                return True
         my_text_wrap(self.win_msg[self.current_first][self.first_square_type])
-        self.win_logs[self.current_first][self.first_square_type] = self.fork_position
+        self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
         print(text_arrays["win_progress"][self.victories])
         print()
         self.victories += 1
@@ -392,14 +400,14 @@ class GameTracker:
             return
         print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
         place = [ 'in the center', 'in the corner', 'on the side' ]
-        for x in win_logs:
+        for x in self.win_logs:
             you_them = 'you' if x == PLAYER_FIRST else 'them'
             if not self.left_specific_player_first(x):
                 print("  You let the kid beat you all three ways (corner, side, center) with "
                     "{} going first.".format(you_them))
                 continue
-            for y in win_logs[x]:
-                if win_logs[x][y]:
+            for y in self.win_logs[x]:
+                if self.win_logs[x][y]:
                     print("  You managed to lose with {} going first {}.".format(
                         you_them, place[y - 1]))
 
@@ -563,6 +571,7 @@ class GameTracker:
             if m0 == 'r':
                 global descriptions_not_ascii # pylint: disable=global-statement
                 descriptions_not_ascii = not descriptions_not_ascii
+                print("Descriptions instead of ascii are now {}.".format(mt.on_off(descriptions_not_ascii)))
                 continue
             if m0 in ('v', '?'):
                 dump_text("commands")
@@ -845,7 +854,7 @@ def read_game_stuff(bail = False):
                 continue
             if line.startswith("msg-type"):
                 ary = line.split("\t")
-                win_msg[int(ary[1])][int(ary[2])] = ary[3]
+                win_msg_from_file[int(ary[1])][int(ary[2])] = ary[3]
                 continue
             if "~" in line:
                 ltil = line.strip().split("~")

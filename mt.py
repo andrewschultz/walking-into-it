@@ -47,3 +47,6 @@ def nohy(x, also_lower = True): # mostly for command line argument usage, so -s 
     if also_lower:
         return x.lower()
     return x
+
+def on_off(my_truth_state):
+    return "on" if my_truth_state else "off"
