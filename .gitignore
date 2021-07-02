@@ -1,3 +1,3 @@
-*.bat
-*.py
-*.txt
+# I just want to be able to sweep everything up with a wildcard
+# and not worry about more
+*

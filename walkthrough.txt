@@ -31,7 +31,7 @@ Unsurprisingly, the easiest way for the kid to win is by starting in the center.
 --+--+--
 4o|..|..
 
-(Note that if the kid placed an X in the corner as their second move, they could still force a win. But this might overlap woith other cases, for instance, when the kid started in the corner.)
+(Note that if the kid placed an X on the side the corner as their second move, they could still force a win. But this might overlap with other cases, for instance, when the kid started in the corner.)
 
 There are other ways to win, but I hard-coded this so the kid's win wouldn't overlap others.
 
@@ -55,7 +55,7 @@ If you move on a far side square, the same thing happens, with a slight transpos
 
 Note (3x) in the lower right corner would've worked, too, as the kid would still take the center.
 
-It's worth noting that O taking the center would make it very hard for X to win. Then taking the final corner would lose:
+It's worth noting that O taking the center would make it very hard for X to win, but taking the final corner would lose:
 
 4o|..|1x
 --+--+--
