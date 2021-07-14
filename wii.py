@@ -1,5 +1,7 @@
-'''ttt.py: tic tac toe in python
-# where you meet a kid who wants to beat you, but not after you make obvious dumb mistakes'''
+'''wii.py: Walking Into It, IFComp entry for 2021
+The overall idea is that you meet a kid who wants to win at tic-tac-toe without their opponent making obvious mistakes
+So you must play badly ... but not too badly!
+'''
 
 # pylint: disable=too-many-branches, too-many-statements
 
@@ -11,11 +13,13 @@ from collections import defaultdict
 import os
 
 # local imports
-import tttests
+import gametests
 import mt
 
 # for debugging only
 # import traceback
+
+data_file = "wii.txt"
 
 tree_move_dict = defaultdict(int)
 tree_move_status = defaultdict(int)
@@ -205,7 +209,7 @@ def show_introductory_text():
         print()
 
 def dump_text(my_idx, resize = True):
-    '''given an array of text read from ttt.txt, we print it out with appropriate line spacing'''
+    '''given an array of text read from wii.txt, we print it out with appropriate line spacing'''
     if resize:
         global term_width # pylint: disable=global-statement
         try:
@@ -473,7 +477,7 @@ class GameTracker:
 
     def kid_pick_square(self):
         '''figures what square the kid pics, first looking for forced blocks, wins, and forks
-        the last resort is data from ttt'''
+        the last resort is data from wii'''
         d_print("Finding move for: {}".format(board_sum(self.board)))
         if len(self.moves) == 0:
             return self.kid_start_square()
@@ -746,7 +750,7 @@ def rotation_index(a_sum, a_board):
     sys.exit("Could not rotate {} onto {}.".format(a_sum, a_board))
 
 def check_dupe_trees(board):
-    '''checks for rotation duplicates in data read from ttt.txt'''
+    '''checks for rotation duplicates in data read from wii.txt'''
     my_sum = 0
     #orig_sum = board_sum(board)
     for y in all_sums_from_board(board):
@@ -769,9 +773,9 @@ def check_dupe_trees(board):
     return (tree_move_dict[my_sum], my_sum)
 
 def read_game_stuff(bail = False):
-    '''this reads in kid move data and game text from ttt.txt'''
+    '''this reads in kid move data and game text from wii.txt'''
     text_macro = defaultdict(str)
-    with open("ttt.txt") as file:
+    with open(data_file) as file:
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"):
                 continue
@@ -806,7 +810,7 @@ def read_game_stuff(bail = False):
             try:
                 ary2 = [int(x) for x in ary[0].split(",")]
             except:
-                print("Uh oh. Bad line in ttt.txt {} {}".format(line_count, line.strip()))
+                print("Uh oh. Bad line in {} {} {}".format(data_file, line_count, line.strip()))
             for ia2 in ary2:
                 for x in all_rotations_of_sums(ia2):
                     if x in tree_move_dict:
@@ -820,10 +824,10 @@ def read_game_stuff(bail = False):
             if debug:
                 sys.exit("Oh no! Had trouble parsing line {}: {}".format(line_count, line))
     if bail:
-        sys.exit("Fix ttt before playing.")
+        sys.exit("Fix {} before playing.".format(data_file))
 
 def in_pos_file(my_board_num):
-    '''see if a board number is in ttt.txt'''
+    '''see if a board number is in wii.txt'''
     for x in all_rotations_of_sums(my_board_num):
         if x in tree_move_dict:
             return x
@@ -868,14 +872,14 @@ while cmd_count < len(sys.argv):
     elif arg == 'c':
         check_needed = True
     elif arg == 't':
-        tttests.test_rotations()
+        gametests.test_rotations()
     elif arg == 'l':
         log_output = True
     elif arg[:2] == 'l=':
         log_output = True
         log_file = arg[2:]
     elif arg[0] == 'a':
-        tttests.show_all_rotations(int(arg[1:]))
+        gametests.show_all_rotations(int(arg[1:]))
         sys.exit()
     else:
         usage()
@@ -889,7 +893,7 @@ if log_output:
 # put (other) tests below here
 
 if check_needed:
-    tttests.check_all_needed_branches()
+    gametests.check_all_needed_branches()
 
 # put tests above here
 
