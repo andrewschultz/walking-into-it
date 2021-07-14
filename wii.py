@@ -1,5 +1,6 @@
 '''wii.py: Walking Into It, IFComp entry for 2021
-The overall idea is that you meet a kid who wants to win at tic-tac-toe without their opponent making obvious mistakes
+The overall idea is that you meet a kid who wants to win at tic-tac-toe
+But they don't want obvious mistakes e.g. overlooking an easy block
 So you must play badly ... but not too badly!
 '''
 
@@ -165,6 +166,7 @@ def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_r
         print()
 
 def log_cr():
+    '''cheap stub to decide whether to output a string'''
     return "\n" if log_output else ""
 
 def show_introductory_text():
@@ -356,7 +358,8 @@ class GameTracker:
                     unfound_rotation = True
             if unfound_rotation:
                 if debug:
-                    d_print("DEBUG MESSAGE: You found an alternate solution that will go into the list for this game-start.")
+                    d_print("DEBUG MESSAGE: You found an alternate solution that"
+                        "will go into the list for this game-start.")
                 self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
             return True
         for x in self.win_logs[self.current_first]:
@@ -367,13 +370,15 @@ class GameTracker:
                     my_text_wrap(win_verify["exact-position-before"])
                 else:
                     my_text_wrap(win_verify["rotation-before"])
-                if self.current_first == PLAYER_FIRST and self.first_square_type == CORNER and x == SIDE \
-                    and not self.win_logs[self.current_first][CORNER]: # hard coded. We can generalize.
+                if self.current_first == PLAYER_FIRST and self.first_square_type == CORNER and \
+                    x == SIDE and not self.win_logs[self.current_first][CORNER]:
+                    # This is hard coded. We can generalize, but that'd require extra testing.
                     if len(self.win_logs[self.current_first][SIDE]) > 1:
                         my_text_wrap(win_verify["shift-one-side-win"])
                     else:
                         my_text_wrap(win_verify["shift-side-to-corner"])
-                    self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
+                    self.win_logs[self.current_first][self.first_square_type].append \
+                        (self.fork_position)
                     self.win_logs[self.current_first][x].remove(y)
                 return True
         my_text_wrap(self.win_msg[self.current_first][self.first_square_type])
@@ -576,7 +581,8 @@ class GameTracker:
             if m0 == 'r':
                 global descriptions_not_ascii # pylint: disable=global-statement
                 descriptions_not_ascii = not descriptions_not_ascii
-                print("Descriptions instead of ascii are now {}.".format(mt.on_off(descriptions_not_ascii)))
+                print("Descriptions instead of ascii are now {}.". \
+                    format(mt.on_off(descriptions_not_ascii)))
                 continue
             if m0 in ('v', '?'):
                 dump_text("commands")
