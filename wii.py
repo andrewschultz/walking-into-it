@@ -74,10 +74,11 @@ win_triads = [ [0, 1, 2], [3, 4, 5], [6, 7, 8],
 debug = False
 check_needed = False
 descriptions_not_ascii = False
-log_output = False
-
 term_width = 5000
-log_file = "logfile.log"
+
+# logging variables
+log_output = True
+log_file = "wii-logfile.log"
 
 CONTINUE_PLAYING = 0
 BOARD_FULL_DRAW = -1
@@ -892,6 +893,11 @@ while cmd_count < len(sys.argv):
     cmd_count += 1
 
 if log_output:
+    try:
+        f = open(log_file, "a")
+        f.close()
+    except:
+        sys.exit("Could not open log file candidate {}. Please check to make sure it is a valid path and not a directory.".format(log_file))
     print("Note: carriage returns will appear after each user input prompt to flush STDOUT "+ \
         "so the actual question appears. This shouldn't happen in non-logging mode.")
     sys.stdout = mt.Logger(log_file)
