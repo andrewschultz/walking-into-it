@@ -179,16 +179,22 @@ def show_introductory_text():
             return
         print("debug-skip-intro.txt exists, but it is blank, so I am not skipping the intro.")
     count = 0
-    print("First, this game can give short descriptions instead of small ASCII art.")
+    print("First, this game can give short descriptions instead of displaying minimal ASCII art.",
+        "The ASCII art may cause problems for screen readers.")
+    global descriptions_not_ascii # pylint: disable=global-statement
     while 1:
-        print("Would you like to see the descriptions instead of ASCII art? Y/N")
+        print("Would you prefer descriptions instead of ASCII art (F forces descriptions for screen readers)? Y/N/F")
         raw = _find_getch().decode().lower()
         if raw == 'y':
-            global descriptions_not_ascii # pylint: disable=global-statement
             descriptions_not_ascii = True
-            break
-        if raw == 'n':
-            break
+        elif raw == 'f':
+            descriptions_not_ascii = 2
+        elif raw == 'n':
+            descriptions_not_ascii = False
+        else:
+            continue
+        break
+    print("Note this setting isn't fixed. It can be toggled by typing R.")
     my_text_wrap("If you've read the introduction before, you can "
         "(S)how the remaining introductory text without pauses ({} chunks left) or "
         "(F)ast-forward to ignore the remaining text. "
@@ -581,6 +587,10 @@ class GameTracker:
                 sys.exit("Bye!")
             if m0 == 'r':
                 global descriptions_not_ascii # pylint: disable=global-statement
+                if descriptions_not_ascii == 2:
+                    print("Text descriptions are locked in.",
+                        "You'll need to restart if you wish to toggle to ASCII.")
+                    continue
                 descriptions_not_ascii = not descriptions_not_ascii
                 print("Descriptions instead of ascii are now {}.". \
                     format(mt.on_off(descriptions_not_ascii)))
