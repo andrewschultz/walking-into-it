@@ -55,6 +55,7 @@ X_FIRST = 0
 O_FIRST = 1
 X_PLAYER = 2
 O_PLAYER = 3
+total_display_types = 4
 
 turn_option_descriptions = [ 'X goes first', 'O goes first', 'Player is X', 'Player is O' ]
 square_placement_descriptions = [
@@ -547,6 +548,7 @@ class GameTracker:
                 self.show_board()
                 continue
             m0 = my_move[0] # pylint:disable=invalid-name
+            mx = my_move[1:] if len(my_move) > 1 else '' # pylint:disable=invalid-name
             if m0 == 'a':
                 dump_text("about")
                 continue
@@ -558,7 +560,17 @@ class GameTracker:
                 dump_text("credits")
                 continue
             if m0 == 'd':
-                self.display_type = (self.display_type + 1) % 4
+                if mx == '':
+                    self.display_type = (self.display_type + 1) % total_display_types
+                elif mx.isdigit():
+                    if int(mx) > total_display_types or int(mx) < 1:
+                        print("You need to change to display type 1 through {}.".format(total_display_types))
+                        continue
+                    else:
+                        self.display_type = int(mx) - 1
+                else:
+                    print("The display type argument can be blank (cycling) or 1-{}.".format(total_display_types))
+                    continue
                 print("Changed display type:", turn_option_descriptions[self.display_type])
                 continue
             if my_move in ('l', 's', 'w'):
