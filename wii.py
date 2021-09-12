@@ -196,8 +196,12 @@ def show_introductory_text():
         "The ASCII art may cause problems for screen readers.")
     global descriptions_not_ascii # pylint: disable=global-statement
     while 1:
-        print("Would you prefer descriptions instead of ASCII art (F forces descriptions for screen readers)? Y/N/F")
-        raw = _find_getch().decode().lower()
+        print("Would you prefer descriptions instead of ASCII art",
+            "(F forces descriptions for screen readers)? Y/N/F")
+        raw = _find_getch()
+        if raw == b'\xe0':
+            _find_getch() # Can this semi-duplicated code be pulled into a _find_getch_extended?
+        raw = raw.decode().lower()
         if raw == 'y':
             descriptions_not_ascii = True
         elif raw == 'f':
@@ -217,6 +221,9 @@ def show_introductory_text():
     while count < len(text_arrays["intro"]):
         if wait_for_pause:
             raw = _find_getch()
+            if raw == b'\xe0':
+                _find_getch()
+                continue
             if raw == b'\x03':
                 print("Bailing.")
                 sys.exit()
@@ -576,12 +583,13 @@ class GameTracker:
                     self.display_type = (self.display_type + 1) % total_display_types
                 elif mx.isdigit():
                     if int(mx) > total_display_types or int(mx) < 1:
-                        print("You need to change to display type 1 through {}.".format(total_display_types))
+                        print("You need to change to display type 1 through {}.".format(
+                            total_display_types))
                         continue
-                    else:
-                        self.display_type = int(mx) - 1
+                    self.display_type = int(mx) - 1
                 else:
-                    print("The display type argument can be blank (cycling) or 1-{}.".format(total_display_types))
+                    print("The display type argument can be blank (cycling) or 1-{}.".format(
+                        total_display_types))
                     continue
                 print("Changed display type:", turn_option_descriptions[self.display_type])
                 continue
@@ -939,10 +947,11 @@ while cmd_count < len(sys.argv):
 
 if log_output:
     try:
-        f = open(log_file, "a")
-        f.close()
+        with open(log_file) as very_temp_file:
+            pass
     except:
-        sys.exit("Could not open log file candidate {}. Please check to make sure it is a valid path and not a directory.".format(log_file))
+        sys.exit("Could not open log file candidate {}. ".format(log_file) +
+            "Please check to make sure it is a valid path and not a directory.")
     print("Note: carriage returns will appear after each user input prompt to flush STDOUT "+ \
         "so the actual question appears. This shouldn't happen in non-logging mode.")
     sys.stdout = mt.Logger(log_file)
