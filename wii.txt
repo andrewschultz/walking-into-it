@@ -51,6 +51,13 @@ txtary	intro	Maybe you can put your finger on what you wanted and what the kid w
 txtary	examine	You look at the game the kid was playing. It's only partially finished.
 txtary	examine	X| |O\n-+-+-\n |O|\n-+-+-\nX| |X
 txtary	examine	You think you see what's going to happen there, and you also think you can see more or less how the position came about.
+##################################winhope messages by order
+txtary	winning_move_act	"Umm ... I think this wins. I hope."
+txtary	winning_move_act	The kid nods slightly, pauses, nods again, and moves.
+txtary	winning_move_act	The kid points at a few squares, then moves.
+txtary	winning_move_act	The kid makes the big move a little more confidently than last time.
+txtary	winning_move_act	The kid shoots their hand forward to move almost immediately.
+txtary	winning_move_act	The kid almost knocks your hand away with their move.
 ##################################win messages by order
 txtary	win_progress	The kid can't help making a small show. A few other kids look up from playing ball and stop by. They ask the kid to replay the win. The kid obliges.
 txtary	win_progress	A few more kids stop by. You don't need to provide a replay this time. The initial crowd is glad to relate what happened.

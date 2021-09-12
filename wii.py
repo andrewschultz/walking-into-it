@@ -522,7 +522,7 @@ class GameTracker:
         forking_move_blocks = self.find_forking_move(self.board, KID_COLOR, is_also_block = True)
         ranch = []
         if len(winning_moves):
-            print('"I think this wins!", the kid says.')
+            print(text_arrays["winning_move_act"][self.victories])
             ranch = list(winning_moves)
         elif len(blocking_moves):
             if len(blocking_moves) > 1:
