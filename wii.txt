@@ -59,13 +59,17 @@ txtary	win_progress	This time, the crowd cheers a bit after your latest loss. Ev
 txtary	win_progress	Someone in the crowd whines, "How much more is there going to BE, anyway?" The kids around shush. You assure everyone there's just one more big win. A few kids groan. Others call their friends for the finale.
 txtary	win_progress	The kid jumps up. You mention, yes, they won pretty much every which way. Others surround the kid, asking how they did it. A few come up to you and ask if you'd be willing to lose like that again. You gently explain that your friend was in the right place at the right time, but if they are lucky, the tic-tac-toe champ may be kind enough to beat them, or lose, in the near future. But they'd remember it too easily if they reviewed it right now.\nYour friend is mobbed and invited to the game. You make your way to the library. The book you wanted is a bit dry, and it's also short on detail. But it goes quickly. Near the end, you watch all the kids leave the park for the day. Your friend included. The orange t-shirt is pretty clear from up there. You think back to other games you always wondered about on the way home. That night you learn about Bridge-It or Connect Four. You even brave the intricacies of Nim and, even more dauntingly, Wythoff's Nim.\nYou're sure there's more. You're also sure you'd not have thought of them without running into your friend. What else will you think of looking into that you forgot?
 ##################################usage messages. Why not put them here?
-txtary	usage	You probably typed an invalid parameter. ttt.txt doesn't need parameters except for testing.
+txtary	usage	You probably typed an invalid parameter. wii.py doesn't need parameters except for testing.
 txtary	usage	Here's what can be activated.
-txtary	usage	t = test rotations, c = check needed branches, a = all rotations of a certain #. (programmer testing)
+txtary	usage	FOR PLAYTESTERS:
 txtary	usage	l = log for testing. l=FILE.TXT appends to FILE.TXT. Default is logfile.log. (playtester stuff)
+txtary	usage	FOR PROGRAMMING:
+txtary	usage	t = test rotations, c = check needed branches, a = all rotations of a certain #. (programmer testing)
+txtary	usage	BOTH:
 txtary	usage	d/v = debug/verbose output. (both)
 ##################################win detail messages
-winver	first-already	But sadly, they don't look that happy. They already beat you that way!
+winver	first-already-first	But sadly, they don't look that happy. They already beat you with that first move!
+winver	first-already-second	But sadly, they don't look that happy. They already beat you with that reply to your first move!
 winver	exact-position-before	You're a bit surprised when the kid proclaims they already won from this exact position, so it really shouldn't count.
 winver	rotation-before	You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.
 winver	shift-side-to-corner	But you hammer out a bargain. Since you going first in the corner is probably tougher to beat than you going first on the side, you shift the you-first-side win to the you-first-corner department.

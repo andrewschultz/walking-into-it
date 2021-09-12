@@ -312,7 +312,7 @@ class GameTracker:
                 who_now = ''
             else:
                 who_now = ", (enter) = keep going " + \
-                    'first' if self.current_first == 1 else 'second'
+                    ('first' if self.current_first == 1 else 'second')
             who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.{}". \
                 format(who_now, log_cr())).lower().strip()
             if not who_moves:
@@ -378,7 +378,10 @@ class GameTracker:
                 'really' if self.fork_position else 'slightly'))
             return True
         if self.win_logs[self.current_first][self.first_square_type]:
-            my_text_wrap(win_verify["first-already"])
+            if self.current_first == MY_COLOR:
+                my_text_wrap(win_verify["first-already-second"])
+            else:
+                my_text_wrap(win_verify["first-already-first"])
             unfound_rotation = False
             for x in self.win_logs[self.current_first][self.first_square_type]:
                 if not is_rotated(x, self.fork_position):
@@ -519,7 +522,7 @@ class GameTracker:
         forking_move_blocks = self.find_forking_move(self.board, KID_COLOR, is_also_block = True)
         ranch = []
         if len(winning_moves):
-            print("I think this wins!")
+            print('"I think this wins!", the kid says.')
             ranch = list(winning_moves)
         elif len(blocking_moves):
             if len(blocking_moves) > 1:
