@@ -12,6 +12,7 @@ import random
 import sys
 from collections import defaultdict
 import os
+import re
 
 # local imports
 import gametests
@@ -151,19 +152,30 @@ def my_text_wrap(text, carriage_returns = CR_AFTER, refresh_terminal_size = Fals
             pass
     if carriage_returns & CR_BEFORE:
         print()
-    for temp in text.split("\n"):
-        for x in textwrap.wrap(temp, term_width):
+    text = text.replace("\\n", "\n")
+    for temp in text.rstrip().split("\n"):
+        if not temp:
+            print()
+        for x in textwrap.wrap(kludge_convert(temp), term_width):
             print(x)
     if carriage_returns & CR_AFTER:
         print()
 
+def kludge_convert(my_string):
+    '''this adds 1 to any number that has a + before it'''
+    new_line = re.sub(r'\+([0-9]+)',
+        lambda x: str(int(x.group(1))+my_games.starting_number), my_string)
+    return new_line
 
 def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_return = False):
     '''wraps an array of text strings, with carriage returns as specified'''
     if carriage_returns == CR_AFTER and extra_carriage_return:
         print()
     for line in text_array:
-        my_text_wrap(line, carriage_returns)
+        line_mod = line
+        if '+' in line:
+            line_mod = kludge_convert(line)
+        my_text_wrap(line_mod, carriage_returns)
     if carriage_returns == CR_BEFORE and extra_carriage_return:
         print()
 
