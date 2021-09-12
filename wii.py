@@ -270,6 +270,7 @@ class GameTracker:
     show_numbers = True
     grid_display = True
     starting_number = 1
+    quit_in_a_row = 0
 
     def __init__(self):
         self.init_wins()
@@ -571,6 +572,13 @@ class GameTracker:
                 continue
             m0 = my_move[0] # pylint:disable=invalid-name
             mx = my_move[1:] if len(my_move) > 1 else '' # pylint:disable=invalid-name
+            if m0 == 'q':
+                self.quit_in_a_row += 1
+                if my_move != 'quit' and self.quit_in_a_row == 1:
+                    print("To make sure you don't quit accidentally, I'll request a full QUIT, or another q.")
+                    continue
+                self.conditional_log_bail()
+            self.quit_in_a_row = 0
             if m0 == 'a':
                 dump_text("about")
                 continue
@@ -621,8 +629,6 @@ class GameTracker:
                 self.starting_number = 1
                 self.show_board()
                 continue
-            if m0 == 'q':
-                sys.exit("Bye!")
             if m0 == 'r':
                 global descriptions_not_ascii # pylint: disable=global-statement
                 if descriptions_not_ascii == 2:
