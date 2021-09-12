@@ -580,9 +580,12 @@ class GameTracker:
                 self.grid_display = not self.grid_display
                 print("Grid is now", on_off[self.grid_display])
                 continue
-            if my_move == 'm':
+            if my_move in ('h', 'm'):
                 self.show_moves = not self.show_moves
                 self.show_board()
+                continue
+            if m0 == 'i':
+                dump_text('meta')
                 continue
             if m0 == 'n':
                 self.show_numbers = not self.show_numbers
@@ -607,8 +610,11 @@ class GameTracker:
                 print("Descriptions instead of ascii are now {}.". \
                     format(mt.on_off(descriptions_not_ascii)))
                 continue
-            if m0 in ('v', '?'):
-                dump_text("commands")
+            if m0 == 't':
+                dump_text('options')
+                continue
+            if m0 == '?':
+                dump_text("basichelp")
                 continue
             if m0 in ('x', 'e'):
                 dump_text("examine")
@@ -620,13 +626,18 @@ class GameTracker:
                 self.starting_number = 0
                 self.show_board()
                 continue
+            if m0 == '#':
+                self.starting_number = 1 - self.starting_number
+                print("The board now starts at {} in the upper-left.".format(
+                    ['zero', 'one'][self.starting_number]))
+                self.show_board()
             # debug-only commands here
             if my_move == 'pa' and debug:
                 self.print_all_sums()
             try:
                 x = int(my_move)
             except:
-                print("Unknown command {}. V or ? gives a list of commands.".format(m0.upper()))
+                print("Unknown command {}. ? will help with what works.".format(m0.upper()))
                 continue
             x -= self.starting_number
             if x < 0 or x >= len(self.board):
