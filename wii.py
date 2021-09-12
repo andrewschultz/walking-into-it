@@ -950,14 +950,17 @@ while cmd_count < len(sys.argv):
 
 if log_output:
     try:
-        with open(log_file) as very_temp_file:
-            pass
+        f = open(log_file, "a") # pylint: disable=consider-using-with
+        f.close()
+        print("Note: carriage returns will appear after each user input prompt to flush STDOUT "+ \
+            "so the actual question appears. This shouldn't happen in non-logging mode.")
+        sys.stdout = mt.Logger(log_file)
+        print("Output will go to log file {}.".format(log_file))
     except:
-        sys.exit("Could not open log file candidate {}. ".format(log_file) +
-            "Please check to make sure it is a valid path and not a directory.")
-    print("Note: carriage returns will appear after each user input prompt to flush STDOUT "+ \
-        "so the actual question appears. This shouldn't happen in non-logging mode.")
-    sys.stdout = mt.Logger(log_file)
+        print("* " * 50)
+        print("Could not open log file candidate {}. ".format(log_file) +
+            "Logging disabled. Please check to make sure it is a valid path and not a directory.")
+        log_output = False
 
 # put (other) tests below here
 
