@@ -5,6 +5,14 @@ MACRO_YAWN~-2	"Oh, a draw. Well, that was fast. We can play again." And why not?
 MACRO_NO_FAIR~-1	Sadly, the kid doesn't smile.\n\n"No fair! You missed an obvious block. I want to win fair and square! I'm not a baby any more. Geez."\n\nThe kid looks hurt, then worried they hurt you. You do feel a bit silly. You mention you had, well, things on your mind, but you'll get it straight for them.
 MACRO_BLOCK_AGAIN~0	"Block again. I won't lose THAT easily."
 MACRO_OKAY_BLOCK~0	"Guess I have to block here."
+##################################quit messages
+txtary	quitmsg	The kid looks a bit sad, but at least you tried. You guess.
+txtary	quitmsg	The kid seems to understand you have places to go, things to do and people to see. Well, two out of three ain't bad. They seem glad you paid them some attention.
+txtary	quitmsg	Walking away, you wonder if it would make the parting less awkward to say "I believe in you, kiddo. You can figure out all the other ways to win!"
+txtary	quitmsg	Your head was spinning from the possibilities. And yet, at the same time, you know there are only finitely many, so if the kid is dedicated enough, they'll figure things out.
+txtary	quitmsg	You were getting a bit sick of losing. Perhaps you were also upset you ran out of ways to lose creatively. But you think you did enough for the kid.
+txtary	quitmsg	You convince yourself the kid will figure the last way through, and that will impress their peers. You hope.
+txtary	quitmsg	Congratulations on helping a kid feel better, and I hope you enjoyed this!
 ##################################about-text array
 txtary	about	This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?
 txtary	about	But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. It was part of the Text Adventure Literacy Jam at https://itch.io/jam/talp
@@ -29,6 +37,7 @@ txtary	options	R toggles screen reader mode, though you probably want to keep it
 txtary	meta	Some meta-commands give information about the game state. You don't need them to win, but they can provide clues.
 txtary	meta	A is a general ABOUT, and C is CREDITS.
 txtary	meta	L or W or S (Losses, Wins, Scores) shows your progress, i.e. the kid's wins.
+txtary	meta	Q quits and disappoints the kid, though you need to type it twice, so you don't do so by accident.
 txtary	meta	X examines the tic-tac-toe game the kid was playing alone, which may or may not be a useful or spoilery hint.
 txtary	meta	V or ? views possible commands.
 ##################################credits-text array

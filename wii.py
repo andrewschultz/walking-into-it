@@ -417,7 +417,7 @@ class GameTracker:
         print()
         self.victories += 1
         if self.victories == len(text_arrays["win_progress"]):
-            sys.exit()
+            self.conditional_log_bail()
         return True
 
     def print_all_sums(self):
@@ -676,6 +676,12 @@ class GameTracker:
                 after_moves = len(find_blocking_move(self.board, MY_COLOR))
                 self.played_correctly = before_moves - after_moves
             return
+
+    def conditional_log_bail(self):
+        print(text_arrays["quitmsg"][self.victories])
+        if log_output:
+            print("\n\nThanks for logging your play-through! The file is at {}.".format(log_file))
+        sys.exit()
 
     def place_move(self, square):
         '''place a move, for you or the kid'''
