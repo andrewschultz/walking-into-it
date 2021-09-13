@@ -13,6 +13,7 @@ import sys
 from collections import defaultdict
 import os
 import re
+from random import choice
 
 # local imports
 import gametests
@@ -165,7 +166,7 @@ def kludge_convert(my_string):
     '''this adds 1 to any number that has a + before it'''
     new_line = re.sub(r'\+([0-9]+)',
         lambda x: str(int(x.group(1))+my_games.starting_number), my_string)
-    return new_line
+    return new_line.replace("$KID", kids_name)
 
 def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_return = False):
     '''wraps an array of text strings, with carriage returns as specified'''
@@ -173,7 +174,7 @@ def my_text_wrap_array(text_array, carriage_returns = CR_AFTER, extra_carriage_r
         print()
     for line in text_array:
         line_mod = line
-        if '+' in line:
+        if '+' in line or '$' in line:
             line_mod = kludge_convert(line)
         my_text_wrap(line_mod, carriage_returns)
     if carriage_returns == CR_BEFORE and extra_carriage_return:
@@ -300,13 +301,13 @@ class GameTracker:
         need_you_first = self.left_specific_player_first(PLAYER_FIRST)
         need_kid_first = self.left_specific_player_first(KID_FIRST)
         if not need_kid_first and not need_you_first:
-            sys.exit("Hooray! The kid is happy to have beaten you in all possible ways. "
+            sys.exit("Hooray! {} is happy to have beaten you in all possible ways. ".format(kids_name)
                 "This should not be shown, but it is.")
         if not need_kid_first:
-            print("Since the kid has won starting in the corner, center and sides, you go first.")
+            print("Since {} has won starting in the corner, center and sides, you go first.".format(kids_name))
             return PLAYER_FIRST
         if not need_you_first:
-            print("Since the kid has won all three ways with you first, the kid starts.")
+            print("Since {} has won all three ways with you first, {} starts.".format(kids_name).format(kids_name))
             return KID_FIRST
         while 1:
             if not self.current_first:
@@ -314,8 +315,8 @@ class GameTracker:
             else:
                 who_now = ", (enter) = keep going " + \
                     ('first' if self.current_first == 1 else 'second')
-            who_moves = input("A new game. Who moves first? 1 = you, 2 = the kid{}.{}". \
-                format(who_now, log_cr())).lower().strip()
+            who_moves = input("A new game. Who moves first? 1 = you, 2 = {}{}.{}". \
+                format(kids_name, who_now, log_cr())).lower().strip()
             if not who_moves:
                 if self.current_first:
                     return self.current_first
@@ -335,7 +336,7 @@ class GameTracker:
             return random.choice([1,3,5,7])
         if self.first_square_type == CORNER:
             return random.choice([0,2,6,8])
-        print("Uh-oh, I couldn't find a way for the kid to get started.")
+        print("Uh-oh, I couldn't find a way for {} to get started.".format(kids_name))
         return -1
 
     def check_board(self, this_board = None):
@@ -372,9 +373,9 @@ class GameTracker:
         if game_result == BOARD_FULL_DRAW:
             print("It's a stalemate. Time to start over and play again.")
             return True
-        print("The kid won!")
+        print("{} won!".format(kids_name))
         if not self.played_correctly:
-            print("But they look {} unhappy. "
+            print("But {} looks {} unhappy. ".format(kids_name)
                 "\"No fair! I'm not a baby! You made it too easy.\"".format(
                 'really' if self.fork_position else 'slightly'))
             return True
@@ -414,7 +415,7 @@ class GameTracker:
                 return True
         my_text_wrap(self.win_msg[self.current_first][self.first_square_type])
         self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
-        print(text_arrays["win_progress"][self.victories])
+        print(kludge_convert(text_arrays["win_progress"][self.victories]))
         print()
         self.victories += 1
         if self.victories == len(text_arrays["win_progress"]):
@@ -437,15 +438,15 @@ class GameTracker:
         '''prints all valid wins so far, with special formatting
         if you did nothing meaningful yet or, or cleared X-goes-first'''
         if not self.victories:
-            print("So far, the kid hasn't notched any interesting or worthwhile wins. Yet.")
+            print("{} hasn't notched any impressive wins yet. Keep trying. You'll lose right!".format(kids_name))
             return
-        print("So far, you have let the kid win {} unique ways, total.".format(self.victories))
+        print("So far, you have let {} win {} unique ways, total.".format(kids_name, self.victories))
         place = [ 'in the center', 'in the corner', 'on the side' ]
         for x in self.win_logs:
             you_them = 'you' if x == PLAYER_FIRST else 'them'
             if not self.left_specific_player_first(x):
-                print("  You let the kid beat you all three ways (corner, side, center) with "
-                    "{} going first.".format(you_them))
+                print("  You've lost to {} all three ways (corner, side, center)".format(kids_name),
+                    "with {} going first.".format(you_them))
                 continue
             for y in self.win_logs[x]:
                 if self.win_logs[x][y]:
@@ -468,7 +469,7 @@ class GameTracker:
             if descriptions_not_ascii:
                 if this_board[y]:
                     print(square_placement_descriptions[y], 'is',
-                        'yours' if this_board[y] == 1 else 'the kid\'s')
+                        'yours' if this_board[y] == 1 else '{}\'s'.format(kids_name))
                 continue
             raw_idx = this_board[y]
             if self.display_type == O_PLAYER:
@@ -523,21 +524,21 @@ class GameTracker:
         forking_move_blocks = self.find_forking_move(self.board, KID_COLOR, is_also_block = True)
         ranch = []
         if len(winning_moves):
-            print(text_arrays["winning_move_act"][self.victories])
+            print(kludge_convert(text_arrays["winning_move_act"][self.victories]))
             ranch = list(winning_moves)
         elif len(blocking_moves):
             if len(blocking_moves) > 1:
-                print("Uh oh. The kid should never be in a lost position.")
+                print("Uh oh. {} should never be in a lost position.".format(kids_name))
             if len(forking_move_blocks) > 0:
-                print("\"I see that.\" The kid shifts and giggles slightly.")
+                print("\"I see that.\" {} shifts and giggles slightly.".format(kids_name))
             else:
-                print("The kid nods. They see your threat.")
+                print("{} nods, seeing your threat.".format(kids_name))
             ranch = list(blocking_moves)
         elif len(forking_move_blocks) > 0:
-            print("\"I see that.\" The kid shifts and giggles slightly.")
+            print("\"I see that.\" {} shifts and giggles slightly.".format(kids_name))
             ranch = forking_move_blocks
         elif len(forking_move_noblocks) > 0:
-            print("The kid shifts and giggles slightly.")
+            print("{}'s eyes grow wide for a second or two.".format(kids_name))
             ranch = forking_move_noblocks
         if ranch:
             return random.choice(ranch)
@@ -684,7 +685,7 @@ class GameTracker:
             return
 
     def conditional_log_bail(self):
-        print(text_arrays["quitmsg"][self.victories])
+        print(kludge_convert(text_arrays["quitmsg"][self.victories]))
         if log_output:
             print("\n\nThanks for logging your play-through! The file is at {}.".format(log_file))
         sys.exit()
@@ -850,12 +851,17 @@ def check_dupe_trees(board):
 def read_game_stuff(bail = False):
     '''this reads in kid move data and game text from wii.txt'''
     text_macro = defaultdict(str)
+    global kids_name
     with open(data_file) as file:
         for (line_count, line) in enumerate(file, 1):
             if line.startswith("#"):
                 continue
             if line.startswith(";"):
                 break
+            if line.startswith("names"):
+                name_array = re.sub("^.*\t", "", line.strip()).split(',')
+                kids_name = choice(name_array)
+                continue
             if line.startswith("txtary\t"):
                 ary = line.strip().split("\t")
                 text_arrays[ary[1]].append(ary[2].strip().replace("\\n", "\r\n"))

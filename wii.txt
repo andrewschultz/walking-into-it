@@ -1,18 +1,20 @@
 ##################################macros for what kid says (deprecated/deprecatable?)
-MACRO_MATTER~0	"Does it matter? I don't think it does." The kid fidgets. You can't blame them. You miss the luxury of that sort of impatience.
+MACRO_MATTER~0	"Does it matter? I don't think it does." $KID fidgets. You can't blame them. You miss the luxury of that sort of impatience.
 MACRO_FAIR_WIN~-3	"I had you either way! Go, me!
 MACRO_YAWN~-2	"Oh, a draw. Well, that was fast. We can play again." And why not?
-MACRO_NO_FAIR~-1	Sadly, the kid doesn't smile.\n\n"No fair! You missed an obvious block. I want to win fair and square! I'm not a baby any more. Geez."\n\nThe kid looks hurt, then worried they hurt you. You do feel a bit silly. You mention you had, well, things on your mind, but you'll get it straight for them.
+MACRO_NO_FAIR~-1	Sadly, $KID doesn't smile.\n\n"No fair! You missed an obvious block. I want to win fair and square! I'm not a baby any more. Geez."\n\nThe kid looks hurt, then worried they hurt you. You do feel a bit silly. You mention you had, well, things on your mind, but you'll get it straight for them.
 MACRO_BLOCK_AGAIN~0	"Block again. I won't lose THAT easily."
 MACRO_OKAY_BLOCK~0	"Guess I have to block here."
+##################################random kid names
+names	Ashley,Blair,Casey,Dale,Em,Fran,Gab,Hil,Izzy,Jamie,Kit,Lee,Mel,Noel,Ollie,Pat,Robin,Sandy,Taylor,Val
 ##################################quit messages
-txtary	quitmsg	The kid looks a bit sad, but at least you tried. You guess.
-txtary	quitmsg	The kid seems to understand you have places to go, things to do and people to see. Well, two out of three ain't bad. They seem glad you paid them some attention.
+txtary	quitmsg	$KID looks a bit sad, but at least you tried. You guess.
+txtary	quitmsg	$KID seems to understand you have places to go, things to do and people to see. Well, two out of three ain't bad. They seem glad you paid them some attention.
 txtary	quitmsg	Walking away, you wonder if it would make the parting less awkward to say "I believe in you, kiddo. You can figure out all the other ways to win!"
-txtary	quitmsg	Your head was spinning from the possibilities. And yet, at the same time, you know there are only finitely many, so if the kid is dedicated enough, they'll figure things out.
-txtary	quitmsg	You were getting a bit sick of losing. Perhaps you were also upset you ran out of ways to lose creatively. But you think you did enough for the kid.
-txtary	quitmsg	You convince yourself the kid will figure the last way through, and that will impress their peers. You hope.
-txtary	quitmsg	Congratulations on helping a kid feel better, and I hope you enjoyed this!
+txtary	quitmsg	Your head was spinning from the possibilities. And yet, at the same time, you know there are only finitely many, so if $KID is dedicated enough, they'll figure things out.
+txtary	quitmsg	You were getting a bit sick of losing. Perhaps you were also upset you ran out of ways to lose creatively. But you think you did enough for $KID.
+txtary	quitmsg	You convince yourself $KID will figure the last way through, and that will impress their peers. You hope.
+txtary	quitmsg	Congratulations on helping $KID feel better, and I hope you enjoyed this!
 ##################################about-text array
 txtary	about	This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?
 txtary	about	But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. It was part of the Text Adventure Literacy Jam at https://itch.io/jam/talp
@@ -27,7 +29,7 @@ txtary	basichelp	Most of the time, you will usually just want to type a number f
 txtary	basichelp	Other commands are divided into two groups. I for general information commands and T for stuff you can toggle.
 ##################################option-text array
 txtary	options	You don't need to change any of these options to win the game. However, some may make it easier to view and process things.
-txtary	options	D cycles the display between X first, O first, you as X, and the kid as X. You can also use D1 to D4.
+txtary	options	D cycles the display between X first, O first, you as X, and $KID as X. You can also use D1 to D4.
 txtary	options	G toggles the grid display when showing the board.
 txtary	options	H or M toggles whether or not the current game history is displayed above the board.
 txtary	options	N toggles whether square numbers are shown in the grid or not.
@@ -36,12 +38,12 @@ txtary	options	R toggles screen reader mode, though you probably want to keep it
 ##################################meta-text array
 txtary	meta	Some meta-commands give information about the game state. You don't need them to win, but they can provide clues.
 txtary	meta	A is a general ABOUT, and C is CREDITS.
-txtary	meta	L or W or S (Losses, Wins, Scores) shows your progress, i.e. the kid's wins.
-txtary	meta	Q quits and disappoints the kid, though you need to type it twice, so you don't do so by accident.
-txtary	meta	X examines the tic-tac-toe game the kid was playing alone, which may or may not be a useful or spoilery hint.
+txtary	meta	L or W or S (Losses, Wins, Scores) shows your progress, i.e. $KID's wins.
+txtary	meta	Q quits and disappoints $KID, though you need to type it twice, so you don't do so by accident.
+txtary	meta	X examines the tic-tac-toe game $KID was playing alone, which may or may not be a useful or spoilery hint.
 txtary	meta	V or ? views possible commands.
 ##################################credits-text array
-txtary	credits	Thanks to my testers: Mike Russo.
+txtary	credits	Thanks to my testers: A. DiBianca, Mike Russo.
 #txtary	credits	Thanks to people who found bugs once the game was released: <nobody yet>.
 txtary	credits	Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues
 txtary	credits	Thanks to stackoverflow for helping me with so much cool coding stuff, enough so I would be confident writing a Python text adventure.
@@ -51,29 +53,29 @@ txtary	credits	And thanks to everyone who's been even moderately successful with
 txtary	intro	The book on the four-color theorem isn't online, and it's in the research collection at the main library branch, so you'll have to make a trip. That's okay--the weather's been nice. It's a short train ride and walk. Past a park blocks from the library, you see kids playing ball and yelling. But one kid is to the side, staring at a tic-tac-toe game in chalk on the pavement.
 txtary	intro	You think back to all the draws you played as a kid. Against other kids. Just glad you never lost. It beat the heck out of more physical activities, which you weren't good at. But then the draws got boring. Over the years, you've ... at least kept in shape. Seeing that kid reminds you of something, though.
 txtary	intro	It reminds you of the day you finally won a game. Against another kid who missed something. It didn't feel as good as you hoped, and you didn't know why. You wanted to win and feel clever about it, which felt greedy. You never quite did.
-txtary	intro	The kid looks up at you. "Would you like to play?"
-txtary	intro	Why not? You sit down to play with the kid. You have a faint memory, of one kid taunting another that their position was hopeless. The game itself wasn't important... but you wish you could remember...
+txtary	intro	$KID looks up at you. "Would you like to play?"
+txtary	intro	Why not? You sit down to play with $KID. You have a faint memory, of one kid taunting another that their position was hopeless. The game itself wasn't important... but you wish you could remember...
 txtary	intro	You have nothing better to do. In fact, now might be the perfect time to finish your scratch-writing notebook that has a few pages in it. It's weird, but the last few pages are always tough to get through. It's tough to say goodbye to an inanimate object like a writing notebook.
 txtary	intro	You think back to what you would've wanted as a kid. You remember how adults let you win at certain games, but it was too obvious, and you were almost mad at them. You felt bad, asking for more.
-txtary	intro	Maybe you can put your finger on what you wanted and what the kid wants now.
+txtary	intro	Maybe you can put your finger on what you wanted and what $KID wants now.
 ##################################old game text array
-txtary	examine	You look at the game the kid was playing. It's only partially finished.
+txtary	examine	You look at the game $KID was playing. It's only partially finished.
 txtary	examine	X| |O\n-+-+-\n |O|\n-+-+-\nX| |X
 txtary	examine	You think you see what's going to happen there, and you also think you can see more or less how the position came about.
 ##################################winhope messages by order
 txtary	winning_move_act	"Umm ... I think this wins. I hope."
-txtary	winning_move_act	The kid nods slightly, pauses, nods again, and moves.
-txtary	winning_move_act	The kid points at a few squares, then moves.
-txtary	winning_move_act	The kid makes the big move a little more confidently than last time.
-txtary	winning_move_act	The kid shoots their hand forward to move almost immediately.
-txtary	winning_move_act	The kid almost knocks your hand away with their move.
+txtary	winning_move_act	$KID nods slightly, pauses, nods again, and moves.
+txtary	winning_move_act	$KID points at a few squares, then moves.
+txtary	winning_move_act	$KID makes the big move a little more confidently than last time.
+txtary	winning_move_act	$KID shoots their hand forward to move almost immediately.
+txtary	winning_move_act	$KID almost knocks your hand away with their move.
 ##################################win messages by order
-txtary	win_progress	The kid can't help making a small show. A few other kids look up from playing ball and stop by. They ask the kid to replay the win. The kid obliges.
+txtary	win_progress	$KID can't help making a small show. A few other kids look up from playing ball and stop by. Not NEEDING a break, of course, just curious. They ask $KID to replay the win. $KID obliges.
 txtary	win_progress	A few more kids stop by. You don't need to provide a replay this time. The initial crowd is glad to relate what happened.
-txtary	win_progress	There are still enough kids for several games in the background. But more are gathering. And they're impressed at this new hero they didn't take much notice of before. You hear a brief argument over whether they should cheer the kid on or keep quiet to help them focus.
-txtary	win_progress	This time, the crowd cheers a bit after your latest loss. Everyone wonders how much is left. Some still can't believe the kid managed to win so convincingly going second! More kids stop by.
+txtary	win_progress	There are still enough kids for several games in the background. But more are gathering. And they're impressed at this new hero they didn't take much notice of before. You hear a brief argument over whether they should cheer $KID on or keep quiet to help them focus.
+txtary	win_progress	This time, the crowd cheers a bit after your latest loss. Everyone wonders how much is left. Some still can't believe $KID managed to win so convincingly going second! More kids stop by.
 txtary	win_progress	Someone in the crowd whines, "How much more is there going to BE, anyway?" The kids around shush. You assure everyone there's just one more big win. A few kids groan. Others call their friends for the finale.
-txtary	win_progress	The kid jumps up. You mention, yes, they won pretty much every which way. Others surround the kid, asking how they did it. A few come up to you and ask if you'd be willing to lose like that again. You gently explain that your friend was in the right place at the right time, but if they are lucky, the tic-tac-toe champ may be kind enough to beat them, or lose, in the near future. But they'd remember it too easily if they reviewed it right now.\nYour friend is mobbed and invited to the game. You make your way to the library. The book you wanted is a bit dry, and it's also short on detail. But it goes quickly. Near the end, you watch all the kids leave the park for the day. Your friend included. The orange t-shirt is pretty clear from up there. You think back to other games you always wondered about on the way home. That night you learn about Bridge-It or Connect Four. You even brave the intricacies of Nim and, even more dauntingly, Wythoff's Nim.\nYou're sure there's more. You're also sure you'd not have thought of them without running into your friend. What else will you think of looking into that you forgot?
+txtary	win_progress	$KID jumps up. You mention, yes, they won pretty much every which way. Others surround $KID, asking "how'd you do it" and so forth. A few come up to you and ask if you'd be willing to lose like that again. You gently explain that your friend was in the right place at the right time, but if they are lucky, the tic-tac-toe champ may be kind enough to beat them, or lose, in the near future. But they'd remember it too easily if they reviewed it right now.\nYour friend is mobbed and invited to the game. You make your way to the library. The book you wanted is a bit dry, and it's also short on detail. But you get through it -- taking breaks to look over the park. As everyone leaves, you notice $KID's orange t-shirt in the crowd. It's pretty clear.\n\nYou think back to other games you always wondered about on the way home. That night you learn about Bridge-It or Connect Four. You even brave the intricacies of Nim and, even more dauntingly, Wythoff's Nim.\n\nYou're sure there's more. You're also sure you'd not have thought of them without running into your friend. What else will you think of looking into that you forgot?
 ##################################usage messages. Why not put them here?
 txtary	usage	You probably typed an invalid parameter. wii.py doesn't need parameters except for testing.
 txtary	usage	Here's what can be activated.
@@ -86,17 +88,17 @@ txtary	usage	d/v = debug/verbose output. (both)
 ##################################win detail messages
 winver	first-already-first	But sadly, they don't look that happy. They already beat you with that first move!
 winver	first-already-second	But sadly, they don't look that happy. They already beat you with that reply to your first move!
-winver	exact-position-before	You're a bit surprised when the kid proclaims they already won from this exact position, so it really shouldn't count.
-winver	rotation-before	You're a bit surprised when the kid starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.
+winver	exact-position-before	You're a bit surprised when $KID proclaims they already won from this exact position, so it really shouldn't count.
+winver	rotation-before	You're a bit surprised when $KID starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.
 winver	shift-side-to-corner	But you hammer out a bargain. Since you going first in the corner is probably tougher to beat than you going first on the side, you shift the you-first-side win to the you-first-corner department.
-winver	shift-one-side-to-win	But wait. The kid managed to win more than one way when you started from the side. You both agree it's okay to say, okay, the kid's now won when you've started in the corner or the side.
+winver	shift-one-side-to-win	But wait. $KID managed to win more than one way when you started from the side. You both agree it's okay to say, okay, $KID's now won when you've started in the corner or the side.
 ##################################win messages by start type
-msg-type	1	1	You congratulate the kid on what is probably the toughest way to win. You took the center first, and somehow they pulled it out!
-msg-type	1	2	"Wow! I feel good about that. But I guess I had to take the center there eventually to win." You both poke at other possibilities for a bit and realize that if you take a corner first, then they take an adjacent one, and you take the square between, they can win by taking the corner opposite your first move, then the other corner. But then the kid sees the classic tic-tac-toe win where your second move was in the opposite corner.\n\nIf you want notation, the game went +0-+2-+1-+8-+5-+6.
-msg-type	1	3	"Well, you sort of wasted your first move," the kid says. "I mean ... well ... you know. I think. I hope." You do. But they still did well, and you let them know.
-msg-type	2	1	The kid shrugs a bit, wondering if they really deserved it. Starting in the center was probably the easiest way to win. But you brush off their concerns and commend them for recognizing that was the easiest way through and wanting more.
-msg-type	2	2	The kid fingers the moves in the order played until they come to a suitable conclusion.
-msg-type	2	3	The kid seems slightly blown away that they could win by taking the side square first.
+msg-type	1	1	You congratulate $KID on what is probably the toughest way to win. You took the center first, and somehow they pulled it out!
+msg-type	1	2	"Wow! I feel good about that. But I guess I had to take the center there eventually to win." You both poke at other possibilities for a bit and realize that if you take a corner first, then they take an adjacent one, and you take the square between, they can win by taking the corner opposite your first move, then the other corner. But then $KID sees the classic tic-tac-toe win where your second move was in the opposite corner.\n\nIf you want notation, the game went +0-+2-+1-+8-+5-+6.
+msg-type	1	3	"Well, you sort of wasted your first move," $KID says. "I mean ... well ... you know. I think. I hope." You do. But they still did well, and you let them know.
+msg-type	2	1	$KID shrugs a bit, wondering if they really deserved it. Starting in the center was probably the easiest way to win. But you brush off their concerns and commend them for recognizing that was the easiest way through and wanting more.
+msg-type	2	2	$KID fingers the moves in the order played until they come to a suitable conclusion.
+msg-type	2	3	$KID seems slightly blown away that they could win by taking the side square first.
 #current binary number, where to place, text
 3	4	0	Wow! I get the center!
 #1	4	0	Wow! I get the center!
