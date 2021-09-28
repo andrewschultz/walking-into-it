@@ -80,7 +80,7 @@ descriptions_not_ascii = False
 term_width = 5000
 
 # logging variables
-log_output = True
+log_output = False
 log_file = "wii-logfile.log"
 
 CONTINUE_PLAYING = 0
@@ -249,7 +249,7 @@ def dump_text(my_idx, resize = True):
     my_text_wrap_array(text_arrays[my_idx])
 
 class GameTracker:
-    '''this is the main thing that keeps track of how the kid won'''
+    '''this is the main class that keeps track of how the kid won'''
     # pylint: disable=too-many-instance-attributes
     my_move = PLAYER_FIRST
     board = []
@@ -261,8 +261,7 @@ class GameTracker:
     victories = 0
     fork_position = 0
     played_correctly = 0
-    current_mover = NONE_FIRST
-    current_first = NONE_FIRST
+    current_mover = current_first = NONE_FIRST
     first_square_type = 0
     show_moves = False
     display_type = X_FIRST
@@ -301,8 +300,7 @@ class GameTracker:
         need_you_first = self.left_specific_player_first(PLAYER_FIRST)
         need_kid_first = self.left_specific_player_first(KID_FIRST)
         if not need_kid_first and not need_you_first:
-            sys.exit("Hooray! {} is happy to have beaten you in all possible ways. ".format(kids_name)
-                "This should not be shown, but it is.")
+            sys.exit("Hooray! {} is happy to have beaten you in all possible ways. This should not be shown, but it is.".format(kids_name))
         if not need_kid_first:
             print("Since {} has won starting in the corner, center and sides, you go first.".format(kids_name))
             return PLAYER_FIRST
@@ -375,7 +373,7 @@ class GameTracker:
             return True
         print("{} won!".format(kids_name))
         if not self.played_correctly:
-            print("But {} looks {} unhappy. ".format(kids_name)
+            print("But {} looks {} unhappy. ".format(kids_name),
                 "\"No fair! I'm not a baby! You made it too easy.\"".format(
                 'really' if self.fork_position else 'slightly'))
             return True
@@ -637,7 +635,7 @@ class GameTracker:
                         "You'll need to restart if you wish to toggle to ASCII.")
                     continue
                 descriptions_not_ascii = not descriptions_not_ascii
-                print("Descriptions instead of ascii are now {}.". \
+                print("Descriptions instead of ASCII art are now {}.". \
                     format(mt.on_off(descriptions_not_ascii)))
                 continue
             if m0 == 't':
@@ -667,7 +665,7 @@ class GameTracker:
             try:
                 x = int(my_move)
             except:
-                print("Unknown command {}. ? will help with what works.".format(m0.upper()))
+                print("Unknown command {}. Type ? to see a list.".format(m0.upper()))
                 continue
             x -= self.starting_number
             if x < 0 or x >= len(self.board):
@@ -675,7 +673,7 @@ class GameTracker:
                     self.starting_number, 8 + self.starting_number))
                 continue
             if self.board[x] != 0:
-                print("Something is already on square", x + self.starting_number)
+                print("Something is already on square {}.".format(x + self.starting_number))
                 continue
             before_moves = len(find_blocking_move(self.board, MY_COLOR))
             self.place_move(x)
@@ -941,9 +939,7 @@ orientations = [
 inverse = assign_inverse_orientations()
 
 # initialization stuff
-
 read_game_stuff()
-
 cmd_count = 1
 
 while cmd_count < len(sys.argv):
