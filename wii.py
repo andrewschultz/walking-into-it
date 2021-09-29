@@ -448,6 +448,14 @@ class GameTracker:
                     print("  You managed to lose with {} going first {}.".format(
                         you_them, place[y - 1]))
 
+    def describe_squares(self, who_moves):
+        player_string = 'You' if who_moves == MY_COLOR else kids_name
+        temp_ary = [square_placement_descriptions[x] for x in range(0, 9) if self.board[x] == who_moves]
+        if len(temp_ary) == 0:
+            print("No squares for {}.".format(player_string))
+        else:
+            print("{} took {}.".format(player_string, ', '.join(temp_ary)))
+
     def show_board(self, this_board = None):
         '''simply shows the board based on the display options you have set'''
         if not this_board:
@@ -457,15 +465,15 @@ class GameTracker:
                 print("Moves:", mt.list_nums(self.moves))
             else:
                 print("Nobody has moved yet.")
-        elif descriptions_not_ascii and len(self.moves) == 0:
-            print("Nobody has moved yet.")
+        elif descriptions_not_ascii:
+            if len(self.moves) == 0:
+                print("Nobody has moved yet.")
+            else:
+                self.describe_squares(1)
+                self.describe_squares(2)
+            return
         row_string = ''
         for y in range(0, 9):
-            if descriptions_not_ascii:
-                if this_board[y]:
-                    print(square_placement_descriptions[y], 'is',
-                        'yours' if this_board[y] == 1 else '{}\'s'.format(kids_name))
-                continue
             raw_idx = this_board[y]
             if self.display_type == O_PLAYER:
                 if raw_idx:
@@ -694,6 +702,8 @@ class GameTracker:
             self.first_square_type = locations[square]
         self.moves.append(square)
         self.cell_idx[square] = len(self.moves)
+        if descriptions_not_ascii and self.current_mover == KID_COLOR:
+            print(kids_name, "takes the", square_placement_descriptions[square])
         self.show_board()
 
     def next_move(self):
