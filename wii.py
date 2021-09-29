@@ -325,17 +325,14 @@ class GameTracker:
                 return KID_FIRST
 
     def kid_start_square(self):
-        '''pick a square the kid can start on that might help you win the game'''
+        '''pick a square the kid can start on that might help you lose a different sort of game'''
         picks_list = [x for x in self.win_logs[KID_FIRST] if not self.win_logs[KID_FIRST][x]]
         self.first_square_type = random.choice(picks_list)
-        if self.first_square_type == CENTER:
-            return 4
-        if self.first_square_type == SIDE:
-            return random.choice([1,3,5,7])
-        if self.first_square_type == CORNER:
-            return random.choice([0,2,6,8])
-        print("Uh-oh, I couldn't find a way for {} to get started.".format(kids_name))
-        return -1
+        try:
+            return random.choice([x for x in range(0,9) if locations[x] == self.first_square_type])
+        except:
+            print("Uh-oh, I couldn't find a way for {} to get started.".format(kids_name))
+            return -1
 
     def check_board(self, this_board = None):
         '''check for win or draw'''
