@@ -232,6 +232,7 @@ def show_introductory_text():
             if raw == 's':
                 wait_for_pause = False
             elif raw == 'f':
+                print("  (Skipping the rest of your conversation with {}...)".format(kids_name))
                 return
         my_text_wrap(text_arrays["intro"][count])
         count += 1
@@ -370,9 +371,8 @@ class GameTracker:
             return True
         print("{} won!".format(kids_name))
         if not self.played_correctly:
-            print("But {} looks {} unhappy. ".format(kids_name),
-                "\"No fair! I'm not a baby! You made it too easy.\"".format(
-                'really' if self.fork_position else 'slightly'))
+            print('But {} looks {} unhappy. "No fair! Too easy! I\'m not a baby!"'.format(
+                kids_name, 'really' if self.fork_position else 'slightly'))
             return True
         if self.win_logs[self.current_first][self.first_square_type]:
             if self.current_first == MY_COLOR:
@@ -563,6 +563,8 @@ class GameTracker:
         '''this is the main engine that sees how the player is trying to move'''
         while 1:
             my_move = input(self.input_text() + log_cr()).lower().strip()
+            if log_output:
+                print("<LOGGING PURPOSES ONLY> YOUR COMMAND = {}".format(my_move))
             if my_move == '':
                 self.show_board()
                 continue
