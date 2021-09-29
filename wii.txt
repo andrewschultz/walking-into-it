@@ -1,8 +1,8 @@
 ##################################macros for what kid says (deprecated/deprecatable?)
 MACRO_MATTER~0	"Does it matter? I don't think it does." $KID fidgets. You can't blame them. You miss the luxury of that sort of impatience.
-MACRO_FAIR_WIN~-3	"I had you either way! Go, me!
+MACRO_FAIR_WIN~-3	"I had you either way! Go, me!"
 MACRO_YAWN~-2	"Oh, a draw. Well, that was fast. We can play again." And why not?
-MACRO_NO_FAIR~-1	Sadly, $KID doesn't smile.\n\n"No fair! You missed an obvious block. I want to win fair and square! I'm not a baby any more. Geez."\n\nThe kid looks hurt, then worried they hurt you. You do feel a bit silly. You mention you had, well, things on your mind, but you'll get it straight for them.
+MACRO_NO_FAIR~-1	Sadly, $KID doesn't smile.\n\n"No fair! You missed an obvious block. I want to win fair and square! I'm not a baby any more. Geez."\n\n$KID looks hurt, then worried that might've hurt you. You do feel a bit silly. You commend $KID for being observant and mention adults lose their focus, too.
 MACRO_BLOCK_AGAIN~0	"Block again. I won't lose THAT easily."
 MACRO_OKAY_BLOCK~0	"Guess I have to block here."
 ##################################random kid names
@@ -11,22 +11,24 @@ names	Ashley,Blair,Casey,Dale,Em,Fran,Gab,Hil,Izzy,Jamie,Kit,Lee,Mel,Noel,Ollie,
 txtary	quitmsg	$KID looks a bit sad, but at least you tried. You guess.
 txtary	quitmsg	$KID seems to understand you have places to go, things to do and people to see. Well, two out of three ain't bad. They seem glad you paid them some attention.
 txtary	quitmsg	Walking away, you wonder if it would make the parting less awkward to say "I believe in you, kiddo. You can figure out all the other ways to win!"
-txtary	quitmsg	Your head was spinning from the possibilities. And yet, at the same time, you know there are only finitely many, so if $KID is dedicated enough, they'll figure things out.
+txtary	quitmsg	Your head was spinning from the possibilities. And yet, at the same time, you know there are only finitely many, so if $KID will figure things out with enough dedication.
 txtary	quitmsg	You were getting a bit sick of losing. Perhaps you were also upset you ran out of ways to lose creatively. But you think you did enough for $KID.
 txtary	quitmsg	You convince yourself $KID will figure the last way through, and that will impress their peers. You hope.
 txtary	quitmsg	Congratulations on helping $KID feel better, and I hope you enjoyed this!
 ##################################about-text array
 txtary	about	This was originally intended to be a 4-hour EctoComp game in 2019, but the scope was much too big. Plus I thought it was too abstract. Why bother?
-txtary	about	But games like Sandcastle Master, where an adult humors a kid, so a kid has a fun time, stuck in my mind. It was part of the Text Adventure Literacy Jam at https://itch.io/jam/talp
+txtary	about	But games like Sandcastle Master, from the Text Adventure Literacy Jam at https://itch.io/jam/talp, stuck in my mind. It's a trip to the beach where an adult gives a kid a scavenger hunt to get peace and quiet. So I wondered, what else do adults do for kids that maybe kids realize later?
 txtary	about	And some of my favorite memories of being taught are people who helped me feel smarter than them. Looking back, of course, I realize how clever they were to frame things as they did.
-txtary	about	Also, as a chess player, I remember my fear of how bore draws might take the game over. Sometimes it felt like 'best play' might ruin chess. It ruined tic-tac-toe...or did it? I enjoyed the what-if meta-games.
-txtary	about	I initially went ahead with this to make sure I kept my IFComp streak alive at 11. My other game had had roadblocks, and I was happy with this once I made it about more than some silly abstract kids' game.
-txtary	about	Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot.
+txtary	about	Also, as a chess player, I remember my fear of how bore draws might take the game over. Sometimes it felt like 'best play' might ruin chess. Tic-tac-toe was obviously all about the draws...or was it? I enjoyed the what-if meta-games.
+txtary	about	I initially went ahead with this to make sure I kept my IFComp streak alive at 11. My other game had had roadblocks, and I was happy with this once I made it about more than some silly abstract kids' game. Then, of course, I had the idea for another short game.
+txtary	about	Along the way, I managed to learn about AI and minimax and that sort of thing, and I originally wrote the game without classes. So I rewrote it with classes and learned a lot. I used Pylint to clean up the code. I set a goal of under 1000 lines in the main program. I even used trivial markdown in wii.txt, for the kid's name and alternate board numberings.
 txtary	about	So I think the game stands well on its own, if it's not especially big. Maybe you'll be glad it doesn't drag on, and if you're playing this during IFComp, hopefully that will save your energy to try others.
 txtary	about	My email is blurglecruncheon@gmail.com if you want to contact me about bugs, features, or general stuff.
 ##################################basichelp-text array
 txtary	basichelp	Most of the time, you will usually just want to type a number from +0 to +8 inclusive to make a move.
-txtary	basichelp	Other commands are divided into two groups. I for general information commands and T for stuff you can toggle.
+txtary	basichelp	There are meta-commands as well. They are divided into two groups.
+txtary	basichelp	I gives general information commands, and T toggles various options.
+txtary	basichelp	None of the commands is necessary to win the game, but some may add flavor or ease of play.
 ##################################option-text array
 txtary	options	You don't need to change any of these options to win the game. However, some may make it easier to view and process things.
 txtary	options	D cycles the display between X first, O first, you as X, and $KID as X. You can also use D1 to D4.
@@ -43,17 +45,18 @@ txtary	meta	Q quits and disappoints $KID, though you need to type it twice, so y
 txtary	meta	X examines the tic-tac-toe game $KID was playing alone, which may or may not be a useful or spoilery hint.
 txtary	meta	V or ? views possible commands.
 ##################################credits-text array
-txtary	credits	Thanks to my testers: A. DiBianca, Mike Russo.
-#txtary	credits	Thanks to people who found bugs once the game was released: <nobody yet>.
+txtary	credits	Thanks to my testers: A. DiBianca, Andy Joel, Mike Russo.
+#txtary	credits	Placeholder: thanks to people who found bugs and suggested features once the game was released: <your name could go here!>.
+txtary	credits	Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.
+txtary	credits	I did some research for this. Not a lot, but enough to mention people who've helped me without knowing it.
 txtary	credits	Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues
 txtary	credits	Thanks to stackoverflow for helping me with so much cool coding stuff, enough so I would be confident writing a Python text adventure.
-txtary	credits	Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.
 txtary	credits	And thanks to everyone who's been even moderately successful with a homebrew IFComp entry. It all gave me the confidence to try a project in something other than Inform or Twine.
 ##################################introduction text array
 txtary	intro	The book on the four-color theorem isn't online, and it's in the research collection at the main library branch, so you'll have to make a trip. That's okay--the weather's been nice. It's a short train ride and walk. Past a park blocks from the library, you see kids playing ball and yelling. But one kid is to the side, staring at a tic-tac-toe game in chalk on the pavement.
 txtary	intro	You think back to all the draws you played as a kid. Against other kids. Just glad you never lost. It beat the heck out of more physical activities, which you weren't good at. But then the draws got boring. Over the years, you've ... at least kept in shape. Seeing that kid reminds you of something, though.
 txtary	intro	It reminds you of the day you finally won a game. Against another kid who missed something. It didn't feel as good as you hoped, and you didn't know why. You wanted to win and feel clever about it, which felt greedy. You never quite did.
-txtary	intro	$KID looks up at you. "Would you like to play?"
+txtary	intro	You introduce yourselves and exchange names. $KID looks up at you. "Would you like to play?"
 txtary	intro	Why not? You sit down to play with $KID. You have a faint memory, of one kid taunting another that their position was hopeless. The game itself wasn't important... but you wish you could remember...
 txtary	intro	You have nothing better to do. In fact, now might be the perfect time to finish your scratch-writing notebook that has a few pages in it. It's weird, but the last few pages are always tough to get through. It's tough to say goodbye to an inanimate object like a writing notebook.
 txtary	intro	You think back to what you would've wanted as a kid. You remember how adults let you win at certain games, but it was too obvious, and you were almost mad at them. You felt bad, asking for more.
@@ -72,10 +75,10 @@ txtary	winning_move_act	$KID almost knocks your hand away with their move.
 ##################################win messages by order
 txtary	win_progress	$KID can't help making a small show. A few other kids look up from playing ball and stop by. Not NEEDING a break, of course, just curious. They ask $KID to replay the win. $KID obliges.
 txtary	win_progress	A few more kids stop by. You don't need to provide a replay this time. The initial crowd is glad to relate what happened.
-txtary	win_progress	There are still enough kids for several games in the background. But more are gathering. And they're impressed at this new hero they didn't take much notice of before. You hear a brief argument over whether they should cheer $KID on or keep quiet to help them focus.
+txtary	win_progress	There are still enough kids for several games in the background. But more are gathering, impressed at this new hero they didn't take much notice of before. You hear a brief argument about whether tocheer $KID on or keep quiet to help them focus.
 txtary	win_progress	This time, the crowd cheers a bit after your latest loss. Everyone wonders how much is left. Some still can't believe $KID managed to win so convincingly going second! More kids stop by.
-txtary	win_progress	Someone in the crowd whines, "How much more is there going to BE, anyway?" The kids around shush. You assure everyone there's just one more big win. A few kids groan. Others call their friends for the finale.
-txtary	win_progress	$KID jumps up. You mention, yes, they won pretty much every which way. Others surround $KID, asking "how'd you do it" and so forth. A few come up to you and ask if you'd be willing to lose like that again. You gently explain that your friend was in the right place at the right time, but if they are lucky, the tic-tac-toe champ may be kind enough to beat them, or lose, in the near future. But they'd remember it too easily if they reviewed it right now.\nYour friend is mobbed and invited to the game. You make your way to the library. The book you wanted is a bit dry, and it's also short on detail. But you get through it -- taking breaks to look over the park. As everyone leaves, you notice $KID's orange t-shirt in the crowd. It's pretty clear.\n\nYou think back to other games you always wondered about on the way home. That night you learn about Bridge-It or Connect Four. You even brave the intricacies of Nim and, even more dauntingly, Wythoff's Nim.\n\nYou're sure there's more. You're also sure you'd not have thought of them without running into your friend. What else will you think of looking into that you forgot?
+txtary	win_progress	Someone in the crowd whines, "How much more is there going to BE, anyway?" The kids around shush. You assure everyone there's just one more big win. A few kids groan. Others call their friends for the finale, because it might be over soon.
+txtary	win_progress	$KID jumps up. You mention, yes, that's the last of the ways to win. Others surround $KID, asking "how'd you do it?" and so forth. A few come up to you and ask if you'd be willing to lose like that again. You gently explain that your friend was in the right place at the right time, but if they are lucky, the tic-tac-toe champ may be kind enough to show how it's done, or maybe let special friends try, in the near future. But not right now! It's just be a memory exercise.\nYour friend is mobbed and invited to the game. You make your way to the library. The book you wanted is a bit dry, and it's also short on detail. But you get through it -- taking breaks to look over the park. As everyone leaves, you notice $KID's orange t-shirt in the crowd. It's pretty clear.\n\nYou think back to other games you always wondered about on the way home. That night you learn about Bridge-It or Connect Four. You even brave the intricacies of Nim and, even more dauntingly, Wythoff's Nim.\n\nYou're sure there's more. You're also sure you'd not have thought of them without running into your friend. What else will you think of looking into that you forgot?
 ##################################usage messages. Why not put them here?
 txtary	usage	You probably typed an invalid parameter. wii.py doesn't need parameters except for testing.
 txtary	usage	Here's what can be activated.
@@ -86,11 +89,11 @@ txtary	usage	t = test rotations, c = check needed branches, a = all rotations of
 txtary	usage	BOTH:
 txtary	usage	d/v = debug/verbose output. (both)
 ##################################win detail messages
-winver	first-already-first	But sadly, they don't look that happy. They already beat you with that first move!
-winver	first-already-second	But sadly, they don't look that happy. They already beat you with that reply to your first move!
-winver	exact-position-before	You're a bit surprised when $KID proclaims they already won from this exact position, so it really shouldn't count.
+winver	first-already-first	But sadly, $KID doesn't look very happy. It didn't feel new, because it wasn't. A win is a win, but that was the same win as before.
+winver	first-already-second	But sadly, $KID looks ... polite. Composed. Despite winning without going first. Because it'd already been done.
+winver	exact-position-before	You're a bit surprised when $KID proclaims they already won from this exact position, so it really shouldn't count. Impressive insight!
 winver	rotation-before	You're a bit surprised when $KID starts mentioning how this win LOOKED sort of like another one, so they're not sure if it should count. You undo the last couple moves and rotate and flip the board in your head, and yeah, you have to agree.
-winver	shift-side-to-corner	But you hammer out a bargain. Since you going first in the corner is probably tougher to beat than you going first on the side, you shift the you-first-side win to the you-first-corner department.
+winver	shift-side-to-corner	But you hammer out a bargain. Since you going first in the corner is probably tougher to beat than you going first on the side, and you recall that one game COULD'VE transposed with you starting in the corner, you count it as such. $KID nods, understanding, you think.
 winver	shift-one-side-to-win	But wait. $KID managed to win more than one way when you started from the side. You both agree it's okay to say, okay, $KID's now won when you've started in the corner or the side.
 ##################################win messages by start type
 msg-type	1	1	You congratulate $KID on what is probably the toughest way to win. You took the center first, and somehow they pulled it out!
@@ -100,31 +103,31 @@ msg-type	2	1	$KID shrugs a bit, wondering if they really deserved it. Starting i
 msg-type	2	2	$KID fingers the moves in the order played until they come to a suitable conclusion.
 msg-type	2	3	$KID seems slightly blown away that they could win by taking the side square first.
 #current binary number, where to place, text
-3	4	0	Wow! I get the center!
-#1	4	0	Wow! I get the center!
-1	4	0	Might be big trouble if I don't take the center either.
-1494	8	0	I already have a threat.
-16803	4	0	Someone finally took the center.
-81	0	0	Whoah! Gonna be tough to win now you took the center!
-166	2	0	OK, I'll block. Now you block.
+3	4	0	"Wow! I get the center!"
+#1	4	0	"Wow! I get the center!"
+1	4	0	"Might be big trouble if I don't take the center either."
+1494	8	0	"I already have a threat."
+16803	4	0	"Someone finally took the center."
+81	0	0	"Whoah! Gonna be tough to win now you took the center!"
+166	2	0	"OK, I'll block. Now you block."
 211	6	MACRO_NO_FAIR
 427,453	6	MACRO_NO_FAIR
 913	3	MACRO_BLOCK_AGAIN
-1210	7	0	Doesn't make a difference, does it?
+1210	7	0	"Doesn't make a difference, does it?"
 12145	-1	MACRO_YAWN
 3154	5	MACRO_NO_FAIR
 7528	7	MACRO_BLOCK_AGAIN
 2371	6	MACRO_NO_FAIR
 6745	6	MACRO_NO_FAIR
-172	1	0	OK, I'll block.
+172	1	0	"OK, I'll block."
 205	7	MACRO_NO_FAIR
 907	7	MACRO_NO_FAIR
-2365	3	0	Didn't threaten anything but okay...
+2365	3	0	"Didn't threaten anything but okay..."
 2662	8	MACRO_BLOCK_AGAIN
 3148	5	MACRO_NO_FAIR
 8980	5	MACRO_NO_FAIR
 451	6	MACRO_NO_FAIR
-406	8	0	Ho hum. Block me, I guess.
+406	8	0	"Ho hum. Block me, I guess."
 13531	2	MACRO_OKAY_BLOCK
 13555	6	MACRO_OKAY_BLOCK
 15022	7	MACRO_FAIR_WIN
@@ -132,16 +135,16 @@ msg-type	2	3	$KID seems slightly blown away that they could win by taking the si
 #1153	3	MACRO_OKAY_BLOCK
 #2611	6	MACRO_NO_FAIR
 439,1141	7	MACRO_NO_FAIR
-2599	6	-1	Long as I don't play that side square...
+2599	6	-1	"Long as I don't play that side square..."
 6973	7	MACRO_NO_FAIR
-6724	1	0	I know that one! I'm not playing the corner.
+6724	1	0	"I know that one! I'm not playing the corner."
 6757,7459	7	MACRO_NO_FAIR
-8917	6	0	Okay, I block.
-10384	5	0	I block.
+8917	6	0	"Okay, I block."
+10384	5	0	"I block."
 10402,10618	2	MACRO_NO_FAIR
-192	0	0	No, I'm not playing the opposite corner!
-6755	6	0	You better block again!
-8222	5	0	Block you back.
+192	0	0	"No, I'm not playing the opposite corner!"
+6755	6	0	"You better block again!"
+8222	5	0	"Block you back."
 10895	-1	MACRO_YAWN
 8456	2	MACRO_NO_FAIR
 10400	2	MACRO_NO_FAIR
@@ -149,28 +152,28 @@ msg-type	2	3	$KID seems slightly blown away that they could win by taking the si
 1407	0	MACRO_OKAY_BLOCK
 3596	8	MACRO_OKAY_BLOCK
 16727	-1	MACRO_YAWN
-7970	2	0	Doesn't matter, does it?
+7970	2	0	"Doesn't matter, does it?"
 10175	-1	MACRO_YAWN
 3567	3	MACRO_NO_FAIR
-2352	3	0	You're on the defensive already!
+2352	3	0	"You're on the defensive already!"
 2649	0	0	(Silence)
-2660	6	-1	That's just silly! You have to TRY. Even though it won't HELP...
-3380	8	-3	Wow! I did it!
-9212	6	-3	Wow! I did it!
+2660	6	-1	"That's just silly! You have to TRY. Even though it won't HELP..."
+3380	8	-3	"Wow! I did it!"
+9212	6	-3	"Wow! I did it!"
 10679	-1	MACRO_YAWN
 1145	8	MACRO_NO_FAIR
 2603	8	MACRO_NO_FAIR
 14538	0	MACRO_NO_FAIR
 16722	0	MACRO_NO_FAIR
 2397	6	MACRO_NO_FAIR
-6977	3	-1	No fair! I shouldn't lose like that. There's a bug.
-14536	1	-1	No fair! I shouldn't lose like that. There's a bug.
-9686	1	-1	No fair! I shouldn't lose like that. There's a bug.
-3123	0	0	Oh no! How'd I get suckered like that?
+6977	3	-1	"No fair! I shouldn't lose like that. There's a bug."
+14536	1	-1	"No fair! I shouldn't lose like that. There's a bug."
+9686	1	-1	"No fair! I shouldn't lose like that. There's a bug."
+3123	0	0	"Oh no! How'd I get suckered like that?"
 3128	8	MACRO_NO_FAIR
 3368	8	MACRO_NO_FAIR
 86	7	MACRO_OKAY_BLOCK
-4469	6	MACRO_OKAY_BLOCK Hmm.
+4469	6	MACRO_OKAY_BLOCK
 5954	8	MACRO_FAIR_WIN
 6170	8	MACRO_FAIR_WIN
 12488	3	MACRO_FAIR_WIN
@@ -186,7 +189,7 @@ msg-type	2	3	$KID seems slightly blown away that they could win by taking the si
 5234	5	MACRO_OKAY_BLOCK
 5450	3	MACRO_MATTER
 11768	3	MACRO_MATTER
-11021	6	0	No immediate threats here for you.
+11021	6	0	"No immediate threats here for you."
 12506	5	MACRO_OKAY_BLOCK
 12722	3	MACRO_NO_FAIR
 92	6	MACRO_OKAY_BLOCK
@@ -202,12 +205,12 @@ msg-type	2	3	$KID seems slightly blown away that they could win by taking the si
 12767	-1	MACRO_YAWN
 2567	6	MACRO_NO_FAIR
 6941	6	MACRO_NO_FAIR
-6644	2	0	I think I'm in trouble if I do this wrong.
+6644	2	0	"I think I'm in trouble if I do this wrong."
 15514	6	MACRO_OKAY_BLOCK
 #########################################note below here is if the kid goes first
 # we don't have anything for 0 because that is determined by what you've won
-163	8	0	Okay, let's try this!
-165	0	0	I feel good about my chances.
+163	8	0	"Okay, let's try this!"
+165	0	0	"I feel good about my chances."
 13288	2	MACRO_NO_FAIR
 13294	2	MACRO_NO_FAIR
 13528	6	MACRO_MATTER
@@ -221,9 +224,9 @@ msg-type	2	3	$KID seems slightly blown away that they could win by taking the si
 410	8	MACRO_NO_FAIR
 896	8	MACRO_NO_FAIR
 2354	8	MACRO_NO_FAIR
-5	6	0	A threat already!
+5	6	0	"A threat already!"
 1472	3	MACRO_NO_FAIR
-1490	4	0	Yay, the center!
+1490	4	0	"Yay, the center!"
 1661	8	MACRO_FAIR_WIN
 # a block here would still lose
 1895	8	MACRO_NO_FAIR
@@ -233,72 +236,72 @@ msg-type	2	3	$KID seems slightly blown away that they could win by taking the si
 1706	3	MACRO_NO_FAIR
 3650	3	MACRO_NO_FAIR
 8024	3	MACRO_NO_FAIR
-11	8	0	Let's try this.
+11	8	0	"Let's try this."
 13136	4	MACRO_NO_FAIR
 13160	4	MACRO_NO_FAIR
 13214	4	MACRO_NO_FAIR
 13862	4	MACRO_NO_FAIR
-83	8	0	Ok, try this.
-13208	7	0	Block...
+83	8	0	"Ok, try this."
+13208	7	0	"Block..."
 17591	6	MACRO_NO_FAIR
 17609	6	MACRO_NO_FAIR
 17825	6	MACRO_NO_FAIR
-18311	2	0	Block...
+18311	2	0	"Block..."
 18356	2	MACRO_NO_FAIR
 18572	3	MACRO_YAWN
 # 6 also works below
-245	2	0	Let's rumble!
-6563	6	0	Let's rumble!
+245	2	0	"Huh, random, let's see what happens..."
+6563	6	0	"Huh, random, let's see what happens..."
 8030	3	MACRO_NO_FAIR
-8048	2	0	Nobody's taken the center yet!
+8048	2	0	"Wow. Nobody's taken the center yet!"
 8069	4	MACRO_FAIR_WIN
 8147	1	MACRO_FAIR_WIN
 8309	4	MACRO_NO_FAIR
 10253	4	MACRO_NO_FAIR
 8102	3	MACRO_NO_FAIR
 8264	3	MACRO_NO_FAIR
-7	6	0	Oh, I dunno, here?
-1474	7	0	Oh, I really dunno, here?
+7	6	0	"Gee, I dunno, here?"
+1474	7	0	"Gee, I dunno, here?"
 5875	8	MACRO_NO_FAIR
 6091	8	MACRO_NO_FAIR
 5929	8	MACRO_FAIR_WIN
 12409	4	MACRO_FAIR_WIN
-1492	4	0	Oh, I really dunno, here?
+1492	4	0	"Gee, I dunno, here?"
 1663	7	MACRO_FAIR_WIN
 3841	2	MACRO_FAIR_WIN
 1897	7	MACRO_NO_FAIR
 8215	7	MACRO_NO_FAIR
-1546	8	0	Block...
+1546	8	0	"Okay, gotta block..."
 14677	7	MACRO_NO_FAIR
 14695	7	MACRO_NO_FAIR
 14911	7	MACRO_NO_FAIR
-16855	5	0	Nothing to block...
-17350	3	0	Nothing to block...
+16855	5	0	"Nothing to block... no wrong choices, I hope..."
+17350	3	0	"Nothing to block... no wrong choices, I hope..."
 17368	2	MACRO_NO_FAIR
-1708	4	0	Oh, I really dunno, here?
+1708	4	0	"Gee, I dunno, here?"
 1879	7	MACRO_FAIR_WIN
 4057	7	MACRO_FAIR_WIN
 8431	7	MACRO_NO_FAIR
-3652	4	0	Guess this is okay.
-3823	5	0	Guess this is okay.
+3652	4	0	"I guess this is okay."
+3823	5	0	"I guess this is okay."
 4336	8	MACRO_YAWN
 10870	3	MACRO_NO_FAIR
 10375	2	MACRO_FAIR_WIN
 8026	4	MACRO_FAIR_WIN
-33	4	0	This looks promising.
+33	4	0	"This looks promising."
 196	7	MACRO_NO_FAIR
 204	7	MACRO_NO_FAIR
 438	7	MACRO_NO_FAIR
 924	7	MACRO_NO_FAIR
-2382	0	0	This looks promising.
+2382	0	0	"This looks promising."
 2393	8	MACRO_FAIR_WIN
 2627	8	MACRO_NO_FAIR
 3113	8	MACRO_NO_FAIR
 8945	2	MACRO_FAIR_WIN
 6756	7	MACRO_NO_FAIR
-87	0	0	Ok, see what's next.
-98	6	0	Ok, block.
-1583	5	0	Ok, block.
+87	0	0	"Ok, let's see what's next."
+98	6	0	"Ok, block."
+1583	5	0	"Ok, block."
 4256	8	MACRO_YAWN
 1799	3	MACRO_NO_FAIR
 3743	3	MACRO_NO_FAIR
@@ -308,22 +311,22 @@ msg-type	2	3	$KID seems slightly blown away that they could win by taking the si
 818	2	MACRO_NO_FAIR
 2276	2	MACRO_NO_FAIR
 6650	2	MACRO_NO_FAIR
-735	4	0	Take the center, ok.
+735	4	0	"Take the center, okay."
 898	7	MACRO_NO_FAIR
 906	7	MACRO_NO_FAIR
-3084	8	0	OK, block.
-16207	3	0	OK, block.
+3084	8	0	"OK, block."
+16207	3	0	"OK, block."
 16233	0	MACRO_NO_FAIR
 16449	0	MACRO_NO_FAIR
 7458	7	MACRO_NO_FAIR
 2193	4	0	Center.
-2356	3	0	Why not here?
+2356	3	0	"Why not here?"
 2419	5	MACRO_NO_FAIR
-2653	6	0	Why not here?
+2653	6	0	"Why not here?"
 4120	8	MACRO_YAWN
 10672	2	MACRO_YAWN
 3139	5	MACRO_NO_FAIR
-8971	6	0	Block.
+8971	6	0	"Block."
 10438	5	MACRO_NO_FAIR
 #15 vs 27 could go either way
 ;
