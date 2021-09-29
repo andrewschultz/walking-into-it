@@ -400,18 +400,16 @@ class GameTracker:
                 if self.current_first == PLAYER_FIRST and self.first_square_type == CORNER and \
                     x == SIDE and not self.win_logs[self.current_first][CORNER]:
                     # This is hard coded. We can generalize, but that'd require extra testing.
-                    if len(self.win_logs[self.current_first][SIDE]) > 1:
+                    if len(self.win_logs[PLAYER_FIRST][SIDE]) > 1:
                         my_text_wrap(win_verify["shift-one-side-win"])
                     else:
                         my_text_wrap(win_verify["shift-side-to-corner"])
-                    self.win_logs[self.current_first][self.first_square_type].append \
-                        (self.fork_position)
-                    self.win_logs[self.current_first][x].remove(y)
+                    self.win_logs[PLAYER_FIRST][CORNER].append(self.fork_position)
+                    self.win_logs[PLAYER_FIRST][SIDE].remove(y)
                 return True
         my_text_wrap(self.win_msg[self.current_first][self.first_square_type])
         self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
-        print(kludge_convert(text_arrays["win_progress"][self.victories]))
-        print()
+        print(kludge_convert(text_arrays["win_progress"][self.victories]) + "\n")
         self.victories += 1
         if self.victories == len(text_arrays["win_progress"]):
             self.conditional_log_bail()
