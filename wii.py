@@ -306,7 +306,7 @@ class GameTracker:
             print("Since {} has won starting in the corner, center and sides, you go first.".format(kids_name))
             return PLAYER_FIRST
         if not need_you_first:
-            print("Since {} has won all three ways with you first, {} starts.".format(kids_name).format(kids_name))
+            print("Since {} has won all three ways with you first, {} starts.".format(kids_name, kids_name))
             return KID_FIRST
         while 1:
             if not self.current_first:
@@ -409,7 +409,7 @@ class GameTracker:
                 return True
         my_text_wrap(self.win_msg[self.current_first][self.first_square_type])
         self.win_logs[self.current_first][self.first_square_type].append(self.fork_position)
-        print(kludge_convert(text_arrays["win_progress"][self.victories]) + "\n")
+        my_text_wrap(text_arrays["win_progress"][self.victories] + "\n")
         self.victories += 1
         if self.victories == len(text_arrays["win_progress"]):
             self.conditional_log_bail()
@@ -436,7 +436,7 @@ class GameTracker:
         print("So far, you have let {} win {} unique ways, total.".format(kids_name, self.victories))
         place = [ 'in the center', 'in the corner', 'on the side' ]
         for x in self.win_logs:
-            you_them = 'you' if x == PLAYER_FIRST else 'them'
+            you_them = 'you' if x == PLAYER_FIRST else kids_name
             if not self.left_specific_player_first(x):
                 print("  You've lost to {} all three ways (corner, side, center)".format(kids_name),
                     "with {} going first.".format(you_them))
