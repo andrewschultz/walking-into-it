@@ -122,6 +122,15 @@ def python_2_checkoffs():
         if temp.isdigit():
             term_width = int(temp)
 
+def old_python_3_check():
+    version_tuple = sys.version_info
+    print("Checking version: {}.{}".format(version_tuple[0], version_tuple[1]))
+    if version_tuple[0] == 3 and version_tuple[1] < 9:
+        print("You may be using an old version of Python, which may cause some small odd text discrepancies.")
+        print("\nYou may wish to update to 3.9 or the latest version.\n")
+        print("(hit enter to continue or ctrl-c to exit and download the latest Python)")
+        _find_getch()
+
 # thanks to https://stackoverflow.com/a/21659588/6395052
 def _find_getch():
     # pylint: disable=import-outside-toplevel,invalid-name
@@ -957,6 +966,7 @@ orientations = [
 inverse = assign_inverse_orientations()
 
 # initialization stuff
+old_python_3_check()
 read_game_stuff()
 cmd_count = 1
 
