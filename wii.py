@@ -90,6 +90,10 @@ KID_WON = 2
 
 intro_array = []
 
+def input_stub(my_text):
+    temp = str(input(my_text))
+    return temp.lower().strip()
+
 def crude_process(my_raw):
     try:
         my_raw = my_raw.decode()
@@ -322,7 +326,7 @@ class GameTracker:
                 who_now = ", (enter) = keep going " + \
                     ('first' if self.current_first == 1 else 'second')
             input_str = "A new game. Who moves first? 1 = you, 2 = {}{}.{}".format(kids_name, who_now, log_cr())
-            who_moves = str(input(input_str)).lower().strip()
+            who_moves = input_stub(input_str)
             if not who_moves:
                 if self.current_first:
                     return self.current_first
@@ -575,7 +579,7 @@ class GameTracker:
     def player_move(self):
         '''this is the main engine that sees how the player is trying to move'''
         while 1:
-            my_move = input(self.input_text() + log_cr()).lower().strip()
+            my_move = input_stub(self.input_text() + log_cr())
             if log_output:
                 print("<LOGGING PURPOSES ONLY> YOUR COMMAND = {}".format(my_move))
             if my_move == '':
