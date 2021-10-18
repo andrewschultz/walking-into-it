@@ -90,6 +90,13 @@ KID_WON = 2
 
 intro_array = []
 
+def crude_process(my_raw):
+    try:
+        my_raw = my_raw.decode()
+    except:
+        pass
+    return my_raw.lower()
+
 def python_2_checkoffs():
     # pylint: disable=redefined-builtin,undefined-variable,global-statement
     ''' python 3 can detect terminal size. python 2 can't.
@@ -105,9 +112,9 @@ def python_2_checkoffs():
         term_width = os.get_terminal_size().columns
     except:
         temp = input("Since you seem to be using Python 2, "
-            "I want to ask you for your preferred terminal width."
+            "I want to ask you for your preferred terminal width.\n\n"
             "This only affects text-wrapping for paragraphs of text, "
-            "so you can just ignore this question if you'd like.")
+            "so you can just ignore this question if you'd like.\n\n")
         if temp.isdigit():
             term_width = int(temp)
 
@@ -202,7 +209,7 @@ def show_introductory_text():
         raw = _find_getch()
         if raw == b'\xe0':
             _find_getch() # Can this semi-duplicated code be pulled into a _find_getch_extended?
-        raw = raw.decode().lower()
+        raw = crude_process(raw)
         if raw == 'y':
             descriptions_not_ascii = True
         elif raw == 'f':
@@ -228,7 +235,7 @@ def show_introductory_text():
             if raw == b'\x03':
                 print("Bailing.")
                 sys.exit()
-            raw = raw.decode().lower()
+            raw = crude_process(raw)
             if raw == 's':
                 wait_for_pause = False
             elif raw == 'f':
@@ -314,8 +321,8 @@ class GameTracker:
             else:
                 who_now = ", (enter) = keep going " + \
                     ('first' if self.current_first == 1 else 'second')
-            who_moves = input("A new game. Who moves first? 1 = you, 2 = {}{}.{}". \
-                format(kids_name, who_now, log_cr())).lower().strip()
+            input_str = "A new game. Who moves first? 1 = you, 2 = {}{}.{}".format(kids_name, who_now, log_cr())
+            who_moves = str(input(input_str)).lower().strip()
             if not who_moves:
                 if self.current_first:
                     return self.current_first
