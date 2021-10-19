@@ -1,6 +1,10 @@
-Walkthrough for <insert game here> by Andrew Schultz blurglecruncheon@gmail.com
-http://andrewschultz.itch.io
-http://github.com/andrewschultz/<tic-tac-toe>
+Walkthrough for, err, Walking Into It by Andrew Schultz blurglecruncheon@gmail.com
+Game page: http://andrewschultz.itch.io/walking-into-it
+Source control page: http://github.com/andrewschultz/walking-into-it
+
+This game was entered in the 2021 IFComp.
+
+First of all, if you were wondering, the kid's name is randomly chosen from various unisex names in wii.txt. They will be referred to as "the kid" for brevity's sake and also because I originally wrote this document before testers suggested I give the kid a name. I chose a maximum of one per starting letter, though some went unused. If you have any ideas for the missing letters, I'd love to know. I'd be glad to give you credit. I just did a quick Google search.
 
 In order to please the kid, you need to be able to let them win at tic-tac-toe. But you can't let them win by being dumb and missing an immediate three-in-a-row!
 
@@ -19,7 +23,11 @@ We'll go roughly from easiest to lose to hardest. The exact difficulty is debata
 
 Note the kid moves randomly on the first move, but after that, it's relatively fixed, and they always block or find a fork when they can.
 
-To understand the notation, the numbers are the orders of moves. X goes first, third and fifth, and so forth. I hope the rotations won't be too hard to figure out. I also assume that O plays second.
+To understand the notation, the numbers are the orders of moves. X goes first, third and fifth, and so forth. I also assume that O plays second.
+
+I hope that rotations of these solutions won't be too hard to figure out, because the kid, when they start on an edge or corner, randomly picks from any of the four. 
+
+As a few last-ditch "don't use the walkthrough unless necessary" prods: there are only finitely many choices, and unique ones are cut down by 1) having to make obvious blocks and 2) rotations and symmetry, so you can win/lose right by process of elimination without, hopefully, too much sweat. You also probably figured that, when in doubt, take an edge, as that makes the fewest threats and lets the kid make more threats. But not always! You, of course, have to take the center to win a couple of ways, but sometimes the corner is the right move. You need a little foresight.
 
 ==========================1. kid goes first, center
 
