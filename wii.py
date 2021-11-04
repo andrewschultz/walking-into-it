@@ -107,6 +107,7 @@ def python_2_checkoffs():
     But we need to give a default term_width to call functions.
     We make it ridiculously large, because text-wrapping isn't critical.'''
     try:
+        global input
         input = raw_input
     except:
         pass
@@ -472,7 +473,7 @@ class GameTracker:
         if len(temp_ary) == 0:
             print("No squares for {}.".format(player_string))
         else:
-            print("{} took {}.".format(player_string, ', '.join(temp_ary)))
+            print("{} took {}, square {}.".format(player_string, ', '.join(temp_ary), x + starting_number))
 
     def show_board(self, this_board = None):
         '''simply shows the board based on the display options you have set'''
@@ -711,6 +712,7 @@ class GameTracker:
         print(kludge_convert(text_arrays["quitmsg"][self.victories]))
         if log_output:
             print("\n\nThanks for logging your play-through! The file is at {}.".format(log_file))
+        temp = input("Press <ENTER> to exit the game. If you double-clicked on the wii.py file, this will cause the text window to close.")
         sys.exit()
 
     def place_move(self, square):
