@@ -46,7 +46,7 @@ txtary	meta	X examines the tic-tac-toe game $KID was playing alone, which may or
 txtary	meta	V or ? views possible commands.
 ##################################credits-text array
 txtary	credits	Thanks to my testers: A. DiBianca, Andy Joel, Ade McT and Mike Russo. They all took time to look at a fellow IFComp entrant's effort and make it better, and I enjoyed what they had to offer as well.
-#txtary	credits	Placeholder: thanks to people who found bugs and suggested features once the game was released: Autumn Chen and Amanda Walker helped me uncover problems with Python 2.x, and dgtziea found a useful bug when the endgame cut out too soon.
+#txtary	credits	Thanks to people who found bugs and suggested features once the game was released: Autumn Chen and Amanda Walker helped me uncover problems with Python 2.x, Viv Dunstan found a regression introduced by an update, and dgtziea found a useful bug when the endgame cut out too soon.
 txtary	credits	Thanks to people on various discord servers for general game talk: PunyInform, Adventuron, and the 6502 workshop. It helped when I was stuck with things.
 txtary	credits	I did some research for this. Not a lot, but enough to mention people who've helped me without knowing it.
 txtary	credits	Thanks to Clederson Cruz for the tic tac toe minimax code: https://github.com/Cledersonbc/tic-tac-toe-minimax/issues

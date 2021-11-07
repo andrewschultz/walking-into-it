@@ -473,7 +473,7 @@ class GameTracker:
         if len(temp_ary) == 0:
             print("No squares for {}.".format(player_string))
         else:
-            print("{} took {}, square {}.".format(player_string, ', '.join(temp_ary), x + starting_number))
+            print("{} took {}, square {}.".format(player_string, ', '.join(temp_ary), x + self.starting_number))
 
     def show_board(self, this_board = None):
         '''simply shows the board based on the display options you have set'''
