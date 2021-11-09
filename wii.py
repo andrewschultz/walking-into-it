@@ -473,7 +473,7 @@ class GameTracker:
         if len(temp_ary) == 0:
             print("No squares for {}.".format(player_string))
         else:
-            print("{} took {}, square {}.".format(player_string, ', '.join(temp_ary), x + self.starting_number))
+            print("{} took {}.".format(player_string, ', '.join(temp_ary)))
 
     def show_board(self, this_board = None):
         '''simply shows the board based on the display options you have set'''
@@ -723,7 +723,10 @@ class GameTracker:
         self.moves.append(square)
         self.cell_idx[square] = len(self.moves)
         if descriptions_not_ascii and self.current_mover == KID_COLOR:
-            print(kids_name, "takes the", square_placement_descriptions[square])
+            print("{} takes the {}.".format(kids_name, square_placement_descriptions[square]))
+            print("Here is the new board status:")
+        if descriptions_not_ascii and len(self.moves) != 9 and self.current_mover == MY_COLOR:
+            return
         self.show_board()
 
     def next_move(self):
