@@ -13,19 +13,26 @@ EMPTY_PLAYER = 0
 X_PLAYER = 1
 Y_PLAYER = 2
 
+def to_num(my_tuple):
+    return ''.join([str(a) for a in my_tuple])
+
+def is_two_match(the_board, the_move, three_squares):
+    freq = [0, 0, 0]
+    for x in range(0, 3):
+        this_square = the_board[three_squares[x][0]][three_squares[x][1]][three_squares[x][2]]
+        freq[this_square] += 1
+        if this_square == 0:
+            open_square = three_squares[x]
+    if freq[0] == 1 and freq[the_move] == 2:
+        return open_square
+    return None
+
 def possible_wins(the_board, the_move, look_for_win):
     potential_wins = []
     for w in wins:
-        so_far = 0
-        last_blank = -1
-        for x in range(0, 3):
-            this_square = the_board[w[x][0]][w[x][1]][w[x][2]]
-            if this_square == 0:
-                last_blank = x
-            elif this_square == the_move:
-                so_far += 1
-        if so_far == 2 and last_blank != -1:
-            potential_wins.append(''.join([str(j) for j in w[x]]))
+        temp = is_two_match(the_board, the_move, w)
+        if temp:
+            potential_wins.append(''.join([str(j) for j in temp]))
     return potential_wins
 
 def print_board(the_board):
@@ -46,16 +53,40 @@ def check_win(the_board, the_move):
             return j
     return 0
 
+def possible_forks(this_board, this_move):
+    poss = []
+    for c in coords:
+        if this_board[c] != 0:
+            continue
+        this_board[c] = this_move
+        wins_this_square = 0
+        for w in wins:
+            if c not in w:
+                continue
+            temp = is_two_match(this_board, this_move, w)
+            wins_this_square += (temp != None)
+        if wins_this_square > 1:
+            poss.append(c)
+        this_board[c] = 0
+    return poss
+
 def play_a_game():
     my_board = numpy.zeros((3, 3, 3), dtype=numpy.int8)
     current_move = X_PLAYER
     move_list = []
     while 1:
-        possible_wins(my_board, 3 - current_move, False)
+        potential_blocks = possible_wins(my_board, 3 - current_move, False)
         potential_wins = possible_wins(my_board, current_move, True)
+        potential_forks = possible_forks(my_board, current_move)
+
+        if len(potential_blocks) > 0:
+            print("Need to block at {}".format(', '.join(potential_blocks)))
 
         if len(potential_wins) > 0:
-            print("Potential {}{} at {}".format(move_type[look_for_win], 's' if len(potential_wins) > 1 else '', ', '.join(potential_wins)))
+            print("Potential win{} at {}".format('s' if len(potential_wins) > 1 else '', ', '.join(potential_wins)))
+
+        if len(potential_forks) > 0:
+            print("Winning forks at {}".format(', '.join([to_num(x) for x in potential_forks])))
 
         x = input("Where will {} move (x, y, z coordinate)?".format(whose_move[current_move])).strip().lower()
 
@@ -100,6 +131,13 @@ def play_a_game():
                 return
             current_move = 3 - current_move
             move_list.append(100 * coord[0] + 10 * coord[1] + coord[2])
+
+coords = []
+
+for a in range (0, 3):
+    for b in range (0, 3):
+        for c in range (0, 3):
+            coords.append((a, b, c))
 
 wins = [ ((0, 0, 0), (0, 0, 1), (0, 0, 2)),
 ((0, 1, 0), (0, 1, 1), (0, 1, 2)),
