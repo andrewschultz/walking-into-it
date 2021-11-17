@@ -2,6 +2,7 @@
 # wai.py: Walking Around It
 #
 
+import sys
 import numpy
 import re
 
@@ -58,12 +59,23 @@ def play_a_game():
 
         x = input("Where will {} move (x, y, z coordinate)?".format(whose_move[current_move])).strip().lower()
 
+        if x[0] == '':
+            print_board(my_board)
+            continue
+        if x.startswith('quit'):
+            print("You put your little thought experiment down.")
+            sys.exit()
+        elif x[0] == 'q':
+            print("Note: the game requires you to type out QUIT so you don't quit by accident. Ctrl-c also works.")
+            continue
+
         if x[0] == 'm':
             if len(move_list) == 0:
                 print("No moves yet.")
                 continue
             print("Moves so far, in order:")
-            print("    " + ', '.join([str(x) for x in move_list])
+            print("    " + ', '.join([str(x) for x in move_list]))
+
         if x[0] == 'u':
             if len(move_list) == 0:
                 print("Nothing to undo.")
