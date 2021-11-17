@@ -3,9 +3,14 @@
 # walking into it auxiliary file
 #
 
+import os
+import sys
 import re
 
 square = [ '?', ' ', 'X', 'O' ]
+
+logic = "reasoning.txt"
+source = "wai.py"
 
 def is_board_line(my_string):
     return re.search("^[OX\| ]{5,}$", my_string)
@@ -13,13 +18,17 @@ def is_board_line(my_string):
 def rot13_string_convert(my_string):
     footer_chunk = "-+-+- "
     mss = my_string.rstrip()
+    mss_orig = mss
     out_string = ''
     if is_board_line(my_string):
         paren_val = 0
-        while len(mss) >= 7:
+        while len(mss) >= 6:
             paren_val <<= 6
-            paren_val += square.index(mss[1]) + square.index(mss[1]) << 2 + square.index(mss[1]) << 4
-            mss = mss[7:]
+            try:
+                paren_val += square.index(mss[0]) + square.index(mss[2]) << 2 + square.index(mss[4]) << 4
+            except:
+                sys.exit("Badly formatted board: {} ~ <{}> ~ <{}/{}/{}> in {}".format(mss_orig, mss, mss[0], mss[2], mss[4], square))
+            mss = mss[6:]
         out_string = "{{}}".format(paren_val)
         if '\n' in my_string:
             out_string += "\n"
@@ -49,16 +58,12 @@ def rot13_string_convert(my_string):
         "NOPQRSTUVWXYZnopqrstuvwxyzABCDEFGHIJKLMabcdefghijklm")
         return string.translate(my_string, rot13)
 
-# testing
-#print(rot13_string_convert("{55}"))
-#print(rot13_string_convert("{21}"))
-#print(rot13_string_convert("{-39}"))
-print(rot13_string_convert("Testing"))
-print(rot13_string_convert("This is a test."))
-
 def rot13_file_convert(file_name):
     out_file = rot13_string_convert(file_name)
+    if not os.path.exists(file_name):
+        sys.exit("No file {} to process.".format(file_name))
     fout = open(out_file, "w")
+    look_ahead = False
     with open(file_name) as file:
         for (line_count, line) in enumerate (file, 1):
             if look_ahead:
@@ -74,3 +79,29 @@ def rot13_file_convert(file_name):
                 continue
             fout.write(rot13_string_convert(line))
     fout.close()
+
+encode = False
+
+if 'wiaux' in sys.argv[0]:
+    cmd_count = 1
+    while cmd_count < len(sys.argv):
+        arg = sys.argv[cmd_count].lower()
+        if arg[0] == '-':
+            arg = arg[1:]
+        if arg[0] == 'e':
+            encode = True
+        elif arg[0] == 'd':
+            encode = False
+        elif arg[0] == '?':
+            print("d=decode e=encode")
+        else:
+            sys.exit("d=decode e=encode")
+        cmd_count += 1
+    if encode:
+        print("encoding")
+        rot13_file_convert(rot13_string_convert(logic))
+        rot13_file_convert(rot13_string_convert(source))
+    else:
+        print("decoding")
+        rot13_file_convert(logic)
+        rot13_file_convert(source)
