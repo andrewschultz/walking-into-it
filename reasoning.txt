@@ -8,7 +8,7 @@ For me it broke open when I considered the corner squares of the top plane. Assu
 
 X| |X
 -+-+-
- | | 
+ | |
 -+-+-
 X| |X
 
@@ -18,7 +18,7 @@ The two-of-each cases may actually be slightly easier than three-and-one. First 
 
 X| |O
 -+-+-
- | | 
+ | |
 -+-+-
 O| |X
 
@@ -56,7 +56,7 @@ X| |X  | |   | |
 -+-+- -+-+- -+-+-
  | |   |X|   | |
 -+-+- -+-+- -+-+-
-X| |O  | |   | | 
+X| |O  | |   | |
 
 You need 3 O's on the bottom plane to avoid a three-match on the long cube diagonal.
 
@@ -82,7 +82,7 @@ O| |O  | |   | |
 -+-+- -+-+- -+-+-
  | |   |X|   | |
 -+-+- -+-+- -+-+-
-X| |O  | |   | | 
+X| |O  | |   | |
 
 There the upper right corner must be an O.
 
@@ -90,7 +90,7 @@ O| |O  | |   | |O
 -+-+- -+-+- -+-+-
  | |   |X|   | |
 -+-+- -+-+- -+-+-
-X| |O  | |   | | 
+X| |O  | |   | |
 
 But that creates the same problem, namely, three squares in the central plane must each have an X!
 
@@ -98,7 +98,7 @@ O| |O  |X|X  | |O
 -+-+- -+-+- -+-+-
  | |   |X|X  | |
 -+-+- -+-+- -+-+-
-X| |O  | |   | | 
+X| |O  | |   | |
 
 Again, any X makes a match in the center plane, but filling it in with all O's makes three O's in a row.
 

@@ -3,6 +3,8 @@
 # walking into it auxiliary file
 #
 
+import mytools
+import shutil
 import os
 import sys
 import re
@@ -18,18 +20,21 @@ def is_board_line(my_string):
 def rot13_string_convert(my_string):
     footer_chunk = "-+-+- "
     mss = my_string.rstrip()
+    if len(mss) > 0 and mss[-1] == '|':
+        mss += ' '
     mss_orig = mss
     out_string = ''
     if is_board_line(my_string):
         paren_val = 0
-        while len(mss) >= 6:
-            paren_val <<= 6
+        mult_val = 1
+        while len(mss) >= 5:
             try:
-                paren_val += square.index(mss[0]) + square.index(mss[2]) << 2 + square.index(mss[4]) << 4
+                paren_val += mult_val * (square.index(mss[0]) + (square.index(mss[2]) << 2) + (square.index(mss[4]) << 4))
             except:
                 sys.exit("Badly formatted board: {} ~ <{}> ~ <{}/{}/{}> in {}".format(mss_orig, mss, mss[0], mss[2], mss[4], square))
             mss = mss[6:]
-        out_string = "{{}}".format(paren_val)
+            mult_val <<= 6
+        out_string = "{{{}}}".format(paren_val)
         if '\n' in my_string:
             out_string += "\n"
         return out_string
@@ -41,6 +46,7 @@ def rot13_string_convert(my_string):
         while this_idx > 0:
             footer_length += 1
             next_fragment = "{}|{}|{} ".format(square[this_idx & 3], square[(this_idx >> 2) & 3], square[(this_idx >> 4) & 3])
+            print(this_idx, this_idx & 3, (this_idx >> 2) & 3, (this_idx >> 4) & 3)
             this_idx >>= 6
             out_string += next_fragment
         out_string = out_string.rstrip()
@@ -54,9 +60,10 @@ def rot13_string_convert(my_string):
         "NOPQRSTUVWXYZABCDEFGHIJKLMnopqrstuvwxyzabcdefghijklm"))
     except:
         import string
-        rot13 = string.maketrans("ABCDEFGHIJKLMabcdefghijklmNOPQRSTUVWXYZnopqrstuvwxyz", 
-        "NOPQRSTUVWXYZnopqrstuvwxyzABCDEFGHIJKLMabcdefghijklm")
-        return string.translate(my_string, rot13)
+
+#print(rot13_string_convert("X| |X"))
+#print(rot13_string_convert("{768}"))
+#sys.exit(rot13_string_convert("{-768}"))
 
 def rot13_file_convert(file_name):
     out_file = rot13_string_convert(file_name)
@@ -68,19 +75,22 @@ def rot13_file_convert(file_name):
         for (line_count, line) in enumerate (file, 1):
             if look_ahead:
                 if line.startswith("-+"):
+                    fout.write(reserve_write)
+                else:
                     reserve_write = reserve_write[0] + '-' + reserve_write[1:]
                     fout.write(reserve_write)
-                    continue
-                else:
-                    fout.write(reserve_write)
+                    fout.write(line)
+                look_ahead = False
+                continue
             if is_board_line(line):
                 look_ahead = True
                 reserve_write = rot13_string_convert(line)
+                #sys.exit(reserve_write)
                 continue
             fout.write(rot13_string_convert(line))
     fout.close()
 
-encode = False
+copy_backup = decode = encode = windiff = False
 
 if 'wiaux' in sys.argv[0]:
     cmd_count = 1
@@ -91,17 +101,25 @@ if 'wiaux' in sys.argv[0]:
         if arg[0] == 'e':
             encode = True
         elif arg[0] == 'd':
-            encode = False
+            decode = True
+        elif arg[0] == 'c':
+            copy_backup = True
+        elif arg[0] == 'w':
+            windiff = True
         elif arg[0] == '?':
             print("d=decode e=encode")
         else:
             sys.exit("d=decode e=encode")
         cmd_count += 1
+    if copy_backup:
+        shutil.copy("bak/reasoning.txt", "reasoning.txt")
     if encode:
-        print("encoding")
-        rot13_file_convert(rot13_string_convert(logic))
-        rot13_file_convert(rot13_string_convert(source))
-    else:
-        print("decoding")
+        print("enoding")
         rot13_file_convert(logic)
         rot13_file_convert(source)
+    if decode:
+        print("decoding")
+        rot13_file_convert(rot13_string_convert(logic))
+        rot13_file_convert(rot13_string_convert(source))
+    if windiff:
+        mytools.wm("reasoning.txt", "bak/reasoning.txt")
