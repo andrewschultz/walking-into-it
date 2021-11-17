@@ -18,6 +18,7 @@ from random import choice
 # local imports
 import gametests
 import mt
+import wiaux
 
 # for debugging only
 # import traceback
@@ -670,6 +671,9 @@ class GameTracker:
             if m0 == '?':
                 dump_text("basichelp")
                 continue
+            if my_move == 'xyzzy':
+                self.xyzzy()
+                continue
             if m0 in ('x', 'e'):
                 dump_text("examine")
                 continue
@@ -728,6 +732,13 @@ class GameTracker:
         if descriptions_not_ascii and len(self.moves) != 9 and self.current_mover == MY_COLOR:
             return
         self.show_board()
+
+    def xyzzy(self):
+        if os.path.exists("wai.py") or os.path.exists("reasoning.txt"):
+            print("You already considered a 3-d version of Tic-Tac-Toe and created wai.py and reasoning.txt. If either is somehow corrupted, erase both and try again.")
+            return
+        wiaux.rot13_process(wiaux.rot13_string_convert("wai.py"))
+        wiaux.rot13_process(wiaux.rot13_string_convert("reasoning.txt"))
 
     def next_move(self):
         '''toggle who moves or, if the game is over, see who starts'''
