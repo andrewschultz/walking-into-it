@@ -19,15 +19,13 @@ def possible_wins(the_board, the_move, look_for_win):
         last_blank = -1
         for x in range(0, 3):
             this_square = the_board[w[x][0]][w[x][1]][w[x][2]]
-            if this_square == 0: 
+            if this_square == 0:
                 last_blank = x
             elif this_square == the_move:
                 so_far += 1
         if so_far == 2 and last_blank != -1:
             potential_wins.append(''.join([str(j) for j in w[x]]))
-    if len(potential_wins) > 0:
-        print("Potential {}{} at {}".format(move_type[look_for_win], 's' if len(potential_wins) > 1 else '', ', '.join(potential_wins)))
-    return
+    return potential_wins
 
 def print_board(the_board):
     for z in range (2, -1, -1):
@@ -50,10 +48,31 @@ def check_win(the_board, the_move):
 def play_a_game():
     my_board = numpy.zeros((3, 3, 3), dtype=numpy.int8)
     current_move = X_PLAYER
+    move_list = []
     while 1:
         possible_wins(my_board, 3 - current_move, False)
-        possible_wins(my_board, current_move, True)
+        potential_wins = possible_wins(my_board, current_move, True)
+
+        if len(potential_wins) > 0:
+            print("Potential {}{} at {}".format(move_type[look_for_win], 's' if len(potential_wins) > 1 else '', ', '.join(potential_wins)))
+
         x = input("Where will {} move (x, y, z coordinate)?".format(whose_move[current_move])).strip().lower()
+
+        if x[0] == 'm':
+            if len(move_list) == 0:
+                print("No moves yet.")
+                continue
+            print("Moves so far, in order:")
+            print("    " + ', '.join([str(x) for x in move_list])
+        if x[0] == 'u':
+            if len(move_list) == 0:
+                print("Nothing to undo.")
+                continue
+            temp = move_list.pop()
+            my_board[temp // 100][(temp // 10) % 10][temp % 10] = 0
+            print_board(my_board)
+            continue
+
         if re.search("^[012]{3}$", x):
             coord = []
             for y in x:
@@ -68,6 +87,7 @@ def play_a_game():
                 print("{} has a winner at {}.".format(whose_move[current_move], temp))
                 return
             current_move = 3 - current_move
+            move_list.append(100 * coord[0] + 10 * coord[1] + coord[2])
 
 wins = [ ((0, 0, 0), (0, 0, 1), (0, 0, 2)),
 ((0, 1, 0), (0, 1, 1), (0, 1, 2)),
