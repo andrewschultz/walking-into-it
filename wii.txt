@@ -81,14 +81,15 @@ txtary	win_progress	This time, the crowd cheers a bit after your latest loss. Ev
 txtary	win_progress	Someone in the crowd whines, "How much more is there going to BE, anyway?" The kids around shush. You assure everyone there's just one more big win. A few kids groan. Others call their friends for the finale, because it might be over soon.
 txtary	win_progress	$KID jumps up. You mention, yes, that's the last of the ways to win. Others surround $KID, asking "how'd you do it?" and so forth. A few come up to you and ask if you'd be willing to lose like that again. You gently explain that your friend was in the right place at the right time, but if they are lucky, the tic-tac-toe champ may be kind enough to show how it's done, or maybe let special friends try, in the near future. But not right now! It's just be a memory exercise.\nYour friend is mobbed and invited to the game. You make your way to the library. The book you wanted is a bit dry, and it's also short on detail. You could use, well, a big sidewalk and chalk to look at some of the cases. But you get through it -- taking breaks to look over the park. As everyone leaves, you notice $KID's orange t-shirt in the crowd. It's pretty clear.\n\nYou think back to other games you always wondered about on the way home. That night you learn about Bridge-It or Connect Four. You even brave the intricacies of Nim and, even more dauntingly, Wythoff's Nim.\n\nYou're sure there's more. You're also sure you'd not have thought of them without running into your friend. What else will you think of looking into that you forgot?
 ##################################usage messages. Why not put them here?
-txtary	usage	You probably typed an invalid parameter. wii.py doesn't need parameters except for testing.
-txtary	usage	Here's what can be activated.
+txtary	usage	You probably typed an invalid parameter. wii.py doesn't need parameters except for testing, though many were used for testing.
+txtary	usage	Nevertheless, if you're curious, here's what can be activated.
 txtary	usage	FOR PLAYTESTERS:
-txtary	usage	l = log for testing. l=FILE.TXT appends to FILE.TXT. Default is logfile.log. (playtester stuff)
+txtary	usage	l = log for testing. l=FILE.TXT appends to FILE.TXT. Default is logfile.log.
 txtary	usage	FOR PROGRAMMING:
 txtary	usage	t = test rotations, c = check needed branches, a = all rotations of a certain #. (programmer testing)
+txtary	usage	fix(0-3) = fix array # for when kid starts in corner or on side (so testing is reproducible) UL/U=0, UR/L=1, R/DL=2, D/DR=3.
 txtary	usage	BOTH:
-txtary	usage	d/v = debug/verbose output. (both)
+txtary	usage	d/v = debug/verbose output. (probably more for programming)
 ##################################win detail messages
 winver	first-already-first	But sadly, $KID doesn't look very happy. It didn't feel new, because it wasn't. A win is a win, but that was the same win as before.
 winver	first-already-second	But sadly, $KID looks ... polite. Composed. Despite winning without going first. Because it'd already been done.

@@ -83,6 +83,10 @@ term_width = 5000
 log_output = False
 log_file = "wii-logfile.log"
 
+#testing variables
+fixed_first_move = False
+fixed_index = 0
+
 CONTINUE_PLAYING = 0
 BOARD_FULL_DRAW = -1
 YOU_WON = 1 # should never happen but just in case
@@ -351,6 +355,13 @@ class GameTracker:
         picks_list = [x for x in self.win_logs[KID_FIRST] if not self.win_logs[KID_FIRST][x]]
         self.first_square_type = random.choice(picks_list)
         try:
+            if fixed_first_move and self.first_square_type != CENTER:
+                temp = 0
+                for x in range(0, 9):
+                    if locations[x] == self.first_square_type and temp == fixed_index:
+                        return x
+                    temp += 1
+                print("WARNING: bad randomizer to find the fixed first move. This should never happen.")
             return random.choice([x for x in range(0,9) if locations[x] == self.first_square_type])
         except:
             print("Uh-oh, I couldn't find a way for {} to get started.".format(kids_name))
@@ -985,6 +996,16 @@ while cmd_count < len(sys.argv):
         gametests.test_rotations()
     elif arg == 'l':
         log_output = True
+    elif arg[:3] == 'fix':
+        fixed_first_move = True
+        try:
+            temp = int(arg[3:])
+            if fixed_index > 3 or fixed_index < 0:
+                print("The fixed index for starting with corner or edge squares must be from 0 to 3.")
+            else:
+                fixed_index = temp
+        except:
+            pass
     elif arg[:2] == 'l=':
         log_output = True
         log_file = arg[2:]
