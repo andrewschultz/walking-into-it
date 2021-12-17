@@ -48,6 +48,7 @@ CENTER = 1
 CORNER = 2
 SIDE = 3
 
+END_OF_GAME = -1
 NONE_FIRST = 0
 PLAYER_FIRST = 1
 KID_FIRST = 2
@@ -298,10 +299,12 @@ class GameTracker:
     starting_number = 1
     quit_in_a_row = 0
 
-    def __init__(self):
+    def __init__(self, complete_restart = True):
         self.init_wins()
         self.win_msg = win_msg_from_file
-        show_introductory_text()
+        if complete_restart:
+            show_introductory_text()
+        self.victories = 0
         self.clear_and_restart_game()
 
     def init_wins(self):
@@ -444,7 +447,10 @@ class GameTracker:
         my_text_wrap(text_arrays["win_progress"][self.victories] + "\n")
         self.victories += 1
         if self.victories == len(text_arrays["win_progress"]):
-            self.conditional_log_bail()
+            temp = self.conditional_log_bail(False)
+            if temp == END_OF_GAME:
+                global my_games
+                my_games = GameTracker(complete_restart = False)
         return True
 
     def print_all_sums(self):
@@ -613,7 +619,7 @@ class GameTracker:
                 if my_move != 'quit' and self.quit_in_a_row == 1:
                     print("To make sure you don't quit accidentally, I'll request a full QUIT, or another q.")
                     continue
-                self.conditional_log_bail()
+                self.conditional_log_bail(True)
             self.quit_in_a_row = 0
             if m0 == 'a':
                 dump_text("about")
@@ -719,11 +725,21 @@ class GameTracker:
                 self.played_correctly = before_moves - after_moves
             return
 
-    def conditional_log_bail(self):
+    def conditional_log_bail(self, force_bail):
         print(kludge_convert(text_arrays["quitmsg"][self.victories]))
         if log_output:
             print("\n\nThanks for logging your play-through! The file is at {}.".format(log_file))
-        temp = input("Press <ENTER> to exit the game. If you double-clicked on the wii.py file, this will cause the text window to close.")
+        if force_bail == False:
+            got_xyzzy = os.path.exists('wai.py')
+            print("You've completed the game, and there are no huge hidden secrets{}.".format('' if got_xyzzy else ', though typing XYZZY at any time would open a different sort of Tic-Tac-Toe'))
+            while(1):
+                x = input("(R)ESTART{} or (Q)UIT?".format(', XYZZY for a post-comp sequel, ' if got_xyzzy else '')).strip().lower()
+                if x == 'r' or x == 'restart':
+                    return END_OF_GAME
+                if x == 'q' or x == 'quit' or x == '':
+                    break
+        else:
+            input("Press <ENTER> to exit the game. Note this will close the terminal if you double-clicked on the wii.py file.")
         sys.exit()
 
     def place_move(self, square):
@@ -750,6 +766,7 @@ class GameTracker:
         else:
             self.kid_move()
         self.current_mover = other_color(self.current_mover)
+        return self.current_mover
 
 def other_color(move_color): # pylint: disable=missing-function-docstring
     return (MY_COLOR + KID_COLOR - move_color) if move_color else 0
@@ -1038,8 +1055,11 @@ if check_needed:
 # put tests above here
 
 python_2_checkoffs()
-my_games = GameTracker()
 
 while 1:
-    my_games.next_move()
-sys.exit()
+    my_games = GameTracker()
+
+    print(1)
+    while my_games.next_move() != END_OF_GAME:
+        pass
+    print(2)
