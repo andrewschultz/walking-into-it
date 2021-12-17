@@ -640,14 +640,14 @@ class GameTracker:
                     continue
                 print("Changed display type:", turn_option_descriptions[self.display_type])
                 continue
-            if my_move in ('l', 's', 'w'):
+            if m0 in ('l', 's', 'w'):
                 self.print_wins_so_far()
                 continue
-            if my_move == 'g':
+            if m0 == 'g':
                 self.grid_display = not self.grid_display
                 print("Grid is now", on_off[self.grid_display])
                 continue
-            if my_move in ('h', 'm'):
+            if m0 in ('h', 'm'):
                 self.show_moves = not self.show_moves
                 self.show_board()
                 continue
