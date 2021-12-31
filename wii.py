@@ -294,7 +294,6 @@ class GameTracker:
     show_moves = False
     display_type = X_FIRST
     brief_question = False
-    descriptions_not_ascii = False
     show_numbers = True
     grid_display = True
     starting_number = 1
@@ -607,6 +606,7 @@ class GameTracker:
 
     def player_move(self):
         '''this is the main engine that sees how the player is trying to move'''
+        global descriptions_not_ascii # pylint: disable=global-statement
         while 1:
             my_move = input_stub(self.input_text() + log_cr())
             if log_output:
@@ -631,16 +631,27 @@ class GameTracker:
                 print("Brief text prompts are now", on_off[self.brief_question])
                 continue
             if re.search('^c[0-9]+$', my_move):
+                if descriptions_not_ascii == 2:
+                    print("Text color is turned off for screen readers.")
+                    continue
                 if len(my_move) > 5:
                     print("You can only define 4 color numbers.")
                     continue
                 temp_colors = [int(x) for x in my_move[1:]]
+                temp_background = temp_colors[3] if len(temp_colors) == 4 else wic.sidewalks.index(self.textcolors[3])
+                if temp_colors[:3].count(temp_background) > 0:
+                    print("None of the X's, O's and lines can be the same color as the sidewalk. Fix digit {}.".format(temp_colors.index(temp_background)))
+                    continue
                 for x in range(0, len(temp_colors)):
                     if x == 3:
                         self.textcolors[x] = wic.sidewalks[temp_colors[x]]
                     else:
                         self.textcolors[x] = wic.texts[temp_colors[x]]
-                self.show_board()
+                if len(self.moves) == 0:
+                    print("New colors will show up once a move is made. c1110 resets to default.")
+                else:
+                    print("Changing colors.")
+                    self.show_board()
                 continue
             if m0 == 'c':
                 dump_text("credits")
@@ -686,7 +697,6 @@ class GameTracker:
                 self.show_board()
                 continue
             if m0 == 'r':
-                global descriptions_not_ascii # pylint: disable=global-statement
                 if descriptions_not_ascii == 2:
                     print("Text descriptions are locked in.",
                         "You'll need to restart if you wish to toggle to ASCII.")
