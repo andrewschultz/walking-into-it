@@ -1,6 +1,8 @@
 #
 # wai.py: Walking Around It
 #
+# the extra game for WII
+#
 
 import sys
 import numpy
@@ -12,6 +14,8 @@ move_type = [ 'block', 'win' ]
 EMPTY_PLAYER = 0
 X_PLAYER = 1
 Y_PLAYER = 2
+
+played_before = False
 
 def to_num(my_tuple):
     return ''.join([str(a) for a in my_tuple])
@@ -74,6 +78,13 @@ def play_a_game():
     my_board = numpy.zeros((3, 3, 3), dtype=numpy.int8)
     current_move = X_PLAYER
     move_list = []
+    global played_before
+    if played_before:
+        print("You look at things again. Maybe there's a way to make a draw, or maybe there's a way to prove there's no draw.")
+    else:
+        print("Three-by-three-by-three tic-tac-toe. Someone showed it to you when you got bored of the two-dimensional version. It was interesting for a while. Someone always seemed to win. But it was usually the first player. It didn't take long to figure the forced win. But you wondered, would there be a way to get no wins? Even if you played badly?")
+        played_before = True
+    print_board(my_board)
     while 1:
         potential_blocks = possible_wins(my_board, 3 - current_move, False)
         potential_wins = possible_wins(my_board, current_move, True)
@@ -88,7 +99,7 @@ def play_a_game():
         if len(potential_forks) > 0:
             print("Winning forks at {}".format(', '.join([to_num(x) for x in potential_forks])))
 
-        x = input("Where will {} move (x, y, z coordinate)?".format(whose_move[current_move])).strip().lower()
+        x = input("Where will {} move (000 through 222, for horizontal/vertical/up)?".format(whose_move[current_move])).strip().lower()
 
         if x[0] == '':
             print_board(my_board)
