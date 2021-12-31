@@ -18,6 +18,7 @@ from random import choice
 # local imports
 import gametests
 import mt
+import wic
 
 # for debugging only
 # import traceback
@@ -298,6 +299,7 @@ class GameTracker:
     grid_display = True
     starting_number = 1
     quit_in_a_row = 0
+    colors = [wic.texts[1], wic.texts[1], wic.texts[1], wic.sidewalks[0]]
 
     def __init__(self, complete_restart = True):
         self.init_wins()
@@ -523,15 +525,15 @@ class GameTracker:
                 if self.current_first == PLAYER_FIRST:
                     raw_idx = other_color(raw_idx)
             if self.show_numbers:
-                row_string += ' ' if y in self.cell_idx else str(y + self.starting_number)
-            row_string += play_ary[raw_idx]
+                row_string += self.colors[0] + (' ' if y in self.cell_idx else str(y + self.starting_number))
+            row_string += self.colors[raw_idx] + play_ary[raw_idx]
             if y % 3 == 2:
-                print(row_string)
+                print(self.colors[3] + row_string + wic.RESET_ALL)
                 row_string = ""
                 if self.grid_display and y != 8:
-                    print("--+--+--" if self.show_numbers else "-+-+-")
+                    print(self.colors[3] + self.colors[0] + ("--+--+--" if self.show_numbers else "-+-+-") + wic.RESET_ALL)
             else:
-                row_string += "|" if self.grid_display else " "
+                row_string += self.colors[0] + '|' if self.grid_display else ' '
 
     def find_forking_move(self, board, to_move_color, is_also_block = True):
         '''this has to be in the game class, because it establishes a forking move'''
@@ -627,6 +629,18 @@ class GameTracker:
             if m0 == 'b':
                 self.brief_question = not self.brief_question
                 print("Brief text prompts are now", on_off[self.brief_question])
+                continue
+            if re.search('^c[0-9]+$', my_move):
+                if len(my_move) > 5:
+                    print("You can only define 4 color numbers.")
+                    continue
+                temp_colors = [int(x) for x in my_move[1:]]
+                for x in range(0, len(temp_colors)):
+                    if x == 3:
+                        self.colors[x] = wic.sidewalks[temp_colors[x]]
+                    else:
+                        self.colors[x] = wic.texts[temp_colors[x]]
+                self.show_board()
                 continue
             if m0 == 'c':
                 dump_text("credits")
