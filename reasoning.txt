@@ -1,10 +1,10 @@
 Walking Around It reasoning
 
-You may or may not have guessed it is impossible to achieve a draw in 3x3x3 Tic-Tac-Toe/noughts and crosses. Here is a short proof why. We will try to construct a drawish endgame and fail.
+You may or may not have guessed it is impossible to achieve a draw in 3x3x3 Tic-Tac-Toe/noughts and crosses. Here is a short proof by contradiction why. We will try to construct a drawn game and fail, e.g. block the most obvious three in a rows with a less obvious one resulting.
 
-It's not fully constructive to look at actual games, though that might provide a hint. There are a lot of double attacks to be aware of! The key is to find some simple cases where either move on one square forces a win.
+For a quick proof, building actual games isn't very constructive, though it might provide a hint. Double threats can pop up quickly! The key is to find some simple cases where filling an empty square wins for either side.
 
-For me it broke open when I considered the corner squares of the top plane. Assume they're all the same.
+For me it broke open when I considered the corner squares of the top plane. Assume they're all the same. X or O doesn't matter here, though it will later once we consider matches across planes, since we'll assume X is in the center.
 
 X| |X
 -+-+-
@@ -12,9 +12,9 @@ X| |X
 -+-+-
 X| |X
 
-You may notice that placing an X anywhere means X wins. But placing X nowhere gives O a win! This sort of logic will pop up again.
+You may notice that placing an X in any remaining squares means X wins. But placing X nowhere gives O a win! This sort of logic will pop up again.
 
-The two-of-each cases may actually be slightly easier than three-and-one. First note that whoever plays in the center wins. That's one case down.
+Also note that if we have alternating X's and O's in each corner, either player wins if they take the center square.
 
 X| |O
 -+-+-
@@ -22,84 +22,34 @@ X| |O
 -+-+-
 O| |X
 
-Here's the other. (Note all others are functionally similar. We can rotate or flip as needed.)
+Now assume the very central square is an X. We will show 2 X's in adjacent corners are not allowed. Put 2 X's, in the top row of the top level, shown on the left. (If not, the board can be rotated.) Then some placements are forced.
 
-It's not really important if the center square is X or O--just that someone has to take it, so let's say X. Initially things look like this.
+Note the X an O could be flipped horizontally, and it's the same puzzle either way--but we can't have 4 O's on the bottom, and 2 X's would make 4 X's total on the north face of the cube.
 
-X| |X  | |   | |
+X| |X  | |  X| |O
 -+-+- -+-+- -+-+-
  | |   |X|   | |
 -+-+- -+-+- -+-+-
-O| |O  | |   | |
+ | |   | |  O| |O
 
-But now there must be 2 O's on the bottom, or we'd get a diagonal X streak.
+But now the bottom right square in the top level is an O, or X has a diagonal match across the plane. The other corner is an X, or you have a square of 4 O's on the bottom row.
 
-X| |X  | |   | |
--+-+- -+-+- -+-+-
- | |   |X|   | |
--+-+- -+-+- -+-+-
-O| |O  | |  O| |O
-
-But wait! Now the center plane, lower left, must be an X, or we have a vertical match with the O's. Same with the center plane, lower right.
-
-X| |X  | |   | |
--+-+- -+-+- -+-+-
- | |   |X|   | |
--+-+- -+-+- -+-+-
-O| |O X| |X O| |O
-
-Now, though, the center lower square can't be X (in-plane 3-in-a-row) or O (vertical/diagonal 3-in-a-row).
-
-That leaves us with the 2 3-1 breaks. They must be considered separately but have the same methods to show they are undrawable. The 3 X's are easiest.
-
-X| |X  | |   | |
--+-+- -+-+- -+-+-
- | |   |X|   | |
--+-+- -+-+- -+-+-
-X| |O  | |   | |
-
-You need 3 O's on the bottom plane to avoid a three-match on the long cube diagonal.
-
-X| |X  | |   | |O
+X| |X  | |  X| |O
 -+-+- -+-+- -+-+-
  | |   |X|   | |
 -+-+- -+-+- -+-+-
 X| |O  | |  O| |O
 
-But now let's look at the top O. It could link up with any of the three bottom O's. That means we have three squares in the central plane to block out.
+This gives a contradiction. In the center plane, O's must go in the top left, left and top squares to block 3-in-a-rows. But then both of the bottom left and upper right squares must be X's. But that creates three X's in a row.
 
-X| |X  | |   | |O
--+-+- -+-+- -+-+-
- | |   |X|X  | |
--+-+- -+-+- -+-+-
-X| |O  |X|X O| |O
+Since each face of the cube must 1) have no 2 corner X's adjacent and 2) not have X-O-X-O and 3) not have all O's, we have 3 O's and 1 X in the corner of each face. That gives us this.
 
-This, of course, creates a big problem! An X anywhere else on the center plane lets X win, but O's everywhere let O win.
-
-Now for the final arrangement.
-
-O| |O  | |   | |
+O| |O  | |  X| |O
 -+-+- -+-+- -+-+-
  | |   |X|   | |
 -+-+- -+-+- -+-+-
-X| |O  | |   | |
+O| |X  | |  O| |O
 
-There the upper right corner must be an O.
-
-O| |O  | |   | |O
--+-+- -+-+- -+-+-
- | |   |X|   | |
--+-+- -+-+- -+-+-
-X| |O  | |   | |
-
-But that creates the same problem, namely, three squares in the central plane must each have an X!
-
-O| |O  |X|X  | |O
--+-+- -+-+- -+-+-
- | |   |X|X  | |
--+-+- -+-+- -+-+-
-X| |O  | |   | |
-
-Again, any X makes a match in the center plane, but filling it in with all O's makes three O's in a row.
+But now the center squares in the top and bottom planes can't be O, which creates 3 X's in a row vertically.
 
 So there is no way for a game of three-dimensional three-by-three Tic-Tac-Toe/noughts and crosses to end in a draw.
