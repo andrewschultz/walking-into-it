@@ -14,6 +14,13 @@ square = [ '?', ' ', 'X', 'O' ]
 logic = "reasoning.txt"
 source = "wai.py"
 
+def usage(err_msg = 'general usage'):
+    print('=' * 50 + err_msg)
+    print('Note this should only be run on its own for testing.')
+    print('e = encode, d = decode')
+    print('c = copy over new stuff, w = use WinDiff/WinMerge')
+    sys.exit()
+
 def is_board_line(my_string):
     return re.search("^[OX\| ]{5,}$", my_string)
 
@@ -66,6 +73,7 @@ def rot13_string_convert(my_string):
 #sys.exit(rot13_string_convert("{-768}"))
 
 def rot13_file_convert(file_name):
+    print("Poking at", file_name)
     out_file = rot13_string_convert(file_name)
     if not os.path.exists(file_name):
         sys.exit("No file {} to process.".format(file_name))
@@ -94,6 +102,8 @@ copy_backup = decode = encode = windiff = False
 
 if 'wiaux' in sys.argv[0]:
     cmd_count = 1
+    if not cmd_count:
+        usage('general usage')
     while cmd_count < len(sys.argv):
         arg = sys.argv[cmd_count].lower()
         if arg[0] == '-':
@@ -107,14 +117,14 @@ if 'wiaux' in sys.argv[0]:
         elif arg[0] == 'w':
             windiff = True
         elif arg[0] == '?':
-            print("d=decode e=encode")
+            usage()
         else:
-            sys.exit("d=decode e=encode")
+            usage('Bad argument {}'.format(arg))
         cmd_count += 1
     if copy_backup:
         shutil.copy("bak/reasoning.txt", "reasoning.txt")
     if encode:
-        print("enoding")
+        print("encoding")
         rot13_file_convert(logic)
         rot13_file_convert(source)
     if decode:

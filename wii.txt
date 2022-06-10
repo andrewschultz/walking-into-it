@@ -31,6 +31,8 @@ txtary	basichelp	I gives general information commands, and T toggles various opt
 txtary	basichelp	None of the commands is necessary to win the game, but some may add flavor or ease of play.
 ##################################option-text array
 txtary	options	You don't need to change any of these options to win the game. However, some may make it easier to view and process things.
+txtary	options	C (4 numbers from 0 to 8) changes sidewalk chalk color: cell lines, you, $KID, background.
+txttar	options	    black, white, red, green, yellow, blue, purple, light blue, grey
 txtary	options	D cycles the display between X first, O first, you as X, and $KID as X. You can also use D1 to D4.
 txtary	options	G toggles the grid display when showing the board.
 txtary	options	H or M toggles whether or not the current game history is displayed above the board.
